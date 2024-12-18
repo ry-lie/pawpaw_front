@@ -14,8 +14,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-white flex justify-center">
-        <div className="w-full max-w-mobile bg-background border border-stroke_gray-600">{children}</div>
+      <body>
+        <div className="w-full min-h-screen max-w-mobile bg-background border border-stroke_gray-600">{children}</div>
       </body>
     </html>
   );
