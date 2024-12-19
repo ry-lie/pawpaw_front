@@ -1,10 +1,11 @@
-'use client';
+"use client";
 
 import Input from "@/app/components/Input";
 import React from "react";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
+import Button from "@/app/components/Button";
 
 type LoginInputs = {
   email: string;
@@ -13,7 +14,7 @@ type LoginInputs = {
 
 export default function LoginForm() {
   const methods = useForm<LoginInputs>({
-    mode: "onBlur",
+    mode: "onSubmit",
     defaultValues: {
       email: "",
       password: "",
@@ -46,7 +47,7 @@ export default function LoginForm() {
           name="이메일"
           type="email"
           placeholder="이메일"
-          className="min-w-full h-14 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          className="w-full h-14"
           validate={(value: string) =>
             value
               ? value.includes("@")
@@ -56,24 +57,23 @@ export default function LoginForm() {
           }
         />
         <Input
-          name="비밀번호"
+          name="password"
           type="password"
-          placeholder="비밀번호"
-          className="min-w-full h-14 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
+          placeholder="비밀번호를 입력하세요"
+          className="w-full h-14"
           validate={(value: string) =>
             value
-              ? /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z])(?=.*\\d).{8,}$/.test(value)
+              ? /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/.test(value)
                 ? true
-                : "비밀번호는 최소 8자리 이상, 특수문자 포함해야 합니다."
+                : "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다."
               : "비밀번호는 필수 입력 항목입니다"
           }
         />
-        <button
-          type="submit"
-          className="w-full h-14  bg-primary text-white rounded-md hover:bg-hover font-bold text-xl"
-        >
-          로그인
-        </button>
+        <Button
+          title="로그인"
+          btnType="submit"
+          containerStyles="w-full h-14"
+        />
 
         <div className="flex justify-center gap-7 mt-10 pb-5 border-b border-medium_gray">
           <Link href={'/auth/join'}>회원가입</Link>
