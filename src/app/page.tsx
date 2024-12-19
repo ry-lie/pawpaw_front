@@ -22,7 +22,7 @@ export default function Home() {
           <section className="w-full">
             <h2 className="text-lg font-bold mb-1">🔥 인기글</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {["저의 강아지...", "저의 고양이...", "펭귄 소개...", "사나이 샤나이..."].map((item, index) => (
+              {["저의 강아지...", "저의 고양이...", "펭귄 소개...", "사나이 샤나이...", "안녕안녕...", "바보아!!!"].map((item, index) => (
                 <div
                   key={index}
                   className="w-[170px] h-[100px] bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow"
