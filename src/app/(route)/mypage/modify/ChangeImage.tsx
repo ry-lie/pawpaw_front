@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react"
 
 export default function ChangeImage() {
-    const [img, setImg] = useState<string>("/icons/empty.png");
+    const [img, setImg] = useState<string>("/icons/profile_icon.png");
     const fileInput = useRef<HTMLInputElement | null>(null)
 
 
