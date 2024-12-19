@@ -13,10 +13,10 @@ export default function Nav() {
 
         {/* 로그인 및 회원가입 버튼 */}
         <div className="flex items-center gap-4">
-            <Link href="/login" className="text-sm text-gray-600 hover:text-gray-800 transition">
+            <Link href="/auth/login" className="text-sm text-gray-600 hover:text-gray-800 transition">
             로그인
             </Link>
-            <Link href="/signup" className="text-sm text-gray-600 hover:text-gray-800 transition">
+            <Link href="/auth/join" className="text-sm text-gray-600 hover:text-gray-800 transition">
             회원가입
             </Link>
         </div>
