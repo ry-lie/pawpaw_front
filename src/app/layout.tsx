@@ -16,12 +16,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className="flex flex-col w-full min-h-screen max-w-mobile bg-background border border-stroke_gray-600">
-          <div className="flex-grow flex justify-center items-center overflow-auto">
-            {children}
-          </div>
+          {children}
         </div>
       </body>
-
     </html>
   );
 }
