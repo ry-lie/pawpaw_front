@@ -1,4 +1,5 @@
 import Nav from "@/app/components/Nav/Nav";
+import Footer from "@/app/components/Footer";
 
 export default function Home() {
   return (
@@ -48,6 +49,9 @@ export default function Home() {
           </section>
         </div>
       </main>
+      
+      {/* Nav 컴포넌트 */}
+      <Footer />
     </div>
   );
 }

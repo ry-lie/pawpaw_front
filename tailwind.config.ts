@@ -24,6 +24,9 @@ const config: Config = {
         medium_gray: "#efefef",
         strong_gray: "#686868",
       },
+      boxShadow: {
+        'top-sm': '0px -2px 8px rgba(0, 0, 0, 0.1)',
+      },
     },
   },
   plugins: [],
