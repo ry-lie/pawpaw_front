@@ -3,8 +3,8 @@ import LoginForm from "./LoginForm";
 
 
 export const metadata = {
-  title: "Login - My App",
-  description: "Login to access your account.",
+  title: "Login - 포포",
+  description: "로그인을 진행하세요.",
 };
 
 export default function LoginPage() {
