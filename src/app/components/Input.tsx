@@ -8,6 +8,7 @@ interface InputProps {
   placeholder?: string;
   className?: string;
   validate?: (value: string) => string | boolean;
+  children?: React.ReactNode;
 }
 
 export default function Input({
@@ -17,6 +18,7 @@ export default function Input({
   placeholder = "",
   className = "",
   validate,
+  children,
 }: InputProps) {
   const {
     register,
@@ -26,20 +28,27 @@ export default function Input({
   const error = errors[name] as { message?: string };
 
   return (
-    <div className={`min-w-full`}>
+    <div className="w-full">
       {label && (
-        <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+        <label htmlFor={name} className="block text-md font-bold text-gray-700">
           {label}
         </label>
       )}
-      <input
-        id={name}
-        type={type}
-        placeholder={placeholder}
-        className={`${className} border border-stroke_gray p-2`}
-        {...register(name, { validate, required: `${label || name}는 필수 입력 항목입니다` })}
-      />
-      {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
+      <div className="relative">
+        {children && (
+          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+            {children}
+          </div>
+        )}
+        <input
+          id={name}
+          type={type}
+          placeholder={placeholder}
+          className={`${className} border border-stroke_gray p-2 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm`}
+          {...register(name, { validate, required: `${label || name}는 필수 입력 항목입니다` })}
+        />
+      </div>
+      {error && <p className="mt-1 text-sm text-accent_orange">{error.message}</p>}
     </div>
   );
 }
