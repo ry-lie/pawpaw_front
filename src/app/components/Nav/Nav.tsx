@@ -1,3 +1,4 @@
+import { PATHS } from "@/app/constants/path";
 import Link from "next/link";
 
 export default function Nav() {
@@ -6,19 +7,19 @@ export default function Nav() {
       {/* 로고 영역 */}
       <div className="flex justify-between items-center h-full">
         <div className="flex items-center">
-            <Link href="/" className="text-lg font-semibold text-gray-800">
+          <Link href={PATHS.MAIN} className="text-lg font-semibold text-gray-800">
             LOGO
-            </Link>
+          </Link>
         </div>
 
         {/* 로그인 및 회원가입 버튼 */}
         <div className="flex items-center gap-4">
-            <Link href="/auth/login" className="text-sm text-gray-600 hover:text-gray-800 transition">
+          <Link href={PATHS.LOGIN} className="text-sm text-gray-600 hover:text-gray-800 transition">
             로그인
-            </Link>
-            <Link href="/auth/join" className="text-sm text-gray-600 hover:text-gray-800 transition">
+          </Link>
+          <Link href={PATHS.JOIN} className="text-sm text-gray-600 hover:text-gray-800 transition">
             회원가입
-            </Link>
+          </Link>
         </div>
       </div>
     </nav>
