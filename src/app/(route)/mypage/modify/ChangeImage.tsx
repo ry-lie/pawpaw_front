@@ -1,9 +1,10 @@
 "use client"
 
 import React, { useRef, useState } from "react"
+import BasicProfile from "@/app/assets/icons/profile_icon.png"
 
 export default function ChangeImage() {
-    const [img, setImg] = useState<string>("/icons/profile_icon.png");
+    const [img, setImg] = useState<string>(BasicProfile.src);
     const fileInput = useRef<HTMLInputElement | null>(null)
 
 
