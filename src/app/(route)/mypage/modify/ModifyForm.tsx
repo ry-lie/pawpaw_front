@@ -1,11 +1,14 @@
 "use client"
 
+import Button from "@/app/components/Button";
 import Input from "@/app/components/Input";
-import { useState } from "react"
+import React, { useState } from "react"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 
 type NicknameInput = {
     nickname: string;
+    password: string;
+    confirmPassword : string;
 }
 
 export default function ModifyForm() {
@@ -14,15 +17,19 @@ export default function ModifyForm() {
     const openModal = () => setIsModal(true);
     const closeModal = () => setIsModal(false);
 
+
     const methods = useForm<NicknameInput>({
         mode: "onBlur",
         defaultValues: {
             nickname: "",
+            password : "",
+            confirmPassword : "",
         },
     });
 
-    const { handleSubmit } = methods;
+    const { handleSubmit, watch, formState: { isValid } } = methods;
     const onSubmit: SubmitHandler<NicknameInput> = (data) => {
+        const { password } = data;
         // fetch('/nickname',{
         //     method:"POST",
         //     headers:{
@@ -32,6 +39,9 @@ export default function ModifyForm() {
         // });
         console.log(data)
     }
+    const password = watch('password');
+    const confirmPassword = watch('confirmPassword');
+    const isPassword = password && confirmPassword && password === confirmPassword;
 
 
     return (
@@ -39,12 +49,10 @@ export default function ModifyForm() {
             <FormProvider {...methods}>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
-                    <div className="text-xl">
-                        닉네임
-                    </div>
                     <Input name="닉네임"
+                        label="닉네임"
                         type="string"
-                        className="w-96"
+                        className="w-80 h-10"
                         validate={(value: string) =>
                             value ? true : "닉네임을 입력해주세요"}
                     />
@@ -56,47 +64,63 @@ export default function ModifyForm() {
                     </div>
                 </div>
                 <div className="space-x-10 mt-10">
-                    <button type="submit" className="font-bold text-xl bg-stroke_gray w-20 h-10 text-white rounded-md">취소</button>
-                    <button type="submit" className="font-bold text-xl bg-primary hover:bg-hover w-20 h-10 text-white rounded-md">확인</button>
+                    <Button
+                        title="취소"
+                        btnType="button"
+                        containerStyles="bg-stroke_gray w-20 h-10" />
+                    <Button
+                        title="확인"
+                        btnType="submit"
+                        containerStyles="w-20 h-10" />
+
                 </div>
+
                 {/* 모달창 */}
                 {isModal && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-100">
-                        <div className="bg-white p-5 rounded-md shadow-lg w-96 h-96">
+                        <div className="bg-white p-4 rounded-md shadow-lg w-80 h-96">
                             <img src="/icons/exit.png" alt="닫기버튼" className="h-8 w-8 flex justify-end ml-auto cursor-pointer" onClick={closeModal} />
-                            <div className="font-bold text-base">
-                                현재 비밀번호
-                                <Input
-                                    name="현재비밀번호"
-                                    type="password"
-                                    className="h-8 w-80"
-                                    validate={(value: string) => value ?
+
+                            <Input
+                                name="presentPassword"
+                                label="현재비밀번호"
+                                type="password"
+                                className="h-10 w-72"
+                                validate={(value: string) =>
+                                    value ?
                                         true : "현재 비밀번호를 입력하세요"} />
-                            </div>
-                            <div className="font-bold text-base mt-2">
-                                새 비밀번호
-                                <Input
-                                    name="새비밀번호"
-                                    type="password"
-                                    className="h-8 w-80"
-                                    validate={(value: string) => value ?
-                                        true : "새 비밀번호를 입력하세요"} />
-                            </div>
-                            <div className="font-bold text-base mt-2">
-                                새 비밀번호 확인
-                                <Input
-                                    name="새비밀번호확인"
-                                    type="password"
-                                    className="h-8 w-80"
-                                    validate={(value: string) => value ?
-                                        true : "비밀번호가 일치하지 않습니다."} />
-                            </div>
 
-                            <button type="submit" onClick={closeModal} className="flex items-center justify-center ml-auto mb-auto mt-2 font-bold text-base bg-primary hover:bg-hover w-16 h-8 text-white rounded-md">
-                                확인
-                            </button>
+                            <Input
+                                name="newPassword"
+                                label="새비밀번호"
+                                type="password"
+                                className="h-10 w-72"
+                                validate={(value: string) =>
+                                    value
+                                        ? /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/.test(value)
+                                            ? true :
+                                            "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다."
+                                        : "비밀번호는 필수 입력 항목입니다."} />
+                            <Input
+                                name="confirmPassword"
+                                label="새 비밀번호 확인"
+                                type="password"
+                                className="h-10 w-72"
+                                validate={(value : string)=>
+                                    value ===password || '비밀번호가 일치하지 않습니다.'} />
+                                    {isPassword && (
+                                        <img src="/icons/confirm_icon.png"
+                                        alt="체크표시"
+                                        className="h-5 w-5"/>
+                                    )}
+                            <Button
+                                isDisabled={!isValid}
+                                title="확인"
+                                btnType="submit"
+                                containerStyles="w-14 h-8 flex justify-center items-center ml-auto mt-5"
+                                textStyles="text-base justify-center"
+                            />
                         </div>
-
                     </div>
                 )}
             </FormProvider>
