@@ -34,16 +34,16 @@ export default function Home() {
               />
               인기글
             </h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {["저의 강아지...", "저의 고양이...", "펭귄 소개...", "사나이 샤나이...", "이 장소 완전 추천", "강와지와 보내는 행복한 일상"].map((item, index) => (
-                <div
-                  key={index}
-                  className="w-[170px] h-[100px] bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow"
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                {["저의 강아지...", "저의 고양이...", "펭귄 소개...", "사나이 샤나이...", "이 장소 완전 추천", "강와지와 보내는 행복한 일상"].map((item, index) => (
+                  <div
+                    key={index}
+                    className="w-40 h-24 bg-white p-4 rounded-lg shadow hover:shadow-lg transition-shadow"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
           </section>
 
           {/* 최신글 섹션 */}
@@ -62,7 +62,7 @@ export default function Home() {
               {["어제 간 반려동물 핫플", "오늘 미용했어요", "오늘 병원 예약 있는 우리 주주...", "내일 갈 곳 추천"].map((item, index) => (
                 <div
                   key={index}
-                  className="w-[170px] h-[100px] bg-gradient-to-r from-yellow-100 to-yellow-200 p-4 rounded-lg shadow hover:shadow-lg transition-shadow"
+                  className="w-40 h-24 bg-gradient-to-r from-yellow-100 to-yellow-200 p-4 rounded-lg shadow hover:shadow-lg transition-shadow"
                 >
                   {item}
                 </div>
@@ -72,7 +72,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Nav 컴포넌트 */}
+      {/* Footer 카테고리 독바 */}
       <Footer />
     </div>
   );
