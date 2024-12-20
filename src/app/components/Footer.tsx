@@ -1,6 +1,12 @@
 import Link from "next/link";
 import path from "path";
 import { PATHS } from "../constants/path";
+import CommunityIcon from "@/app/assets/icons/community_icon.png"
+import MapIcon from "@/app/assets/icons/map_icon.png"
+import ChatIcon from "@/app/assets/icons/chat_icon.png"
+import MyPageIcon from "@/app/assets/icons/mypage_icon.png"
+import Image from "next/image";
+
 
 
 export default function Footer() {
@@ -12,8 +18,8 @@ export default function Footer() {
                         href={PATHS.COMMUNITY}
                         className="flex flex-col justify-center items-center"
                     >
-                        <img
-                            src="/icons/community_icon.png"
+                        <Image
+                            src={CommunityIcon}
                             alt="community"
                             className="h-[28px] w-[35px] mb-0.5"
                         />
@@ -25,8 +31,8 @@ export default function Footer() {
                         href={PATHS.MAP}
                         className="flex flex-col justify-center items-center"
                     >
-                        <img
-                            src="/icons/map_icon.png"
+                        <Image
+                            src={MapIcon}
                             alt="map"
                             className="h-[31px] w-[22px] mb-0.5"
                         />
@@ -38,8 +44,8 @@ export default function Footer() {
                         href={PATHS.CHATTING_LIST}
                         className="flex flex-col justify-center items-center"
                     >
-                        <img
-                            src="/icons/chat_icon.png"
+                        <Image
+                            src={ChatIcon}
                             alt="chat"
                             className="h-[28.5px] w-[28.5px] mb-1"
                         />
@@ -51,8 +57,8 @@ export default function Footer() {
                         href={PATHS.MYPAGE}
                         className="flex flex-col justify-center items-center"
                     >
-                        <img
-                            src="/icons/mypage_icon.png"
+                        <Image
+                            src={MyPageIcon}
                             alt="mypage"
                             className="h-[34px] w-[34px]"
                         />
