@@ -1,4 +1,7 @@
 import Link from "next/link";
+import path from "path";
+import { PATHS } from "../constants/path";
+
 
 export default function Footer() {
     return (
@@ -6,7 +9,7 @@ export default function Footer() {
             <div className="flex justify-around items-center h-full">
                 <div className="flex flex-col items-center">
                     <Link
-                        href={"/community"}
+                        href={PATHS.COMMUNITY}
                         className="flex flex-col justify-center items-center"
                     >
                         <img
@@ -19,7 +22,7 @@ export default function Footer() {
                 </div>
                 <div className="flex flex-col items-center">
                     <Link
-                        href={"/map"}
+                        href={PATHS.MAP}
                         className="flex flex-col justify-center items-center"
                     >
                         <img
@@ -32,7 +35,7 @@ export default function Footer() {
                 </div>
                 <div className="flex flex-col items-center">
                     <Link
-                        href={"/chat"}
+                        href={PATHS.CHATTING_LIST}
                         className="flex flex-col justify-center items-center"
                     >
                         <img
@@ -45,7 +48,7 @@ export default function Footer() {
                 </div>
                 <div className="flex flex-col items-center">
                     <Link
-                        href={"/mypage"}
+                        href={PATHS.MYPAGE}
                         className="flex flex-col justify-center items-center"
                     >
                         <img

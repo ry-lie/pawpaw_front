@@ -93,7 +93,7 @@ export default function JoinForm() {
         <div className="flex justify-center mb-4">
           <label htmlFor="profile-image-input" className="cursor-pointer">
             <img
-              src={profileImage ? URL.createObjectURL(profileImage) : "/icons/basic-profile.png"}
+              src={profileImage ? URL.createObjectURL(profileImage) : "/icons/profile_icon.png"}
               alt="프로필 이미지"
               className="rounded-full border-2 border-gray-300 w-24 h-24 object-cover"
             />
@@ -117,7 +117,7 @@ export default function JoinForm() {
             label="이메일"
             type="email"
             placeholder="이메일을 입력하세요"
-            className="w-full h-14"
+            className="w-full h-12"
             validate={(value: string) =>
               value.includes('@') || '유효한 이메일 주소를 입력하세요.'
             }
@@ -136,7 +136,7 @@ export default function JoinForm() {
             label="이메일 인증코드"
             type="text"
             placeholder="인증코드를 입력하세요"
-            className="w-full h-14"
+            className="w-full h-12"
           >
             <div className="flex gap-2">
               <Button
@@ -159,7 +159,7 @@ export default function JoinForm() {
           label="비밀번호"
           type="password"
           placeholder="비밀번호를 입력하세요"
-          className="w-full h-14"
+          className="w-full h-12"
           validate={(value: string) =>
             value
               ? /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/.test(value)
@@ -173,7 +173,7 @@ export default function JoinForm() {
           label="비밀번호 확인"
           type="password"
           placeholder="비밀번호를 다시 입력하세요"
-          className="w-full h-14"
+          className="w-full h-12"
           validate={validateConfirmPassword}
         />
         <Input
@@ -181,14 +181,14 @@ export default function JoinForm() {
           label="이름"
           type="text"
           placeholder="이름을 입력하세요"
-          className="w-full h-14"
+          className="w-full h-12"
         />
         <Input
           name="nickname"
           label="닉네임"
           type="text"
           placeholder="닉네임을 입력하세요"
-          className="w-full h-14"
+          className="w-full h-12"
         />
         <Button
           isDisabled={!isValid}

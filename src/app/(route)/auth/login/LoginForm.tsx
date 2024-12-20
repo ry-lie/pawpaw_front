@@ -6,6 +6,7 @@ import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Button from "@/app/components/Button";
+import { PATHS } from "@/app/constants/path";
 
 type LoginInputs = {
   email: string;
@@ -76,8 +77,8 @@ export default function LoginForm() {
         />
 
         <div className="flex justify-center gap-7 mt-10 pb-5 border-b border-medium_gray">
-          <Link href={'/auth/join'}>회원가입</Link>
-          <Link href={'/auth/find-password'}>비밀번호 찾기</Link>
+          <Link href={PATHS.JOIN}>회원가입</Link>
+          <Link href={PATHS.FIND_PASSWORD}>비밀번호 찾기</Link>
         </div>
 
         <button
