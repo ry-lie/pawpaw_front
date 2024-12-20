@@ -4,6 +4,8 @@ import Input from "@/app/components/Input";
 import React, { useState } from "react";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import Button from "@/app/components/Button";
+import Image from "next/image";
+import BasicProfile from "@/app/assets/icons/profile_icon.png"
 
 type JoinInputs = {
   email: string;
@@ -92,8 +94,8 @@ export default function JoinForm() {
 
         <div className="flex justify-center mb-4">
           <label htmlFor="profile-image-input" className="cursor-pointer">
-            <img
-              src={profileImage ? URL.createObjectURL(profileImage) : "/icons/profile_icon.png"}
+            <Image
+              src={profileImage ? URL.createObjectURL(profileImage) : BasicProfile}
               alt="프로필 이미지"
               className="rounded-full border-2 border-gray-300 w-24 h-24 object-cover"
             />

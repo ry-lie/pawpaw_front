@@ -1,5 +1,9 @@
 import Nav from "@/app/components/Nav/Nav";
 import Footer from "@/app/components/Footer";
+import HeartIcon from "./assets/icons/heart_icon.png";
+import FireIcon from "./assets/icons/fire_icon.png";
+import Image from "next/image";
+
 
 export default function Home() {
   return (
@@ -21,7 +25,13 @@ export default function Home() {
           {/* 인기글 섹션 */}
           <section className="w-full mb-7">
             <h2 className="text-lg font-bold mb-1 flex items-center">
-              <img src="/icons/heart_icon.png" alt="heart" className="h-6 w-6 mx-1 mb-1" />
+              <Image
+                src={HeartIcon}
+                alt="heart"
+                width={24}
+                height={24}
+                className="mx-1 mb-1"
+              />
               인기글
             </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
@@ -39,8 +49,14 @@ export default function Home() {
           {/* 최신글 섹션 */}
           <section className="w-full mb-20">
             <h2 className="text-lg font-bold mb-1 flex items-center">
-                <img src="/icons/fire_icon.png" alt="fire" className="h-6 w-6 mx-1 mb-1" />
-                최신글
+              <Image
+                src={FireIcon} // public 디렉토리 기준 경로
+                alt="fire"
+                width={24}
+                height={24}
+                className="mx-1 mb-1"
+              />
+              최신글
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
               {["어제 간 반려동물 핫플", "오늘 미용했어요", "오늘 병원 예약 있는 우리 주주...", "내일 갈 곳 추천"].map((item, index) => (

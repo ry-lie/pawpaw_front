@@ -1,5 +1,6 @@
 "use client"
 
+import Button from "@/app/components/Button";
 import Input from "@/app/components/Input"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form"
 
@@ -15,7 +16,7 @@ export default function FindPasswordForm() {
         },
     });
 
-    const { handleSubmit } = methods;
+    const { handleSubmit, formState: { isValid } } = methods;
     const onSubmit: SubmitHandler<FindPasswordInput> = (data) => {
         // fetch('/findpassword',{
         //     method:"POST",
@@ -28,23 +29,24 @@ export default function FindPasswordForm() {
     }
     return (
         <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <div className="font-bold mt-5">
-                    이메일
-                </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5">
+
                 <Input name="이메일"
+                    label="이메일"
                     type="email"
                     placeholder="abc@abc.com"
-                    className="w-96 mt-1"
+                    className="w-80 mt-2"
                     validate={(value: string) =>
                         value ? value.includes("@") ?
                             true : "유효한 이메일 주소를 입력하세요" : "이메일은 필수 입력 사항입니다."}
                 />
-                <button type="submit"
-                    className="w-full h-14 bg-primary text-white rounded-md hover:bg-hover font-bold text-xl mt-3">
-                    찾기
-                </button>
+                <Button
+                    isDisabled={!isValid}
+                    title="찾기"
+                    btnType="submit"
+                    containerStyles="h-10 w-80"
+                />
             </form>
-        </FormProvider>
+        </FormProvider> 
     )
 }

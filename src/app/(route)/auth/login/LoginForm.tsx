@@ -7,6 +7,9 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Button from "@/app/components/Button";
 import { PATHS } from "@/app/constants/path";
+import KakaoLoginButton from "@/app/assets/images/kakaoResource/kakao_login_large_wide.png";
+import Image from "next/image";
+
 
 type LoginInputs = {
   email: string;
@@ -85,7 +88,7 @@ export default function LoginForm() {
           type="button"
           onClick={handleKakaoLogin}
         >
-          <img src="/images/kakaoResource/kakao_login_large_wide.png" alt="카카오 로그인" className="mt-5" />
+          <Image src={KakaoLoginButton} alt="카카오 로그인" className="mt-5" />
         </button>
       </form>
     </FormProvider>

@@ -1,6 +1,9 @@
 import Nav from "@/app/components/Nav/Nav";
 import Footer from "@/app/components/Footer";
-import PetInfo from "./PetInfo";
+import PetInfo from "./petInfo";
+import BasicProfile from "@/app/assets/icons/profile_icon.png"
+import Image from "next/image";
+import PetLove from "@/app/assets/icons/petlove_icon.png"
 
 export default function MyPage() {
   return (
@@ -14,9 +17,9 @@ export default function MyPage() {
         <div className="items-center">
           {/* 1. 유저 정보 컨테이너 */}
           <section className="w-full max-w-mobile h-36 bg-white border border-stroke_gray rounded-lg p-4 flex gap-4 items-center mb-3">
-            
+  
             {/* (1) 유저 프로필 이미지 */}
-            <img src="/icons/profile_icon.png" alt="profile" className="w-24 h-24 bg-white rounded-full ml-3 mr-1" />
+            <Image src={BasicProfile} alt="profile" className="w-24 h-24 bg-white rounded-full ml-3 mr-1" />
             {/* (2) 유저 정보 */}
             <div className="flex flex-col flex-grow justify-between">
               <div className="flex items-center justify-start">
@@ -49,7 +52,7 @@ export default function MyPage() {
         {/* 반동소 컨테이너*/}
         <div className="flex items-center gap-1 justify-start ml-2">
           {/* 이미지 아이콘 */}
-          <img src="/icons/petlove_icon.png" alt="petLove" className="w-6 h-6" />
+          <Image src={PetLove} alt="petLove" className="w-6 h-6" />
           {/* 텍스트 */}
           <h2 className="text-lg font-bold text-gray-800">내 반려동물을 소개합니다</h2>
         </div>
