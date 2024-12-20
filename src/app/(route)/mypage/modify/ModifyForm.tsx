@@ -3,6 +3,9 @@
 import Input from "@/app/components/Input";
 import { useState } from "react"
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import ExitIcon from "@/app/assets/icons/exit.png"
+import Image from "next/image";
+
 
 type NicknameInput = {
     nickname: string;
@@ -63,7 +66,7 @@ export default function ModifyForm() {
                 {isModal && (
                     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-100">
                         <div className="bg-white p-5 rounded-md shadow-lg w-96 h-96">
-                            <img src="/icons/exit.png" alt="닫기버튼" className="h-8 w-8 flex justify-end ml-auto cursor-pointer" onClick={closeModal} />
+                            <Image src={ExitIcon} alt="닫기버튼" className="h-8 w-8 flex justify-end ml-auto cursor-pointer" onClick={closeModal} />
                             <div className="font-bold text-base">
                                 현재 비밀번호
                                 <Input

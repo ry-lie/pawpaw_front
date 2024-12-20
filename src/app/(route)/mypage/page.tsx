@@ -1,7 +1,8 @@
 import Nav from "@/app/components/Nav/Nav";
 import Footer from "@/app/components/Footer";
 import PetInfo from "./petInfo";
-
+import BasicProfile from "@/app/assets/icons/profile_icon.png"
+import Image from "next/image";
 export default function MyPage() {
   return (
     <div className="min-h-screen">
@@ -12,9 +13,9 @@ export default function MyPage() {
       <main className="flex flex-col items-center gap-8 mt-20">
         {/* 1. 유저 정보 컨테이너 */}
         <section className="w-[495px] h-[160px] bg-white border border-stroke_gray rounded-lg p-4 flex gap-4 items-center">
-          
+
           {/* (1) 유저 프로필 이미지 */}
-          <img src="/icons/profile_icon.png" alt="profile" className="w-[97px] h-[97px] bg-white rounded-full ml-3 mr-1" />
+          <Image src={BasicProfile} alt="profile" className="w-[97px] h-[97px] bg-white rounded-full ml-3 mr-1" />
           {/* (2) 유저 정보 */}
           <div className="flex flex-col flex-grow justify-between">
             <div className="flex items-center justify-start">

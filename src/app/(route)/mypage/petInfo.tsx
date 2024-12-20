@@ -2,6 +2,10 @@
 
 // components/PetInfo.tsx
 import { useState } from 'react';
+import CheckIcon from "@/app/assets/icons/check_icon.png"
+import EditIcon from "@/app/assets/icons/edit_icon.png"
+import BasicProfile from "@/app/assets/icons/profile_icon.png"
+import Image from 'next/image';
 
 export default function PetInfo() {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,8 +30,8 @@ export default function PetInfo() {
         onClick={isEditing ? handleSave : () => setIsEditing(true)}
         className="absolute top-4 right-4 w-8 h-8"
       >
-        <img
-          src={isEditing ? '/icons/check_icon.png' : '/icons/edit_icon.png'}
+        <Image
+          src={isEditing ? CheckIcon : EditIcon}
           alt={isEditing ? '수정 완료' : '수정'}
           className="w-full h-full"
         />
@@ -35,8 +39,8 @@ export default function PetInfo() {
 
       {/* 1. 프로필 섹션 */}
       <div className="flex justify-center mb-2">
-        <img
-          src="/icons/profile_icon.png"
+        <Image
+          src={BasicProfile}
           alt="pet"
           className="w-[180px] h-[180px] bg-white rounded-full"
         />
@@ -73,7 +77,7 @@ export default function PetInfo() {
             )}
           </div>
         </div>
-        
+
         {/* 성별 & 크기 */}
         <div>
           <div className='mb-2'>
@@ -112,16 +116,16 @@ export default function PetInfo() {
         </div>
 
         <div className='w-[256px]'>
-        {isEditing ? (
-          <textarea
-            value={pet.personality}
-            onChange={(e) => setPet({ ...pet, personality: e.target.value })}
-            className="border border-stroke_gray rounded px-1 w-64 h-16 resize-none overflow-auto"
-            maxLength={55}
-          />
-        ) : (
-          <span className="text-lg">{pet.personality}</span>
-        )}
+          {isEditing ? (
+            <textarea
+              value={pet.personality}
+              onChange={(e) => setPet({ ...pet, personality: e.target.value })}
+              className="border border-stroke_gray rounded px-1 w-64 h-16 resize-none overflow-auto"
+              maxLength={55}
+            />
+          ) : (
+            <span className="text-lg">{pet.personality}</span>
+          )}
         </div>
       </div>
 
