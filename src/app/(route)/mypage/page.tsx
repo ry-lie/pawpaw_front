@@ -1,6 +1,6 @@
 import Nav from "@/app/components/Nav/Nav";
 import Footer from "@/app/components/Footer";
-import PetInfo from "./petInfo";
+import PetInfo from "./PetInfo";
 import BasicProfile from "@/app/assets/icons/profile_icon.png"
 import Image from "next/image";
 import PetLove from "@/app/assets/icons/petlove_icon.png"

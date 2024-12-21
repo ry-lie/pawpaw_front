@@ -44,7 +44,7 @@ export default function Input({
           id={name}
           type={type}
           placeholder={placeholder}
-          className={`border border-stroke_gray p-2 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm ${className} `}
+          className={`border border-stroke_gray p-2 rounded-md shadow-sm focus:border-primary focus:ring-primary sm:text-sm ${className} `}
           {...register(name, { validate, required: `${label || name}는 필수 입력 항목입니다` })}
         />
       </div>
