@@ -1,36 +1,31 @@
-import React from "react";
-import { useFormContext } from "react-hook-form";
+'use client';
 
-interface InputProps {
+import React from "react";
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label?: string;
   type?: string;
   placeholder?: string;
   className?: string;
-  validate?: (value: string) => string | boolean;
   children?: React.ReactNode;
+  errorMessage?: string;
 }
 
-export default function Input({
+const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   name,
   label,
   type = "text",
   placeholder = "",
   className = "",
-  validate,
   children,
-}: InputProps) {
-  const {
-    register,
-    formState: { errors },
-  } = useFormContext();
-
-  const error = errors[name] as { message?: string };
-
+  errorMessage,
+  ...props
+}, ref) => {
   return (
     <div className="w-full">
       {label && (
-        <label htmlFor={name} className="block text-md font-bold text-gray-700">
+        <label className="block text-md font-bold text-gray-700">
           {label}
         </label>
       )}
@@ -41,14 +36,22 @@ export default function Input({
           </div>
         )}
         <input
+          ref={ref}
           id={name}
+          name={name}
           type={type}
           placeholder={placeholder}
-          className={`border border-stroke_gray p-2 rounded-md shadow-sm focus:border-primary focus:ring-primary sm:text-sm ${className} `}
-          {...register(name, { validate, required: `${label || name}는 필수 입력 항목입니다` })}
+          className={`border border-stroke_gray p-2 rounded-md shadow-sm focus:border-primary focus:ring-primary sm:text-sm ${className}`}
+          {...props}
         />
+        {errorMessage && (
+          <div>
+            <p className="mt-1 text-sm text-accent_orange">{errorMessage}</p>
+          </div>
+        )}
       </div>
-      {error && <p className="mt-1 text-sm text-accent_orange">{error.message}</p>}
     </div>
   );
-}
+});
+
+export default Input;
