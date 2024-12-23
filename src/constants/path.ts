@@ -11,6 +11,7 @@ export const PATHS = {
 
   MAP: "/map",
   WALKMATE: "/map/walkmate",
+  REVIEW_DETAIL: (id: string) => `/map/review/${id}`,
 
   COMMUNITY: "/community",
   COMMUNITY_DETAIL: (id: string) => `/community/${id}`,
