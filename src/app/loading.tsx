@@ -1,4 +1,4 @@
-import DogLogo from '@/app/assets/images/logo/logo_none_text.png'
+import DogLogo from '@/assets/images/logo/logo_none_text.png'
 import Image from 'next/image';
 export default function Loading() {
 
