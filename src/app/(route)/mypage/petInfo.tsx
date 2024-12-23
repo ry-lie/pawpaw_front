@@ -4,7 +4,9 @@
 import { useState } from 'react';
 import CheckIcon from "@/app/assets/icons/check_icon.png"
 import EditIcon from "@/app/assets/icons/edit_icon.png"
-import BasicProfile from "@/app/assets/icons/profile_icon.png"
+import WomanIcon from "@/app/assets/icons/woman_icon.png"
+import ManIcon from "@/app/assets/icons/man_icon.png"
+import PetProfile from "@/app/assets/icons/petProfile_icon.png"
 import Image from 'next/image';
 
 export default function PetInfo() {
@@ -12,7 +14,7 @@ export default function PetInfo() {
   // 반려동물 임시 정보
   const [pet, setPet] = useState({
     name: '댕댕이',
-    breed: '푸들', // 성별
+    breed: '여자', // 성별
     age: 3,
     size: '소형',
     personality: '귀엽고 씩씩하며 사람을 잘 따르는 편! 그치만 처음에는 친해지는 시간이 필요',
@@ -41,7 +43,7 @@ export default function PetInfo() {
         {/* 1. 프로필 섹션 */}
         <div className="flex justify-center mb-7">
         <Image
-            src={BasicProfile}
+            src={PetProfile}
             alt="pet"
             className="w-44 h-44 bg-white rounded-full"
           />
@@ -81,30 +83,89 @@ export default function PetInfo() {
           
           {/* 성별 & 크기 */}
           <div>
-            <div className='mb-2'>
+            {/* 성별 */}
+            <div className='mb-2 flex items-center gap-2'>
               <span className='text-base font-bold mr-2'>성별 </span>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={pet.breed}
-                  onChange={(e) => setPet({ ...pet, breed: e.target.value })}
-                  className="border border-stroke_gray rounded px-1 w-16"
-                />
+                {isEditing ? (
+                <div className="flex gap-1">
+                  {/* 여자 버튼 */}
+                  <button
+                    onClick={() => setPet({ ...pet, breed: '여자' })}
+                    className={`py-1 px-2 rounded-lg border ${
+                      pet.breed === '여자' ? 'bg-red-100' : 'bg-white'
+                    }`}
+                  >
+                    <Image
+                      src={WomanIcon}
+                      alt="womanIcon"
+                      className="w-5 h-5"
+                    />
+                  </button>
+                  {/* 남자 버튼 */}
+                  <button
+                    onClick={() => setPet({ ...pet, breed: '남자' })}
+                    className={`py-1 px-2 rounded-lg border ${
+                      pet.breed === '남자' ? 'bg-blue-100' : 'bg-white'
+                    }`}
+                  >
+                    <Image
+                      src={ManIcon}
+                      alt="manIcon"
+                      className="w-5 h-5"
+                    />
+                  </button>
+                </div>
               ) : (
-                <span className='text-base'>{pet.breed}</span>
+                // 수정 모드가 아니면 아이콘 렌더링
+                <div className="flex items-center gap-2">
+                  {pet.breed === '여자' ? (
+                    <Image
+                      src={WomanIcon}
+                      alt="womanIcon"
+                      className="w-5 h-5"
+                    />
+                  ) : (
+                    <Image
+                      src={ManIcon}
+                      alt="manIcon"
+                      className="w-5 h-5"
+                    />
+                  )}
+                </div>
               )}
             </div>
-            <div>
-              <span className='text-base font-bold mr-2'>크기 </span>
+            {/* 크기 */}
+            <div className='mb-2 flex items-center gap-2'>
+              <span className="text-base font-bold mr-2">크기</span>
               {isEditing ? (
-                <input
-                  type="text"
-                  value={pet.size}
-                  onChange={(e) => setPet({ ...pet, size: e.target.value })}
-                  className="border border-stroke_gray rounded px-1 w-16"
-                />
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => setPet({ ...pet, size: '소형' })}
+                    className={`py-1 px-2 text-base font-semibold rounded-lg border ${
+                      pet.size === '소형' ? 'bg-stroke_gray' : 'bg-white'
+                    }`}
+                  >
+                    소
+                  </button>
+                  <button
+                    onClick={() => setPet({ ...pet, size: '중형' })}
+                    className={`py-1 px-2 text-base font-semibold rounded-lg border ${
+                      pet.size === '중형' ? 'bg-stroke_gray' : 'bg-white'
+                    }`}
+                  >
+                    중
+                  </button>
+                  <button
+                    onClick={() => setPet({ ...pet, size: '대형' })}
+                    className={`py-1 px-2 text-base font-semibold rounded-lg border ${
+                      pet.size === '대형' ? 'bg-stroke_gray' : 'bg-white'
+                    }`}
+                  >
+                    대
+                  </button>
+                </div>
               ) : (
-                <span className='text-base'>{pet.size}</span>
+                <span className="text-base">{pet.size}</span>
               )}
             </div>
           </div>
