@@ -1,14 +1,13 @@
-import Nav from "@/app/components/Nav/Nav";
-import Footer from "@/app/components/Footer";
-import HeartIcon from "./assets/icons/heart_icon.png";
-import FireIcon from "./assets/icons/fire_icon.png";
+import Footer from "@/components/Footer";
+import HeartIcon from "../assets/icons/heart_icon.png";
+import FireIcon from "../assets/icons/fire_icon.png";
 import Image from "next/image";
 
-import PostCard, { PostCardProps } from '@/app/components/Main/PostCard';
-import HotDog1 from "@/app/assets/images/postCard/hot1.png";
-import HotDog2 from "@/app/assets/images/postCard/hot2.png";
+import PostCard, { PostCardProps } from '@/components/Main/PostCard';
+import HotDog1 from "@/assets/images/postCard/hot1.png";
+import HotDog2 from "@/assets/images/postCard/hot2.png";
 
-import Carousel from "@/app/components/Main/Carousel";
+import Carousel from "@/components/Main/Carousel";
 
 const posts: PostCardProps[] = [
   { category: '펫자랑', title: '우리 한식,두식,삼식이를 소개합니다.', imageUrl: HotDog1 },
@@ -26,8 +25,8 @@ export default function Home() {
 
       {/* 메인 컨테이너 */}
       <main className="mt-12 flex flex-col items-center gap-8">
-       
-      <Carousel />
+
+        <Carousel />
 
         {/* 1. 캐러셀 
         <section className="w-full h-[260px] bg-gray-200 overflow-hidden">
@@ -52,16 +51,16 @@ export default function Home() {
               />
               인기글
             </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 place-items-center">
-                  {posts.map((post, index) => (
-                  <PostCard
-                    key={index}
-                    category={post.category}
-                    title={post.title}
-                    imageUrl={post.imageUrl}
-                  />
-                ))}
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 place-items-center">
+              {posts.map((post, index) => (
+                <PostCard
+                  key={index}
+                  category={post.category}
+                  title={post.title}
+                  imageUrl={post.imageUrl}
+                />
+              ))}
+            </div>
           </section>
 
           {/* 최신글 섹션 */}

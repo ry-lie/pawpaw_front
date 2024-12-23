@@ -1,7 +1,8 @@
+import Modal from "@/components/Modal";
+import Nav from "@/components/Nav/Nav";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Modal from "./components/Modal";
-import Nav from "./components/Nav/Nav";
+
 import "./globals.css";
 import Loading from "./loading";
 
