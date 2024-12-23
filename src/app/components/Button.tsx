@@ -1,28 +1,35 @@
 "use client"
 
-import { MouseEventHandler } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 
 interface CustomButtonProps {
-  title: string;
+  children: ReactNode
   containerStyles?: string;
-  handleClick?: MouseEventHandler<HTMLButtonElement>;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   btnType?: "button" | "submit";
-  textStyles?: string;
   isDisabled?: boolean;
+  isLoading?: boolean;
 }
 export default function Button({
-  title,
+  children,
+  btnType,
+  onClick,
   containerStyles = "",
-  handleClick,
-  btnType = "button",
-  textStyles = "",
+  isDisabled,
+  isLoading,
+  ...props
 }: CustomButtonProps) {
   return (
     <button
       type={btnType || "button"}
-      className={`bg-primary hover:bg-hover transition-colors  text-white rounded-md font-bold text-xl ${containerStyles}`}
-      onClick={handleClick}>
-      <span className={`${textStyles}`}>{title}</span>
+      className={`bg-primary hover:bg-hover transition-colors text-white rounded-md font-bold text-xl 
+        ${isDisabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
+        ${containerStyles}`}
+      disabled={isDisabled || isLoading}
+      onClick={onClick}
+      {...props}
+    >
+      {isLoading ? 'Loading...' : children}
     </button>
   );
 }

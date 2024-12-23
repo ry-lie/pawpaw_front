@@ -26,7 +26,7 @@ export default function MyPage() {
         <div className="items-center">
           {/* 1. 유저 정보 컨테이너 */}
           <section className="w-full max-w-mobile h-36 bg-white border border-stroke_gray rounded-lg p-4 flex gap-4 items-center mb-3">
-  
+
             {/* (1) 유저 프로필 이미지 */}
             <Image src={BasicProfile} alt="profile" className="w-24 h-24 bg-white rounded-full ml-3 mr-1" />
             {/* (2) 유저 정보 */}
