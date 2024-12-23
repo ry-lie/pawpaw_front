@@ -11,7 +11,6 @@ export const metadata = {
 export default function MapPage() {
   return (
     <div>
-      <Nav />
       <LocationPage />
       <Footer />
     </div>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Modal from "./components/Modal";
+import Nav from "./components/Nav/Nav";
 import "./globals.css";
 import Loading from "./loading";
 
@@ -18,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Nav />
         <Suspense fallback={<Loading />}>
           <div className="flex flex-col w-full min-h-screen max-w-mobile bg-background border border-stroke_gray-600">
             {children}
