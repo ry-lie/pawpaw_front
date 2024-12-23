@@ -9,7 +9,6 @@ export const metadata = {
 export default function JoinPage() {
   return (
     <div className="flex items-center justify-center min-h-screen">
-      <Nav />
       <div className="w-full max-w-md p-9 mt-3">
         <h1 className="text-2xl font-bold text-center mb-4">회원가입</h1>
         <JoinForm />

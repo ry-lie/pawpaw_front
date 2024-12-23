@@ -115,7 +115,7 @@ export default function JoinForm() {
             <Button
               btnType="button"
               onClick={handleSendVerificationCode}
-              containerStyles="w-[50px] h-[30px] font-normal text-xs bg-alarm_orange text-primary"
+              containerStyles="w-[50px] h-[30px] font-normal text-xs !bg-alarm_orange !text-primary"
             >
               요청
             </Button>
@@ -176,7 +176,15 @@ export default function JoinForm() {
           required: "닉네임은 필수 입력 항목입니다.",
         })}
         errorMessage={errors.nickname?.message}
-      />
+      >
+        <Button
+          btnType="button"
+          onClick={handleEmailDuplicateCheck}
+          containerStyles="w-[70px] h-[30px] font-normal text-xs"
+        >
+          중복 확인
+        </Button>
+      </Input>
       <Button
         btnType="submit"
         containerStyles="w-full h-14"
