@@ -61,7 +61,7 @@ export default function ModifyForm() {
         <Button btnType="button" containerStyles="bg-stroke_gray w-20 h-10">
           취소
         </Button>
-        <Button btnType="submit" isDisabled={DisableBtn} containerStyles="w-20 h-10">
+        <Button btnType="submit" disabled={DisableBtn} containerStyles="w-20 h-10">
           확인
         </Button>
       </div>
