@@ -2,7 +2,7 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
+import { FormProvider, SubmitHandler, useForm, useWatch } from "react-hook-form";
 
 type FindPasswordInput = {
   email: string;
@@ -10,9 +10,10 @@ type FindPasswordInput = {
 
 export default function FindPasswordForm() {
   const {
-    watch,
+   
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<FindPasswordInput>({
     mode: "onChange",
@@ -27,10 +28,15 @@ export default function FindPasswordForm() {
     // });
     console.log(data);
   };
-  const email = watch("email");
+  
+  const email = useWatch({
+    control,
+    name:"email"
+
+  })
 
   const checkEmail = !email || Object.keys(errors).length > 0;
-  
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5">
       <Input

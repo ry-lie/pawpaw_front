@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Image from "next/image";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import Confirm_icon from "@/assets/icons/confirm_icon.png";
 
 export default function FindPasswordModal() {
@@ -12,7 +12,7 @@ export default function FindPasswordModal() {
   };
 
   const {
-    watch,
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -33,9 +33,18 @@ export default function FindPasswordModal() {
     console.log("data", payload);
   };
 
-  const password = watch("password");
-  const newPassword = watch("newPassword");
-  const confirmPassword = watch("confirmPassword");
+  const password = useWatch({
+    control,
+    name: "password"
+  })
+  const newPassword = useWatch({
+    control,
+    name: "newPassword"
+  })
+  const confirmPassword = useWatch({
+    control,
+    name: "confirmPassword"
+  })
 
   const isPasswordMatch =
     newPassword && confirmPassword && newPassword === confirmPassword;
@@ -109,7 +118,7 @@ export default function FindPasswordModal() {
           </Input>
         </div>
       </div>
-      
+
       <div className="flex justify-center items-center">
         <Button
           disabled={DisabledBtn}
