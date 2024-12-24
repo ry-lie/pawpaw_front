@@ -7,7 +7,7 @@ import PetLove from "@/assets/icons/petlove_icon.png"
 
 import React, { useState } from "react";
 import PlusButton from "@/components/PlusButton";
-import PetInfo from "./PetInfo"
+import PetInfo from "./petInfo";
 
 export default function MyPage() {
   const [petContainers, setPetContainers] = useState<number[]>([]);
