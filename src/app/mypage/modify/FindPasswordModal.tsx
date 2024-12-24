@@ -114,7 +114,7 @@ export default function FindPasswordModal() {
           </div>
           <div className="flex justify-center items-center">
             <Button
-              isDisabled={DisabledBtn}
+              disabled={DisabledBtn}
               btnType="submit"
               containerStyles="w-14 h-8 flex justify-center items-center mt-5"
             >

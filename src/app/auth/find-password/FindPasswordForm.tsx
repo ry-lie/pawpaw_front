@@ -29,7 +29,8 @@ export default function FindPasswordForm() {
   };
   const email = watch("email");
 
-  const checkEmail = !email || Object.keys(errors).length>0;
+  const checkEmail = !email || Object.keys(errors).length > 0;
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5">
       <Input
@@ -48,7 +49,7 @@ export default function FindPasswordForm() {
       />
       <Button
         btnType="submit"
-        isDisabled={checkEmail}
+        disabled={checkEmail}
         containerStyles="h-10 w-80"
       >
         찾기
