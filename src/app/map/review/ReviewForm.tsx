@@ -2,46 +2,44 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import axiosInstance from "@/lib/axios";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { RiThumbUpFill, RiThumbUpLine } from "react-icons/ri";
 
-interface ReviewProps {
-  title: string;
-  description: string;
-  isRecommended: boolean;
+interface ReviewFormProps {
+  initialValues?: { title: string; description: string; isRecommended: boolean }; // 수정 시 초기값
+  onSubmit: (data: { title: string; description: string; isRecommended: boolean }) => Promise<void>; // 작성/수정 핸들러
 }
 
-export default function ReviewWriteFormPage() {
+export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps) {
   const {
     register,
     handleSubmit,
     formState: { isValid },
-  } = useForm<Omit<ReviewProps, "isRecommended">>(); // 추천 여부는 별도로 관리
+    reset, // 폼 초기화를 위한 reset 함수
+  } = useForm({
+    defaultValues: initialValues || { title: "", description: "" }, // 초기값 설정
+  });
+
   const [isLoading, setIsLoading] = useState(false);
-  const [isRecommended, setIsRecommended] = useState<boolean>(false);
+  const [isRecommended, setIsRecommended] = useState(initialValues?.isRecommended || false); // 추천 여부 초기값
 
-  const onSubmit: SubmitHandler<Omit<ReviewProps, "isRecommended">> = async (data) => {
-    const { title, description } = data;
-    const payload: ReviewProps = { title, description, isRecommended };
-
-    console.log("서버로 전송할 데이터:", payload);
-
+  const handleFormSubmit: SubmitHandler<{ title: string; description: string }> = async (data) => {
     setIsLoading(true);
     try {
-      await axiosInstance.post("/api/reviews", payload);
-      alert("리뷰가 성공적으로 등록되었습니다!");
+      await onSubmit({ ...data, isRecommended });
+      alert("성공적으로 처리되었습니다!");
+      reset(); // 폼 초기화
     } catch (error) {
-      console.error("리뷰 등록 실패:", error);
-      alert("리뷰 등록에 실패했습니다.");
+      console.error("작업 실패:", error);
+      alert("작업에 실패했습니다.");
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <form className="my-4" onSubmit={handleSubmit(onSubmit)}>
+    <form className="my-4" onSubmit={handleSubmit(handleFormSubmit)}>
       <Input
         {...register("title", { required: "제목은 필수 입력 항목입니다." })}
         label="제목"
@@ -79,7 +77,7 @@ export default function ReviewWriteFormPage() {
           btnType="submit"
           containerStyles="text-[16px] font-medium ml-auto px-2 mt-2"
         >
-          작성
+          {initialValues ? "수정" : "작성"}
         </Button>
       </div>
     </form>
