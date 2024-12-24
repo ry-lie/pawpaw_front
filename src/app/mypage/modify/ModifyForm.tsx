@@ -34,16 +34,19 @@ export default function ModifyForm() {
     // });
     console.log("data", payload);
   };
+  const DisableBtn = !watch("nickname")||Object.keys(errors).length>0;
 
   return (
     <div className="flex flex-col justify-center items-center">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
+        닉네임
         <Input
           type="string"
           className="w-80 h-10"
           {...register("nickname", {
             required: "닉네임을 입력해주세요",
           })}
+          errorMessage={errors.nickname?.message}
         />
       </form>
       <div className="flex justify-start w-full mt-2">
@@ -55,10 +58,10 @@ export default function ModifyForm() {
         </div>
       </div>
       <div className="space-x-10 mt-10">
-        <Button btnType="submit" containerStyles="bg-stroke_gray w-20 h-10">
+        <Button btnType="button" containerStyles="bg-stroke_gray w-20 h-10">
           취소
         </Button>
-        <Button btnType="submit" containerStyles="w-20 h-10">
+        <Button btnType="submit" isDisabled={DisableBtn} containerStyles="w-20 h-10">
           확인
         </Button>
       </div>

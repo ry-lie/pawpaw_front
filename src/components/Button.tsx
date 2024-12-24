@@ -7,7 +7,7 @@ interface CustomButtonProps {
   containerStyles?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   btnType?: "button" | "submit";
-  isDisabled?: boolean;
+  disabled?: boolean;
   isLoading?: boolean;
 }
 export default function Button({
@@ -15,7 +15,7 @@ export default function Button({
   btnType,
   onClick,
   containerStyles = "",
-  isDisabled,
+  disabled,
   isLoading,
   ...props
 }: CustomButtonProps) {
@@ -23,13 +23,17 @@ export default function Button({
     <button
       type={btnType || "button"}
       className={`bg-primary hover:bg-hover transition-colors text-white rounded-md font-bold text-xl 
-        ${isDisabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
+        ${disabled || isLoading ? 'opacity-50 cursor-not-allowed' : ''} 
         ${containerStyles}`}
-      disabled={isDisabled || isLoading}
+      disabled={disabled || isLoading}
       onClick={onClick}
       {...props}
     >
-      {isLoading ? 'Loading...' : children}
+      {isLoading ? (
+        <span className="inline-block border-2 border-transparent border-t-white rounded-full w-4 h-4 animate-spin"></span>
+      ) : (
+        children
+      )}
     </button>
   );
 }

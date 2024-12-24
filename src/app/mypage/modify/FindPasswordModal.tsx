@@ -40,7 +40,7 @@ export default function FindPasswordModal() {
   const isPasswordMatch =
     newPassword && confirmPassword && newPassword === confirmPassword;
 
-  const DisabledBtn = !password || !newPassword || !confirmPassword;
+  const DisabledBtn = !password || !newPassword || !confirmPassword || Object.keys(errors).length>0;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -48,6 +48,7 @@ export default function FindPasswordModal() {
         <div className="p-3">
           <div className="font-bold text-base">
             현재 비밀번호
+            <div className="flex items-center">
             <Input
               id="password"
               type="password"
@@ -69,6 +70,7 @@ export default function FindPasswordModal() {
                 인증
               </Button>
             </Input>
+          </div>
           </div>
           <div className="font-bold text-base mt-3">
             새 비밀번호

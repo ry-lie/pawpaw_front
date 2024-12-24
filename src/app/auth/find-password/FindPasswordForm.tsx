@@ -29,7 +29,7 @@ export default function FindPasswordForm() {
   };
   const email = watch("email");
 
-  const checkEmail = !email;
+  const checkEmail = !email || Object.keys(errors).length>0;
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5">
       <Input

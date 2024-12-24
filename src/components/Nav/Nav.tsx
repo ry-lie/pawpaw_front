@@ -3,21 +3,15 @@
 import { PATHS } from "@/constants/path";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
 export default function Nav() {
   const pathname = usePathname();
-  const [shouldRenderNav, setShouldRenderNav] = useState(true);
-
-  useEffect(() => {
-    setShouldRenderNav(!NONE_NAV_PAGE_LIST.includes(pathname));
-  }, [pathname]);
-
-  if (!shouldRenderNav) {
+  if (NONE_NAV_PAGE_LIST.includes(pathname)) {
     return null;
   }
+
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-l border-r border-stroke_gray-600 px-6 py-4 max-w-mobile w-full mx-auto h-12">
