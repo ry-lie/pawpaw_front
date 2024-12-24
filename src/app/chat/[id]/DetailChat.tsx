@@ -103,10 +103,11 @@ export default function ChatRoomPage() {
             {chatLog.map((message, index) => (
               <li
                 key={index}
-                className={`m-2 p-3 ${message.sender === nickname
+                className={`m-2 p-3 ${
+                  message.sender === nickname
                     ? "ml-auto bg-primary"
                     : "mr-auto bg-stroke_gray"
-                  } rounded-lg max-w-[60%]`}
+                } rounded-lg max-w-[60%]`}
               >
                 <div className="flex justify-between mb-1">
                   <span className="font-bold text-sm">{message.sender}</span>
@@ -120,11 +121,12 @@ export default function ChatRoomPage() {
           </ul>
           <form onSubmit={submitMessage} className="w-full flex gap-2 mt-2">
             <Input
-              name="chat"
+              id="chatWrite"
               type="text"
               ref={chatRef}
               placeholder="메세지를 입력하세요"
               className="w-full"
+              name="chatWrite"
             />
             <Button btnType="submit" containerStyles="h-10 w-14">
               전송
