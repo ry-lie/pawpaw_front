@@ -8,6 +8,16 @@ import HotDog1 from "@/assets/images/postCard/hot1.png";
 import HotDog2 from "@/assets/images/postCard/hot2.png";
 
 import Carousel from "@/components/Main/Carousel";
+import Carousel1 from "@/assets/images/carousel/carousel1.png";
+import Carousel2 from "@/assets/images/carousel/carousel2.png";
+import Carousel3 from "@/assets/images/carousel/carousel3.png";
+
+const carouselData = [
+  { id: 1, imgUrl: Carousel1, text: "반려동물과\n함께하는 일상" },
+  { id: 2, imgUrl: Carousel2, text: "반려동물과\n어디든지 함께해요" },
+  { id: 3, imgUrl: Carousel3, text: "포포에서 만나는\n산책메이트" },
+];
+
 
 const posts: PostCardProps[] = [
   { category: '펫자랑', title: '우리 한식,두식,삼식이를 소개합니다.', imageUrl: HotDog1 },
@@ -26,7 +36,7 @@ export default function Home() {
       {/* 메인 컨테이너 */}
       <main className="mt-12 flex flex-col items-center gap-8">
 
-        <Carousel />
+        <Carousel carouselData={carouselData} />
 
         {/* 1. 캐러셀 
         <section className="w-full h-[260px] bg-gray-200 overflow-hidden">
