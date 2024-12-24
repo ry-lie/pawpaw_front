@@ -1,3 +1,4 @@
+import QueryProvider from "./QueryProvider";
 import Modal from "@/components/Modal";
 import Nav from "@/components/Nav/Nav";
 import type { Metadata } from "next";
@@ -5,7 +6,6 @@ import { Suspense } from "react";
 
 import "./globals.css";
 import Loading from "./loading";
-
 
 export const metadata: Metadata = {
   title: "포포(pawpaw) - 네 발 달린 친구들(4paws)과 행복한 추억 만들기를 위한 커뮤니티",
@@ -20,13 +20,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Nav />
-        <Suspense fallback={<Loading />}>
-          <div className="flex flex-col w-full min-h-screen max-w-mobile bg-background border border-stroke_gray-600">
-            {children}
-            <Modal />
-          </div>
-        </Suspense>
+        <QueryProvider>
+          <Nav />
+          <Suspense fallback={<Loading />}>
+            <div className="flex flex-col w-full min-h-screen max-w-mobile bg-background border border-stroke_gray-600">
+              {children}
+              <Modal />
+            </div>
+          </Suspense>
+        </QueryProvider>
       </body>
     </html>
   );

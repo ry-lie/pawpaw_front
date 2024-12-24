@@ -1,8 +1,8 @@
 "use client";
 
 import Input from "@/components/Input";
-import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import React, { useState } from "react";
+import { useForm, SubmitHandler, useFormState } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Button from "@/components/Button";
@@ -18,14 +18,31 @@ type LoginInputs = {
 export default function LoginForm() {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginInputs>({
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<LoginInputs> = data => {
-    console.log(data);
+  const { isValid } = useFormState({ control });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+    const { email, password } = data;
+    const payload = { email, password };
+
+    console.log("서버로 전송할 데이터:", payload);
+
+    setIsLoading(true);
+    try {
+      // 로그인 로직 작성 예정
+      console.log("로그인 성공");
+    } catch (error) {
+      console.error("로그인 실패:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
   const handleKakaoLogin = async () => {
     try {
@@ -43,12 +60,11 @@ export default function LoginForm() {
         placeholder="이메일"
         className="w-full h-14"
         {...register("email", {
-          validate: (value: string) =>
-            value
-              ? value.includes("@")
-                ? true
-                : "유효한 이메일 주소를 입력하세요"
-              : "이메일은 필수 입력 항목입니다",
+          required: "이메일은 필수 입력 항목입니다.",
+          pattern: {
+            value: /\S+@\S+\.\S+/,
+            message: "유효한 이메일 주소를 입력하세요",
+          },
         })}
         errorMessage={errors.email?.message}
       />
@@ -58,17 +74,17 @@ export default function LoginForm() {
         placeholder="비밀번호를 입력하세요"
         className="w-full h-14"
         {...register("password", {
-          validate: (value: string) => {
-            if (!value) return "비밀번호는 필수 입력 항목입니다";
-            if (!/^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/.test(value)) {
-              return "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.";
-            }
-            return true;
-          }
+          required: "비밀번호는 필수 입력 항목입니다.",
+          pattern: {
+            value: /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
+            message: "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+          },
         })}
         errorMessage={errors.password?.message}
       />
       <Button
+        disabled={!isValid || isLoading}
+        isLoading={isLoading}
         btnType="submit"
         containerStyles="w-full h-14"
       >
