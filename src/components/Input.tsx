@@ -44,6 +44,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(({
           className={`border border-stroke_gray p-2 rounded-md shadow-sm focus:border-primary focus:ring-primary sm:text-sm ${className}`}
           {...props}
         />
+
+      </div>
+      <div>
         {errorMessage && (
           <div>
             <p className="mt-1 text-sm text-accent_orange">{errorMessage}</p>

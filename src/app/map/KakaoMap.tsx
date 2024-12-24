@@ -8,11 +8,6 @@ import FootPrint from "@/assets/icons/footprint.png";
 import { useModalStore } from "@/stores/modalStore";
 import PlaceDetail from "./PlaceDetail";
 
-declare global {
-  interface Window {
-    kakao: any;
-  }
-}
 interface location {
   longitude: number;
   latitude: number
