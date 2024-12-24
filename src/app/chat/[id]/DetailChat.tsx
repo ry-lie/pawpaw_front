@@ -20,46 +20,20 @@ export default function ChatRoomPage() {
   const [nickname, setNickname] = useState("");
   const [isNicknameSet, setIsNicknameSet] = useState(false);
 
-  // 시간 형식 정리 함수
-  const Time = (timeString: string): string => {
-    const date = new Date(timeString); // timestamp를 Date 객체로 변환
-    const options: Intl.DateTimeFormatOptions = {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    return date.toLocaleString("ko-KR", options);
-  };
-
-  // 메시지 전송
-  const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (chatRef.current?.value && nickname) {
-      const currentTime = new Date().toISOString(); // ISO 형식으로 현재 시간 저장
-      const newMessage: chatMessagetype = {
-        message: chatRef.current.value,
-        sender: nickname,
-        timestamp: currentTime,
-      };
-      chatSocket.emit("message", newMessage);
-      setChatLog((prev) => [...prev, newMessage]); // 추가한 메시지를 로컬 상태에 저장
-      chatRef.current.value = ""; // 입력 필드 초기화
-    }
-  };
-
-  // 메시지 받기
-  const getMessage = (data: chatMessagetype) => {
-    setChatLog((prev) => {
-      // 동일한 메시지가 연속해서 들어오는 것을 방지합니다
-      if (prev.length > 0 && prev[prev.length - 1].message === data.message) {
-        return prev; // 같은 메시지가 들어오면 추가하지 않음
-      }
-      return [...prev, data];
-    });
-  };
-
-  // 메시지 주고받기
+  //닉네임 설정
   useEffect(() => {
+    const inputNickname = prompt("닉네임을 입력하세요");
+    if (inputNickname) {
+      setNickname(inputNickname);
+    }
+  }, []);
+
+  //메세지 주고 받기
+  useEffect(() => {
+    const getMessage = (data: chatMessagetype) => {
+      setChatLog((prev) => [...prev, data]); 
+    };
+
     chatSocket.on("message", getMessage);
     return () => {
       chatSocket.off("message", getMessage);
@@ -73,45 +47,57 @@ export default function ChatRoomPage() {
     }
   }, [chatLog]);
 
-  // 닉네임 입력받기
-  const submitNickname = () => {
-    const inputNickname = prompt("닉네임을 입력하세요");
-    if (inputNickname) {
-      setNickname(inputNickname);
-      setIsNicknameSet(true);
-    } else {
-      alert("닉네임을 입력하지 않았습니다.");
+
+  // 메시지 전송
+  const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (chatRef.current?.value && nickname) {
+      const currentTime = new Date().toISOString();
+      const newMessage: chatMessagetype = {
+        message: chatRef.current.value,
+        sender: nickname,
+        timestamp: currentTime,
+      };
+      chatSocket.emit("message", newMessage); // 서버로 메시지 전송
+      chatRef.current.value = ""; // 입력 필드 초기화
     }
   };
-
-  // 컴포넌트가 처음 렌더링될 때 닉네임 입력 요청
-  useEffect(() => {
-    if (!isNicknameSet) {
-      submitNickname();
-    }
-  }, [isNicknameSet]);
+  if (!nickname) {
+    return null;
+  }
+  // 시간 형식 정리 함수
+  const sendTime = (timeString: string): string => {
+    const date = new Date(timeString); // timestamp를 Date 객체로 변환
+    const options: Intl.DateTimeFormatOptions = {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    };
+    return date.toLocaleString("ko-KR", options);
+  };
 
   return (
     <div className="flex flex-col h-screen justify-end items-center">
-      <Nav />
-      {isNicknameSet ? (
-        <div className="w-full">
+      <div className="w-full">
+      <Nav/>
+      </div>
+        <div className="w-full mt-12">
           <ul
             ref={chatScroll}
-            className="w-full flex flex-col overflow-y-auto mt-12 border-t-4"
+            className="w-full flex overflow-y-auto mt-12 border-t-4 h-screen flex-col"
           >
             {chatLog.map((message, index) => (
               <li
                 key={index}
                 className={`m-2 p-3 ${message.sender === nickname
-                    ? "ml-auto bg-primary"
-                    : "mr-auto bg-stroke_gray"
+                  ? "ml-auto bg-primary"
+                  : "mr-auto bg-stroke_gray"
                   } rounded-lg max-w-[60%]`}
               >
                 <div className="flex justify-between mb-1">
                   <span className="font-bold text-sm">{message.sender}</span>
                   <span className="text-gray-500 text-xs">
-                    {Time(message.timestamp)}
+                    {sendTime(message.timestamp)}
                   </span>
                 </div>
                 <div className="text-sm">{message.message}</div>
@@ -120,18 +106,19 @@ export default function ChatRoomPage() {
           </ul>
           <form onSubmit={submitMessage} className="w-full flex gap-2 mt-2">
             <Input
-              name="chat"
+              id="chatWrite"
               type="text"
               ref={chatRef}
               placeholder="메세지를 입력하세요"
               className="w-full"
+              name="chatWrite"
             />
             <Button btnType="submit" containerStyles="h-10 w-14">
               전송
             </Button>
           </form>
         </div>
-      ) : null}
+  
     </div>
   );
 }
