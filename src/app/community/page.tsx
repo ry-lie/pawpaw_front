@@ -55,6 +55,22 @@ export default function CommunityPage() {
       isLike: false,
       imageList: [],
     },
+    {
+      id: 5,
+      category: "고민 상담",
+      title: "평택 싸나이를 소개합니다.",
+      content: "저의 애착 인형입니다.",
+      isLike: false,
+      imageList: [],
+    },
+    {
+      id: 6,
+      category: "고민 상담",
+      title: "평택 싸나이를 소개합니다.",
+      content: "저의 애착 인형입니다.",
+      isLike: false,
+      imageList: [],
+    },
   ];
 
   // 카테고리별 게시글 필터링
