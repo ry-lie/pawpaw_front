@@ -2,6 +2,7 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import Nav from "@/components/Nav/Nav";
+import { NowDate } from "@/utils/NowTime";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -65,27 +66,14 @@ export default function ChatRoomPage() {
   if (!nickname) {
     return null;
   }
-  // 시간 형식 정리 함수
-  const sendTime = (timeString: string): string => {
-    const date = new Date(timeString); // timestamp를 Date 객체로 변환
-    const options: Intl.DateTimeFormatOptions = {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    };
-    return date.toLocaleString("ko-KR", options);
-  };
 
   return (
-    <div className="flex flex-col h-screen justify-end items-center">
-      <div className="w-full">
-      <Nav/>
-      </div>
-        <div className="w-full mt-12">
-          <ul
-            ref={chatScroll}
-            className="w-full flex overflow-y-auto mt-12 border-t-4 h-screen flex-col"
-          >
+    <div className="flex flex-col h-screen">
+      <div className="w-full flex-1 flex flex-col justify-end">  
+        <ul
+          ref={chatScroll}
+          className="flex flex-col overflow-y-auto border-t-4 pt-12 h-full"
+        >
             {chatLog.map((message, index) => (
               <li
                 key={index}
@@ -97,7 +85,7 @@ export default function ChatRoomPage() {
                 <div className="flex justify-between mb-1">
                   <span className="font-bold text-sm">{message.sender}</span>
                   <span className="text-gray-500 text-xs">
-                    {sendTime(message.timestamp)}
+                    {NowDate(message.timestamp)}
                   </span>
                 </div>
                 <div className="text-sm">{message.message}</div>

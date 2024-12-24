@@ -20,14 +20,14 @@ export default function MyPage() {
     <div className="min-h-screen">
 
       {/* 메인 컨테이너 */}
-      <main className="relative flex flex-col gap-1 pt-16 pb-8 px-14">
+      <main className="relative flex flex-col gap-1 pt-16 pb-8 px-4">
 
         <div className="items-center">
           {/* 1. 유저 정보 컨테이너 */}
           <section className="w-full max-w-mobile h-36 bg-white border border-stroke_gray rounded-lg p-4 flex gap-4 items-center mb-3">
 
             {/* (1) 유저 프로필 이미지 */}
-            <Image src={BasicProfile} alt="profile" className="w-24 h-24 bg-white rounded-full ml-3 mr-1" />
+            <Image src={BasicProfile} alt="profile" className="w-20 h-20 bg-white rounded-full ml-3 mr-1" />
             {/* (2) 유저 정보 */}
             <div className="flex flex-col flex-grow justify-between">
               <div className="flex items-center justify-start">
@@ -37,7 +37,7 @@ export default function MyPage() {
               <button className="text-sm text-blue-500 underline flex justify-start mb-1">내 정보 수정</button>
 
               <div className="flex justify-start items-center">
-                <div className="flex gap-4">
+                <div className="flex">
                   <span className="text-sm text-gray-600">내가 쓴 글</span>
                   <span className="text-sm text-gray-600">|</span>
                   <span className="text-sm text-gray-600">내가 쓴 댓글</span>
