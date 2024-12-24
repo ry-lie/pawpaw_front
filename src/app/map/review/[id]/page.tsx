@@ -1,4 +1,3 @@
-"use client";
 
 import BasicProfileIcon from "@/assets/icons/profile_icon.png";
 import { RiThumbUpLine, RiThumbUpFill, RiDeleteBinLine } from "react-icons/ri";
@@ -7,10 +6,13 @@ import axiosInstance from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Footer from "@/components/Footer";
+import ReviewDeleteButton from "./ReviewDeleteButton";
+import Link from "next/link";
 
 
 
 interface ReviewProps {
+  id: string;
   writer: string;
   title: string;
   description: string;
@@ -32,6 +34,7 @@ export default function ReviewDetail({ params }: { params: { id: string } }) {
   // });
 
   const review = {
+    id: 1,
     profile: BasicProfileIcon,
     writer: "리온이 누나",
     createdDate: "2023-12-12",
@@ -55,8 +58,10 @@ export default function ReviewDetail({ params }: { params: { id: string } }) {
           <div>
             {/**본인이면 뜨도록 수정 */}
             <div className="flex gap-3 justify-center">
-              <FaEdit className="text-gray-400 w-5 h-5" />
-              <RiDeleteBinLine className="text-gray-400 w-5 h-5" />
+              <Link href={`/map/review/write/${review.id}`}>
+                <FaEdit className="text-gray-400 w-5 h-5" />
+              </Link>
+              <ReviewDeleteButton reviewId={id} />
             </div>
             <div className="text-gray-500 text-sm">{review?.createdDate}</div>
           </div>
