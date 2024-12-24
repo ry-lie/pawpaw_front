@@ -48,8 +48,8 @@ const Carousel = ({ carouselData, height = "h-64", imageClassName, containerClas
             <Image
               src={item.imgUrl}
               alt="Carousel Image"
-              className={`cover ${imageClassName}`}
               fill
+              className={`${imageClassName || "object-cover"} max-h-full max-w-full`}
             />
             <div className="absolute inset-0 flex top-[20%] left-[10%] text-black text-3xl font-medium whitespace-pre-line">
               {item.text}
