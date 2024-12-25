@@ -242,21 +242,21 @@ export default function MapClient({ latitude, longitude }: MapClientProps) {
   const [radius, setRadius] = useState(250); // 기본 반경 250m
   const [category, setCategory] = useState("동물약국"); // 기본 카테고리
 
-  useEffect(() => {
-    // 반경과 카테고리에 따라 서버에서 장소 데이터를 가져옴
-    async function fetchPlaces() {
-      try {
-        const response = await fetch(
-          `/api/places?radius=${radius}&category=${encodeURIComponent(category)}&latitude=${latitude}&longitude=${longitude}`
-        );
-        const data = await response.json();
-        setPlaces(data);
-      } catch (error) {
-        console.error("Failed to fetch places:", error);
-      }
-    }
-    fetchPlaces();
-  }, [radius, category, latitude, longitude]);
+  // useEffect(() => {
+  //   // 반경과 카테고리에 따라 서버에서 장소 데이터를 가져옴
+  //   async function fetchPlaces() {
+  //     try {
+  //       const response = await fetch(
+  //         `/api/places?radius=${radius}&category=${encodeURIComponent(category)}&latitude=${latitude}&longitude=${longitude}`
+  //       );
+  //       const data = await response.json();
+  //       setPlaces(data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch places:", error);
+  //     }
+  //   }
+  //   fetchPlaces();
+  // }, [radius, category, latitude, longitude]);
 
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
@@ -267,25 +267,49 @@ export default function MapClient({ latitude, longitude }: MapClientProps) {
       };
 
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
+      // 카테고리에 따른 마커 이미지 매핑
+      const markerImages: Record<string, string> = {
+        "동물약국": "/images/mapMaker/animal_pharmacy.png",
+        "미술관": "/images/mapMaker/art_gallery.png",
+        "카페": "/images/mapMaker/cafe.png",
+        "동물병원": "/images/mapMaker/animal_hospital.png",
+        "반려동물용품": "/images/mapMaker/pet_supplies.png",
+        "미용": "/images/mapMaker/beauty.png",
+        "문예회관": "/images/mapMaker/cultural_center.png",
+        "펜션": "/images/mapMaker/pension.png",
+        "식당": "/images/mapMaker/restaurant.png",
+        "여행지": "/images/mapMaker/travel_destination.png",
+        "위탁관리": "/images/mapMaker/management.png",
+        "박물관": "/images/mapMaker/museum.png",
+        "호텔": "/images/mapMaker/hotel.png",
+      };
 
       // 마커 생성
+
       data.forEach((place) => {
+        console.log("Marker Image Path:", markerImages[place.category]);
         const markerPosition = new window.kakao.maps.LatLng(place.latitude, place.longitude);
+
+        const markerImage = new window.kakao.maps.MarkerImage(
+          markerImages[place.category], // 카테고리에 맞는 이미지 URL
+          new window.kakao.maps.Size(50, 68), // 마커 크기 설정
+          { offset: new window.kakao.maps.Point(16, 32) } // 중심점 설정
+        );
 
         const marker = new window.kakao.maps.Marker({
           position: markerPosition,
+          image: markerImage,
         });
 
         marker.setMap(map);
 
         // 마커 클릭 이벤트
-        window.kakao.maps.event.addListener(marker, "click", async () => {
-          openModal(<PlaceDetail placeId={place.id} />)
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          openModal(<PlaceDetail placeId={place.id} />);
         });
       });
     });
   };
-
   return (
     <>
       {/* 반경 및 카테고리 선택 */}

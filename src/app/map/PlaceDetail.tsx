@@ -36,6 +36,7 @@ export interface PlaceProps {
 export interface ReviewProps {
   id: number;
   writer: string;
+  title: string
   content: string;
   date: string;
   isRecommanded: boolean;
@@ -106,17 +107,26 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
 
       {/* 리뷰 섹션 */}
       <div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 mb-2">
           <h2 className="text-lg font-bold">리뷰</h2>
           <Link href={PATHS.REVIEW_WRITE("1")}><Image src={PlusIcon} alt="리뷰추가" width={20} height={20} onClick={closeModal} /></Link>
         </div>
-        {placeDetails.reviews && placeDetails.reviews.length > 0 ? (
-          placeDetails.reviews.map((review: ReviewProps) => (
-            <Review key={review.id} review={review} />
-          ))
-        ) : (
-          <p className="text-gray-500">등록된 리뷰가 없습니다.</p>
-        )}
+        <div className="flex flex-col gap-2">
+          {placeDetails.reviews && placeDetails.reviews.length > 0 ? (
+            placeDetails.reviews.map((review: ReviewProps) => (
+              <Link
+                key={review.id}
+                href={PATHS.REVIEW_DETAIL(placeId, review.id)}
+                onClick={() => closeModal()}
+              >
+                <Review key={review.id} review={review} />
+              </Link>
+            ))
+          ) : (
+            <p className="text-gray-500">등록된 리뷰가 없습니다.</p>
+          )}
+        </div>
+
       </div>
     </div>
   );

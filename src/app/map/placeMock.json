@@ -21,13 +21,23 @@
       {
         "id": 1,
         "writer": "깡깡이",
-        "content": "의사쌤이 엄청 친절하시고 시설 굳",
+        "title": "대박 추천 병원",
+        "content": "의사쌤이 엄청 친절하시고 시설 굳의사쌤이 엄청 친절하시고 시설 굳의사쌤이 엄청 친절하시고 시설 굳 ",
         "date": "2023-12-24",
         "isRecommanded": true
       },
       {
         "id": 2,
-        "writer": "리온",
+        "writer": "평택평택싸나이",
+        "title": "대박 추천 병원",
+        "content": "강아지가 편하게 진료를 받았어요!",
+        "date": "2023-12-23",
+        "isRecommanded": false
+      },
+      {
+        "id": 2,
+        "writer": "슬픔이피디",
+        "title": "대박 추천 병원",
         "content": "강아지가 편하게 진료를 받았어요!",
         "date": "2023-12-23",
         "isRecommanded": false
@@ -35,13 +45,7 @@
       {
         "id": 2,
         "writer": "리온",
-        "content": "강아지가 편하게 진료를 받았어요!",
-        "date": "2023-12-23",
-        "isRecommanded": false
-      },
-      {
-        "id": 2,
-        "writer": "리온",
+        "title": "대박 추천 병원",
         "content": "강아지가 편하게 진료를 받았어요!",
         "date": "2023-12-23",
         "isRecommanded": false
