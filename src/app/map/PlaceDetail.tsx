@@ -1,5 +1,4 @@
-import { use } from "react";
-import mockData from "./placeMock.json";
+import placeMock from "./placeMock.json";
 import Image from "next/image";
 import LocationIcon from "@/assets/icons/place/place_location.png";
 import TimeIcon from "@/assets/icons/place/place_time.png";
@@ -7,45 +6,57 @@ import PhoneIcon from "@/assets/icons/place/place_phone.png";
 import CarIcon from "@/assets/icons/place/place_parking.png";
 import PriceIcon from "@/assets/icons/place/place_price.png";
 import InfoIcon from "@/assets/icons/place/place_info.png";
+import PlusIcon from "@/assets/icons/plus_icon.png";
+
+import { PATHS } from "@/constants/path";
+import Link from "next/link";
+import { useModalStore } from "@/stores/modalStore";
+import Review from "./place/[placeId]/review/Review";
 export interface PlaceProps {
   id: number; // Primary Key
   name: string; // 시설명
   category: string; // 카테고리3
-  postalCode: string; // 우편번호
+  postalCode: string | number; // 우편번호
   roadNameAddress: string; // 도로명주소
   postalAddress: string; // 지번주소
   contact: string; // 전화번호
   closingDays: string; // 휴무일
   openingHour: string; // 운영시간
   hasParkingArea: boolean; // 주차 가능 여부
-  price: string; // 입장(이용료)가격 정보
+  //price: string; // 입장(이용료)가격 정보
   allowSize: string; // 입장 가능 동물 크기
   restrictions: string; // 반려동물 제한사항
   description: string; // 기본 정보_장소설명
   additionalFees: string; // 애견 동반 추가 요금
   latitude: number; // 위도
   longitude: number; // 경도
-  lastUpdate: Date; // 최종작성일
+  lastUpdate: string; // 최종작성일
+  reviews?: ReviewProps[]; // 리뷰 배열 추가
 }
-
+export interface ReviewProps {
+  id: number;
+  writer: string;
+  content: string;
+  date: string;
+  isRecommanded: boolean;
+}
 async function fetchPlaceDetails(placeId: string) {
   // 장소 설명 받아오는 부분 추가 예정
 }
 
+{/**장소 상세 모달 */ }
 export default function PlaceDetail({ placeId }: { placeId: number }) {
-  // const placeDetails = use(fetchPlaceDetails(placeId));
+  const { closeModal } = useModalStore();
+  // const placeDetails = fetchPlaceDetails(placeId);
   // ID에 해당하는 데이터를 검색
-  const placeDetails = mockData.find(
-    (place) => place.id === placeId // placeId를 숫자로 변환하여 비교
-  );
+  const placeDetails = placeMock.find((place) => place.id === placeId) as PlaceProps | undefined;
 
-  // 데이터가 없을 경우 처리
   if (!placeDetails) {
     return <div>해당 장소를 찾을 수 없습니다.</div>;
   }
 
   return (
-    <div className="max-h-[500px] overflow-y-auto p-2">
+    <div className="max-h-[600px] overflow-y-auto p-2">
       <h2 className="text-lg font-bold mb-4">{placeDetails.name}</h2>
       <div className="flex flex-col gap-1">
         <p className="flex">
@@ -92,16 +103,20 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
       </div>
 
       <hr className="my-4" />
-      <div>
-        <h2 className="text-lg font-bold mb-4">리뷰</h2>
-        <div>리뷰목록</div>
-        <div>리뷰목록</div>
-        <div>리뷰목록</div>
-        <div>리뷰목록</div>
-        <div>리뷰목록</div>
-        <div>리뷰목록</div>
-        <div>리뷰목록</div>
 
+      {/* 리뷰 섹션 */}
+      <div>
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg font-bold">리뷰</h2>
+          <Link href={PATHS.REVIEW_WRITE("1")}><Image src={PlusIcon} alt="리뷰추가" width={20} height={20} onClick={closeModal} /></Link>
+        </div>
+        {placeDetails.reviews && placeDetails.reviews.length > 0 ? (
+          placeDetails.reviews.map((review: ReviewProps) => (
+            <Review key={review.id} review={review} />
+          ))
+        ) : (
+          <p className="text-gray-500">등록된 리뷰가 없습니다.</p>
+        )}
       </div>
     </div>
   );

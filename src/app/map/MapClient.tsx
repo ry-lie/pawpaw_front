@@ -1,4 +1,19 @@
-[
+"use client";
+
+import { useEffect, useState } from "react";
+import { useModalStore } from "@/stores/modalStore";
+import Script from "next/script";
+import Image from "next/image";
+import FootPrint from "@/assets/icons/footprint.png";
+import Link from "next/link";
+import { PATHS } from "@/constants/path";
+import PlaceDetail, { PlaceProps } from "./PlaceDetail";
+
+interface MapClientProps {
+  latitude: number;
+  longitude: number;
+}
+const data = [
   {
     "id": 1,
     "name": "1004 약국",
@@ -220,3 +235,112 @@
     "hasParkingArea": false
   }
 ]
+{/**지도페이지 상태, 이벤트 처리 담당 컴포넌트 */ }
+export default function MapClient({ latitude, longitude }: MapClientProps) {
+  const { openModal } = useModalStore();
+  const [places, setPlaces] = useState<PlaceProps[]>([]);
+  const [radius, setRadius] = useState(250); // 기본 반경 250m
+  const [category, setCategory] = useState("동물약국"); // 기본 카테고리
+
+  useEffect(() => {
+    // 반경과 카테고리에 따라 서버에서 장소 데이터를 가져옴
+    async function fetchPlaces() {
+      try {
+        const response = await fetch(
+          `/api/places?radius=${radius}&category=${encodeURIComponent(category)}&latitude=${latitude}&longitude=${longitude}`
+        );
+        const data = await response.json();
+        setPlaces(data);
+      } catch (error) {
+        console.error("Failed to fetch places:", error);
+      }
+    }
+    fetchPlaces();
+  }, [radius, category, latitude, longitude]);
+
+  const loadKakaoMap = () => {
+    window.kakao.maps.load(() => {
+      const mapContainer = document.getElementById("map");
+      const mapOption = {
+        center: new window.kakao.maps.LatLng(latitude, longitude),
+        level: 3,
+      };
+
+      const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+      // 마커 생성
+      data.forEach((place) => {
+        const markerPosition = new window.kakao.maps.LatLng(place.latitude, place.longitude);
+
+        const marker = new window.kakao.maps.Marker({
+          position: markerPosition,
+        });
+
+        marker.setMap(map);
+
+        // 마커 클릭 이벤트
+        window.kakao.maps.event.addListener(marker, "click", async () => {
+          openModal(<PlaceDetail placeId={place.id} />)
+        });
+      });
+    });
+  };
+
+  return (
+    <>
+      {/* 반경 및 카테고리 선택 */}
+      <div className="flex w-full h-12 mt-12 px-2 text-xs justify-between">
+        <div className="flex">
+          <div className="px-1">
+            <label htmlFor="radius">반경</label>
+            <select
+              id="radius"
+              value={radius}
+              onChange={(e) => setRadius(Number(e.target.value))}
+              className="border border-gray-300 rounded-md p-1"
+            >
+              <option value={250}>250m</option>
+              <option value={500}>500m</option>
+              <option value={1000}>1000m</option>
+            </select>
+          </div>
+          <div>
+            <label htmlFor="category">카테고리</label>
+            <select
+              id="category"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="border border-gray-300 rounded-md p-1"
+            >
+              <option value="동물약국">동물약국</option>
+              <option value="미술관">미술관</option>
+              <option value="카페">카페</option>
+              <option value="동물병원">동물병원</option>
+              <option value="반려동물용품">반려동물용품</option>
+              <option value="미용">미용</option>
+              <option value="문예회관">문예회관</option>
+              <option value="펜션">펜션</option>
+              <option value="식당">식당</option>
+              <option value="여행지">여행지</option>
+              <option value="위탁관리">위탁관리</option>
+              <option value="박물관">박물관</option>
+              <option value="호텔">호텔</option>
+            </select>
+          </div>
+        </div>
+        <div className="flex items-center bg-primary hover:bg-hover text-white rounded-md h-fit p-1 gap-1">
+          <Image src={FootPrint} alt="발자국" width={16} height={16} />
+          <Link href={PATHS.WALKMATE}>산책메이트</Link>
+        </div>
+      </div>
+
+      <Script
+        strategy="afterInteractive"
+        type="text/javascript"
+        src={`//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_CLIENT}&autoload=false`}
+        onReady={loadKakaoMap}
+      />
+      <div id="map" className="w-full h-screen"></div>
+    </>
+  );
+}

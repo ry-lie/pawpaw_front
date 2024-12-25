@@ -8,6 +8,7 @@ import Image from "next/image";
 import Footer from "@/components/Footer";
 import ReviewDeleteButton from "./ReviewDeleteButton";
 import Link from "next/link";
+import { PATHS } from "@/constants/path";
 
 
 
@@ -58,7 +59,7 @@ export default function ReviewDetail({ params }: { params: { id: string } }) {
           <div>
             {/**본인이면 뜨도록 수정 */}
             <div className="flex gap-3 justify-center">
-              <Link href={`/map/review/write/${review.id}`}>
+              <Link href={PATHS.REVIEW_MODIFY("1", "1")}>
                 <FaEdit className="text-gray-400 w-5 h-5" />
               </Link>
               <ReviewDeleteButton reviewId={id} />

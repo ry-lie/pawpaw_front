@@ -1,4 +1,4 @@
-import ReviewDeleteButton from "@/app/map/review/[id]/ReviewDeleteButton";
+import ReviewDeleteButton from "@/app/map/place/[placeId]/review/[reviewId]/ReviewDeleteButton";
 import BasicProfileIcon from "@/assets/icons/profile_icon.png";
 import Button from "@/components/Button";
 import Footer from '@/components/Footer'
