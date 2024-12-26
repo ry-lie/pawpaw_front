@@ -5,22 +5,35 @@ import Image from "next/image";
 import WomanIcon from "@/assets/icons/woman_icon.png";
 import ManIcon from "@/assets/icons/man_icon.png";
 import CheckIcon from "@/assets/icons/check_icon.png";
+import TrashIcon from "@/assets/icons/trash_icon.png";
 import PetProfile from "@/assets/icons/petProfile_icon.png";
 
-export default function EditingPetInfo({
-  pet,
-  onSave,
-}: {
-  pet: any;
-  onSave: (updatedPet: any) => void;
-}) {
-  const [updatedPet, setUpdatedPet] = useState({ ...pet }); // pet을 복사하여 초기값 설정
+export default function AddPetInfo({
+    pet,
+    onSave,
+    onDelete,
+  }: {
+    pet: any;
+    onSave: (updatedPet: any) => void;
+    onDelete: () => void;
+  }) {
+    
+    const [newPet, setNewPet] = useState({ ...pet });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setNewPet({ ...newPet, [name]: value });
+    };
 
   return (
-    <section className="relative w-full max-w-mobile h-auto bg-white border border-stroke_gray rounded-lg p-10 flex flex-col gap-4">
+    <section className="relative w-full max-w-mobile h-auto bg-white border border-stroke_gray rounded-lg p-10 flex flex-col gap-4 mb-5">
       {/* 저장 버튼 */}
-      <button onClick={() => onSave(updatedPet)} className="absolute top-4 right-4 w-8 h-8">
-        <Image src={CheckIcon} alt="저장 완료" className="w-full h-full" />
+      <button onClick={() => onSave(newPet)} className="absolute top-4 right-16 mt-1 w-7 h-7">
+        <Image src={CheckIcon} alt="저장" className="w-full h-full" />
+      </button>
+      {/* 삭제 버튼 */}
+      <button onClick={onDelete} className="absolute top-4 right-5 w-8 h-8">
+        <Image src={TrashIcon} alt="삭제" className="w-full h-full" />
       </button>
 
       <div className="w-full">
@@ -41,8 +54,9 @@ export default function EditingPetInfo({
               <span className="text-base font-bold mr-2">이름 </span>
               <input
                 type="text"
-                value={updatedPet.name}
-                onChange={(e) => setUpdatedPet({ ...updatedPet, name: e.target.value })}
+                name="name"
+                value={newPet.name}
+                onChange={handleChange}
                 className="border border-stroke_gray rounded px-1 w-16"
               />
             </div>
@@ -50,10 +64,9 @@ export default function EditingPetInfo({
               <span className="text-base font-bold mr-2">나이 </span>
               <input
                 type="number"
-                value={updatedPet.age}
-                onChange={(e) =>
-                  setUpdatedPet({ ...updatedPet, age: parseInt(e.target.value) || 0 })
-                }
+                name="age"
+                value={newPet.age}
+                onChange={handleChange}
                 className="border border-stroke_gray rounded px-1 w-16"
               />
             </div>
@@ -67,18 +80,18 @@ export default function EditingPetInfo({
               <div className="flex gap-1">
                 {/* 여자 버튼 */}
                 <button
-                  onClick={() => setUpdatedPet({ ...updatedPet, breed: "여자" })}
+                  onClick={() => setNewPet({ ...newPet, gender: "여자" })}
                   className={`py-1 px-2 rounded-lg border ${
-                    updatedPet.breed === "여자" ? "bg-red-100" : "bg-white"
+                    newPet.gender === "여자" ? "bg-red-100" : "bg-white"
                   }`}
                 >
                   <Image src={WomanIcon} alt="womanIcon" className="w-5 h-5" />
                 </button>
                 {/* 남자 버튼 */}
                 <button
-                  onClick={() => setUpdatedPet({ ...updatedPet, breed: "남자" })}
+                  onClick={() => setNewPet({ ...newPet, gender: "남자" })}
                   className={`py-1 px-2 rounded-lg border ${
-                    updatedPet.breed === "남자" ? "bg-blue-100" : "bg-white"
+                    newPet.gender === "남자" ? "bg-blue-100" : "bg-white"
                   }`}
                 >
                   <Image src={ManIcon} alt="manIcon" className="w-5 h-5" />
@@ -90,25 +103,25 @@ export default function EditingPetInfo({
               <span className="text-base font-bold mr-2">크기</span>
               <div className="flex gap-1">
                 <button
-                  onClick={() => setUpdatedPet({ ...updatedPet, size: "소형" })}
+                  onClick={() => setNewPet({ ...newPet, size: "소형" })}
                   className={`py-1 px-2 text-base font-semibold rounded-lg border ${
-                    updatedPet.size === "소형" ? "bg-stroke_gray" : "bg-white"
+                    newPet.size === "소형" ? "bg-stroke_gray" : "bg-white"
                   }`}
                 >
                   소
                 </button>
                 <button
-                  onClick={() => setUpdatedPet({ ...updatedPet, size: "중형" })}
+                  onClick={() => setNewPet({ ...newPet, size: "중형" })}
                   className={`py-1 px-2 text-base font-semibold rounded-lg border ${
-                    updatedPet.size === "중형" ? "bg-stroke_gray" : "bg-white"
+                    newPet.size === "중형" ? "bg-stroke_gray" : "bg-white"
                   }`}
                 >
                   중
                 </button>
                 <button
-                  onClick={() => setUpdatedPet({ ...updatedPet, size: "대형" })}
+                  onClick={() => setNewPet({ ...newPet, size: "대형" })}
                   className={`py-1 px-2 text-base font-semibold rounded-lg border ${
-                    updatedPet.size === "대형" ? "bg-stroke_gray" : "bg-white"
+                    newPet.size === "대형" ? "bg-stroke_gray" : "bg-white"
                   }`}
                 >
                   대
@@ -125,10 +138,9 @@ export default function EditingPetInfo({
           </div>
           <div className="w-60">
             <textarea
-              value={updatedPet.personality}
-              onChange={(e) =>
-                setUpdatedPet({ ...updatedPet, personality: e.target.value })
-              }
+              name="description"
+              value={newPet.description}
+              onChange={handleChange}
               className="border border-stroke_gray rounded px-1 w-64 h-16 resize-none overflow-auto"
               maxLength={55}
             />

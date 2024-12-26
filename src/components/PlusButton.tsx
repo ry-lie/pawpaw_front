@@ -15,7 +15,7 @@ export default function PlusButton({ onClick, href }: PlusButtonProps) {
     return (
       <Link href={href}>
         <button
-          className="fixed bottom-14 right-[430px] p-4"
+          className="fixed bottom-14 right-3 p-4"
         >
           <div className="shadow-md rounded-full">
             <Image
@@ -33,7 +33,7 @@ export default function PlusButton({ onClick, href }: PlusButtonProps) {
   return (
     <button
       onClick={onClick}
-      className="absolute bottom-14 right-[430px] p-4"
+      className="absolute bottom-14 right-0 p-4"
       aria-label="Add Button" // 접근성을 위해 추가
     >
       <div className="shadow-md rounded-full">

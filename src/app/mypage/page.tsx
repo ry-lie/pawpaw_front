@@ -10,33 +10,77 @@ import { PATHS } from "@/constants/path";
 import React, { useState } from "react";
 import PlusButton from "@/components/PlusButton";
 import PetInfo from "./petInfo";
-import EditingPetInfo from "./editingPetInfo";
+import AddPetInfo from "./addPetInfo";
 
 export default function MyPage() {
-  const [petContainers, setPetContainers] = useState<number[]>([]); // 여러 반려동물 컨테이너 (확장 가능)
-  const [isEditing, setIsEditing] = useState(false); // 현재 편집 모드 여부
-  const [pet, setPet] = useState({
-    name: "댕댕이",
-    breed: "여자",
-    age: 3,
-    size: "소형",
-    personality: "귀엽고 씩씩하며 사람을 잘 따르는 편! 그치만 처음에는 친해지는 시간이 필요",
-  });
 
+  // 임시 펫 정보
+  const [petContainers, setPetContainers] = useState<
+    { id: number; pet: any; isEditing: boolean }[]
+  >([
+    {
+      id: Date.now(),
+      pet: {
+        name: "댕댕이",
+        age: 3,
+        description: "귀엽고 씩씩하며 사람을 잘 따르는 편! 그치만 처음에는 친해지는 시간이 필요",
+        gender: "여자",
+        size: "소형",
+        image: "",
+        imageUrl: "",
+      },
+      isEditing: false,
+    },
+  ]);
+
+  // 새 컨테이너 추가
   const handleAddContainer = () => {
-    setPetContainers([...petContainers, Date.now()]);
+    const newContainer = {
+      id: Date.now(),
+      pet: {
+        name: "",
+        age: 0,
+        description: "",
+        gender: "",
+        size: "",
+        image: "",
+        imageUrl: "",
+      },
+      isEditing: true,
+    };
+    setPetContainers([...petContainers, newContainer]);
   };
 
-  const handleSave = (updatedPet: any) => {
-    setPet(updatedPet);
-    setIsEditing(false);
+  // 저장 (새 컨테이너에 작성한 것 or 기존거 수정한 것)
+  const handleSave = (id: number, updatedPet: any) => {
+    setPetContainers((prev) =>
+      prev.map((container) =>
+        container.id === id
+          ? { ...container, pet: updatedPet, isEditing: false }
+          : container
+      )
+    );
+  };
+
+  // 삭제
+  const handleDelete = (id: number) => {
+    setPetContainers((prev) => prev.filter((container) => container.id !== id));
+  };
+
+  // 수정 모드 활성화
+  const handleEdit = (id: number) => {
+    setPetContainers((prev) =>
+      prev.map((container) =>
+        container.id === id ? { ...container, isEditing: true } : container
+      )
+    );
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
 
       {/* 메인 컨테이너 */}
-      <main className="relative flex flex-col gap-1 pt-16 pb-8 px-14">
+      <main className="flex flex-col gap-1 pt-16 pb-8 px-16">
 
         <div className="items-center">
           {/* 1. 유저 정보 컨테이너 */}
@@ -91,10 +135,22 @@ export default function MyPage() {
           <h2 className="text-lg font-bold text-gray-800">내 반려동물을 소개합니다</h2>
         </div>
         <div className="items-center">
-          {isEditing ? (
-            <EditingPetInfo pet={pet} onSave={handleSave} />
-          ) : (
-            <PetInfo pet={pet} onEdit={() => setIsEditing(true)} />
+          {petContainers.map(({ id, pet, isEditing }) =>
+            isEditing ? (
+              <AddPetInfo
+                key={id}
+                pet={pet}
+                onSave={(updatedPet) => handleSave(id, updatedPet)}
+                onDelete={() => handleDelete(id)} // 삭제 콜백
+              />
+            ) : (
+              <PetInfo 
+                key={id} 
+                pet={pet} 
+                onEdit={() => handleEdit(id)}
+                onDelete={() => handleDelete(id)} 
+              />
+            )
           )}
         </div>
       </main>
@@ -103,7 +159,9 @@ export default function MyPage() {
       <PlusButton onClick={handleAddContainer} />
 
       {/* Footer 카테고리 독바 */}
-      <Footer />
+      <div className="mt-16">
+        <Footer />
+      </div>
     </div>
   )
 }
