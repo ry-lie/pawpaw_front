@@ -73,10 +73,11 @@ export default function FindPasswordModal() {
           >
             <Button
               btnType="submit"
-              containerStyles="w-12 h-8 mr-10 flex justify-center items-center text-primary border-solid border-primary border bg-transparent hover:text-white"
+              containerStyles="w-12 h-8 mr-10 flex justify-center items-center !text-primary border-solid border-primary border bg-transparent hover:bg-primary hover:!text-white"
             >
               인증
             </Button>
+           
           </Input>
 
           <Input
