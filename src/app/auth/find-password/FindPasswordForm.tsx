@@ -2,7 +2,6 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { CheckVerificationCode, SendVerificationCode, TemporaryPassword } from "@/lib/api";
 import { useForm, useWatch } from "react-hook-form";
 import { useFindPassword } from "./useFindPassword";
 
