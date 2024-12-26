@@ -70,3 +70,12 @@ export const verifyCode = async (email: string, verificationCode: string) => {
   );
   return response;
 };
+
+//임시 비밀번호 발급
+export const temporaryPassword = async (email: string) => {
+  const response = await axiosInstance.post(
+    `/auth/send-temporary-password-email`,
+    { email },
+  );
+  return response;
+};
