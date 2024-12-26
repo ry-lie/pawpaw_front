@@ -2,6 +2,7 @@
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import axios from "axios";
 import { FormProvider, SubmitHandler, useForm, useWatch } from "react-hook-form";
 
 type FindPasswordInput = {
@@ -19,14 +20,19 @@ export default function FindPasswordForm() {
   } = useForm<FindPasswordInput>({
     mode: "onChange",
   });
-  const onSubmit: SubmitHandler<FindPasswordInput> = (data) => {
-    // fetch('/findpassword',{
-    //     method:"POST",
-    //     headers:{
-    //         "Content-Type" : "application/json",
-    //     },
-    //     body:JSON.stringify(data)
-    // });
+  const onSubmit: SubmitHandler<FindPasswordInput> = async(data) => {
+  //  try{
+  //   const res = await axios.post('/findpassword', data, {
+  //     headers:{
+  //       "Contend-Type" : "application/json",
+  //     },
+  //   });
+  //   console.log('res',res.data)
+
+  //  }
+  //  catch(e){
+  //   console.error('Error:',e)
+  //  }
     console.log(data);
   };
 

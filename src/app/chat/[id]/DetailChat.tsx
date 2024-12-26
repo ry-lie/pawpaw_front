@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { BUILD_ID_FILE } from "next/dist/shared/lib/constants";
 import Link from "next/link";
+import axios from "axios";
 
 const chatSocket: Socket = io("ws://localhost:5000");
 
@@ -36,16 +37,26 @@ export default function ChatRoomPage() {
   const chatScroll = useRef<HTMLUListElement>(null);
   const [currentMessage, setCurrentMessage] = useState("");
 
-  //마지막 메세지 업데이트하기
+  //상대방과의 로그 기록하기
+  // useEffect(()=>{
+  //   const saveLog = async()=>{
+  //     try{
+  //       const res = await axios.get(`/chat/log/${chatId}`);
+  //       setChatLog(res.data);
+  //     }
+  //     catch(e){
+  //       console.error('메세지를 가져오는데 실패하였습니다.', e)
+  //     }
+  //   }
+  // })
+
+  //마지막 메세지 업데이트하기(채팅로비에서 보여줄 마지막 업데이트)
   const updateLastMessage = (message: string) => {
     const chatRooms = JSON.parse(localStorage.getItem("chatRooms") || "[]");
-
     const roomId = [sender, receiver].sort().join("-");
-
     const existingRoom = chatRooms.find(
       (room: ChatRoom) => room.id === roomId
     );
-
     if (existingRoom) {
       existingRoom.lastMessage = message;
     } else {
@@ -163,7 +174,7 @@ export default function ChatRoomPage() {
           className="w-full border border-gray-300 rounded-md p-2"
           name="chatWrite"
         />
-        <Button btnType="submit" containerStyles="bg-transparent hover:bg-gray-100 p-2">
+        <Button btnType="submit" containerStyles="bg-transparent hover:bg-transparent p-2">
           <Image
             src={currentMessage.trim() ? Message_send : Message_notsend}
             alt="send icon"

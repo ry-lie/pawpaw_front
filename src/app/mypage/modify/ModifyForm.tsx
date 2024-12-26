@@ -5,6 +5,8 @@ import Input from "@/components/Input";
 import { useModalStore } from "@/stores/modalStore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FindPasswordModal from "./FindPasswordModal";
+import Link from "next/link";
+import axios from "axios";
 
 type NicknameInput = {
   nickname: string;
@@ -22,17 +24,21 @@ export default function ModifyForm() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<NicknameInput> = (data) => {
-    const { nickname } = data;
-    const payload = { nickname };
-    // fetch('/nickname',{
-    //     method:"POST",
+  const onSubmit: SubmitHandler<NicknameInput> = async(data) => {
+    // try{
+    //   const res = await axios.post('/nickname', data,{
     //     headers:{
-    //         "Content-Type" : "application/json",
+    //       "Content-Type" : "application/json",
     //     },
-    //     body:JSON.stringify(data)
-    // });
-    console.log("data", payload);
+    //   });
+    //   console.log('res', res.data)
+    // }
+    // catch(e){
+    //   console.error('Error:', e)
+    // }
+    //const { nickname } = data;
+    //const payload = { nickname };
+    console.log("data");
   };
   const DisableBtn = !watch("nickname")||Object.keys(errors).length>0;
 
@@ -47,7 +53,11 @@ export default function ModifyForm() {
             required: "닉네임을 입력해주세요",
           })}
           errorMessage={errors.nickname?.message}
-        />
+        >
+          <Button containerStyles="!text-base font-normal border bg-transparent !text-primary border-solid border-primary hover:!text-white">
+            중복확인
+          </Button>
+        </Input>
       </form>
       <div className="flex justify-start w-full mt-2">
         <div
@@ -59,7 +69,9 @@ export default function ModifyForm() {
       </div>
       <div className="space-x-10 mt-10">
         <Button btnType="button" containerStyles="bg-stroke_gray w-20 h-10">
+          <Link href={'/mypage'}>
           취소
+          </Link>
         </Button>
         <Button btnType="submit" disabled={DisableBtn} containerStyles="w-20 h-10">
           확인
