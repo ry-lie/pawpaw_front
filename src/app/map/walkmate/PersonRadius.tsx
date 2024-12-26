@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client"
 
-const socket = io("http://localhost:5000");
+//const socket = io("http://localhost:5000");
 
 interface User {
 
@@ -20,6 +20,8 @@ export default function PersonRadius() {
     //    const [UsersId, setUsersId] = useState(new Set());
     const [radius, setRadius] = useState(250);
 
+    const currentNickname = "빠알간두볼";
+
     const allUser: User[] = [
         { id: "1", nickname: "빠알간두볼", radius: 180 },
         { id: "2", nickname: "김먹방못해요", radius: 570 },
@@ -28,7 +30,7 @@ export default function PersonRadius() {
     ]
 
     const findUserByRadius = () => {
-        const filterUser = allUser.filter(user => user.radius <= radius);
+        const filterUser = allUser.filter((user) => user.radius <= radius);
         setFindUsers(filterUser);
     };
 
@@ -68,9 +70,11 @@ export default function PersonRadius() {
     return (
         <div>
             <div className="mt-12 flex ml-5 items-center text-xs">
+
                 <label>
                     반경
                 </label>
+
                 <select className="border border-medium_gray rounded-md p-1 ml-1"
                     onChange={handleRadiusChange}
                     value={radius}
@@ -84,11 +88,15 @@ export default function PersonRadius() {
                     btnType="submit"
                     containerStyles="text-xs h-7 w-8 ml-1"
                     onClick={findUserByRadius}
-                >찾기</Button>
+                >
+                    찾기
+                    </Button>
+
             </div>
+
             <div>
                 <div className="font-bold p-2">
-                    {findUsers[0]?.nickname} 님의 반경{radius}m
+                    {currentNickname} 님의 반경{radius}m
                 </div>
                 <ul className="">
                     {findUsers.map((user) => (
@@ -98,7 +106,13 @@ export default function PersonRadius() {
                             </div>
                             <div className="flex  items-center">
                                 <Button containerStyles=" w-20 h-10 !text-base flex items-center justify-center">
-                                    <Link href={`/chat/${user.id}`}>
+                                    <Link href={{pathname : `/chat/${user.id}`,
+                                query : {
+                                    sender : currentNickname,
+                                    receiver : user.nickname,
+                                },
+                                }}
+                                >
                                         연락하기
                                     </Link>
                                 </Button>
