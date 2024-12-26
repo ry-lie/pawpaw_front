@@ -71,13 +71,13 @@ export default function LoginForm() {
 
       <Input
         type="password"
-        placeholder="비밀번호를 입력하세요"
+        placeholder="비밀번호"
         className="w-full h-14"
         {...register("password", {
           required: "비밀번호는 필수 입력 항목입니다.",
           pattern: {
-            value: /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
-            message: "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
+            message: "대/소문자, 숫자, 특수문자 포함 최소 8자리 이상입니다."
           },
         })}
         errorMessage={errors.password?.message}
