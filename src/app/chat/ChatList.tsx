@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import NewMessage from "@/assets/icons/newMessage_icon.png";
 import Image from "next/image";
 import { io } from "socket.io-client";
-import { RoomList } from "@/lib/api";
+import { roomList } from "@/lib/api";
 
 type LastMessageType = {
     text: string;
@@ -35,8 +35,8 @@ export default function ChatList() {
     useEffect(() => {
         const loadRoomList = async () => {
             try {
-                const roomList = await RoomList();
-                const filterList: ConversationType[] = roomList.map((room: { roomId: string; userList: { id: string }[] }) =>
+                const roomListCheck = await roomList();
+                const filterList: ConversationType[] = roomListCheck.map((room: { roomId: string; userList: { id: string }[] }) =>
                 ({
                     id: room.roomId,
                     participants: room.userList.map(user => user.id),
