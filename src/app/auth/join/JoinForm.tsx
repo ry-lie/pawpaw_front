@@ -61,8 +61,13 @@ export default function JoinForm() {
     }
   };
   const onSubmit: SubmitHandler<JoinInputs> = async (data) => {
-    const { email, password, name, nickname } = data;
-    const payload = { email, password, name, nickname, profileImage };
+    const payload: RegisterPayload = {
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      nickname: data.nickname,
+      profileImage,
+    };
     setIsLoading(true);
     try {
       const response = await registerAPI(payload);

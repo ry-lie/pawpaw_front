@@ -11,10 +11,23 @@ export interface RegisterPayload {
 }
 // 회원가입
 export const registerAPI = async (payload: RegisterPayload) => {
+  const formData = new FormData();
+  formData.append("email", payload.email);
+  formData.append("password", payload.password);
+  formData.append("name", payload.name);
+  formData.append("nickname", payload.nickname);
+  formData.append("profileImage", payload.profileImage);
+
   const response = await axiosInstance.post(
     `${API_BASE_URL}/auth/register`,
-    payload,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
   );
+
   return response.data;
 };
 
