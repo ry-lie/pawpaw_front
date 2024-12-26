@@ -1,7 +1,6 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import Nav from "@/components/Nav/Nav";
 import { NowDate } from "@/utils/NowTime";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
@@ -9,11 +8,11 @@ import Message_notsend from "@/assets/icons/message_notsend.png";
 import Message_send from "@/assets/icons/message_send.png";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { BUILD_ID_FILE } from "next/dist/shared/lib/constants";
 import Link from "next/link";
-import axios from "axios";
+import { ReadChatLog } from "@/lib/api";
 
-const chatSocket: Socket = io("ws://localhost:5000");
+const socket_url = process.env.SOKECT_URL
+const chatSocket: Socket = io(`ws://${socket_url}`);
 
 type chatMessagetype = {
   message: string;
@@ -22,68 +21,47 @@ type chatMessagetype = {
   timestamp: string; // 현재 시간을 저장하기 위한 속성 추가
 };
 
-type ChatRoom = {
-  id: string;
-  participant: string[];
-  lastMessage: string;
-}
 
 export default function ChatRoomPage() {
   const searchParams = useSearchParams();
   const sender = searchParams.get("sender") || "자기자신";
   const receiver = searchParams.get("receiver") || "상태방";
-
+  const roomId = "room1"; //하드코딩한 상태임
   const [chatLog, setChatLog] = useState<chatMessagetype[]>([]);
   const chatScroll = useRef<HTMLUListElement>(null);
   const [currentMessage, setCurrentMessage] = useState("");
 
-  //상대방과의 로그 기록하기
-  // useEffect(()=>{
-  //   const saveLog = async()=>{
-  //     try{
-  //       const res = await axios.get(`/chat/log/${chatId}`);
-  //       setChatLog(res.data);
-  //     }
-  //     catch(e){
-  //       console.error('메세지를 가져오는데 실패하였습니다.', e)
-  //     }
-  //   }
-  // })
 
-  //마지막 메세지 업데이트하기(채팅로비에서 보여줄 마지막 업데이트)
-  const updateLastMessage = (message: string) => {
-    const chatRooms = JSON.parse(localStorage.getItem("chatRooms") || "[]");
-    const roomId = [sender, receiver].sort().join("-");
-    const existingRoom = chatRooms.find(
-      (room: ChatRoom) => room.id === roomId
-    );
-    if (existingRoom) {
-      existingRoom.lastMessage = message;
-    } else {
-      chatRooms.push({
-        id: roomId,
-        participants: [sender, receiver],
-        lastMessage: message,
-      });
-    }
-
-    // 업데이트된 방 목록을 localStorage에 저장
-    localStorage.setItem("chatRooms", JSON.stringify(chatRooms));
-  };
-
-  //메세지 주고 받기
   useEffect(() => {
-    const getMessage = (data: chatMessagetype) => {
-      if (data.receiver === sender) {
-        setChatLog((prev) => [...prev, data]);
+    //이전 채팅 로그 가져오기
+    const LoadChatLog = async (roomId: string) => {
+      try {
+        await ReadChatLog(roomId);
+      } catch (e) {
+        console.error("채팅 로그를 가져오는데 실패하였습니다.", e)
       }
-    };
+    }
+    LoadChatLog(roomId);
 
-    chatSocket.on("message", getMessage);
+    //상대방이 들어왔을때 확인
+    chatSocket.on("join", (data: { body: { message: string } }) => {
+      if (data.body.message.includes(receiver)) {
+        console.log(data.body.message);
+      }
+    });
+
+    //메세지 수신
+    chatSocket.on("receive-message", (data: chatMessagetype) => {
+      setChatLog((prev) => [...prev, data]);
+    });
+
+    //완료되면 소켓 해제
     return () => {
-      chatSocket.off("message", getMessage);
-    };
-  }, [sender]);
+      chatSocket.off("join");
+      chatSocket.off("receive-message");
+    }
+  }, [])
+  //useEffect여기까지 받음
 
   // 메시지가 쌓일 때마다 스크롤 자동으로 이동
   useEffect(() => {
@@ -91,7 +69,6 @@ export default function ChatRoomPage() {
       chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
     }
   }, [chatLog]);
-
 
   // 메시지 전송
   const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -105,16 +82,14 @@ export default function ChatRoomPage() {
         timestamp: currentTime,
       };
 
-      chatSocket.emit("message", newMessage);
+      //서버에 메세지 저장
+      chatSocket.emit("send-message", { roomId, message: currentMessage });
       setChatLog((prev) => [...prev, newMessage])
-      setCurrentMessage("")
+      setCurrentMessage("");
     }
-
-    //마지막 메세지 업데이트
-    updateLastMessage(currentMessage);
   };
-
-  const HandleInputChage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //input에 내용 저장
+  const HandleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentMessage(e.target.value);
   }
 
@@ -169,7 +144,7 @@ export default function ChatRoomPage() {
           id="chatWrite"
           type="text"
           value={currentMessage}
-          onChange={HandleInputChage}
+          onChange={HandleInputChange}
           placeholder="메세지를 입력하세요"
           className="w-full border border-gray-300 rounded-md p-2"
           name="chatWrite"
