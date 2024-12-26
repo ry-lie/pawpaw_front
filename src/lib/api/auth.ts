@@ -1,7 +1,21 @@
 import axiosInstance from "../axios";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+// 로그인
+export const loginAPI = async ({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) => {
+  const response = await axiosInstance.post(`/auth/login`, {
+    email,
+    password,
+  });
+  return response;
+};
 
+// 회원가입
 export interface RegisterPayload {
   email: string;
   password: string;
@@ -9,7 +23,6 @@ export interface RegisterPayload {
   nickname: string;
   profileImage: string;
 }
-// 회원가입
 export const registerAPI = async (payload: RegisterPayload) => {
   const formData = new FormData();
   formData.append("email", payload.email);
@@ -18,51 +31,42 @@ export const registerAPI = async (payload: RegisterPayload) => {
   formData.append("nickname", payload.nickname);
   formData.append("profileImage", payload.profileImage);
 
-  const response = await axiosInstance.post(
-    `${API_BASE_URL}/auth/register`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  const response = await axiosInstance.post(`/auth/register`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
     },
-  );
+  });
 
-  return response.data;
+  return response;
 };
 
 // 이메일 중복 확인
 export const checkEmailDuplicate = async (email: string) => {
-  const response = await axiosInstance.post(
-    `${API_BASE_URL}/auth/check-email`,
-    { email },
-  );
-  return response.data;
+  const response = await axiosInstance.post(`/auth/check-email`, { email });
+  return response;
 };
 
 // 닉네임 중복 확인
 export const checkNicknameDuplicate = async (nickname: string) => {
-  const response = await axiosInstance.post(
-    `${API_BASE_URL}/auth/check-nickname`,
-    { nickname },
-  );
-  return response.data;
+  const response = await axiosInstance.post(`/auth/check-nickname`, {
+    nickname,
+  });
+  return response;
 };
 
 // 인증 코드 요청
 export const sendVerificationCode = async (email: string) => {
-  const response = await axiosInstance.post(
-    `${API_BASE_URL}/auth/send-verification-email`,
-    { email },
-  );
-  return response.data;
+  const response = await axiosInstance.post(`/auth/send-verification-email`, {
+    email,
+  });
+  return response;
 };
 
 // 인증 코드 확인
 export const verifyCode = async (email: string, verificationCode: string) => {
   const response = await axiosInstance.post(
-    `${API_BASE_URL}/auth/validate-verification-code`,
+    `/auth/validate-verification-code`,
     { email, verificationCode },
   );
-  return response.data;
+  return response;
 };
