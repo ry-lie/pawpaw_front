@@ -43,13 +43,13 @@ const Carousel = ({ carouselData, height = "h-64", imageClassName, containerClas
         {carouselData.map((item) => (
           <div
             key={item.id}
-            className={`min-w-full ${height} flex items-center justify-center bg-gray-200 relative ${containerClassName}`}
+            className={`min-w-full ${height} flex items-center justify-center  relative ${containerClassName}`}
           >
             <Image
               src={item.imgUrl}
               alt="Carousel Image"
-              className={`cover ${imageClassName}`}
               fill
+              className={`${imageClassName || "object-cover"} max-h-full max-w-full`}
             />
             <div className="absolute inset-0 flex top-[20%] left-[10%] text-black text-3xl font-medium whitespace-pre-line">
               {item.text}

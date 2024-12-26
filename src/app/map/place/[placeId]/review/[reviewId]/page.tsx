@@ -6,8 +6,9 @@ import axiosInstance from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Footer from "@/components/Footer";
-import ReviewDeleteButton from "./ReviewDeleteButton";
 import Link from "next/link";
+import { PATHS } from "@/constants/path";
+import DeleteButton from "@/components/DeleteButton";
 
 
 
@@ -38,7 +39,7 @@ export default function ReviewDetail({ params }: { params: { id: string } }) {
     profile: BasicProfileIcon,
     writer: "리온이 누나",
     createdDate: "2023-12-12",
-    title: "여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페",
+    title: "여기 카페 너무 비싸요 여기 카페 너무싸요 여기 카페 너무싸요 ",
     description: "여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요",
     isLiked: true
   }
@@ -54,14 +55,20 @@ export default function ReviewDetail({ params }: { params: { id: string } }) {
           className="rounded-full"
         />
         <div className="flex justify-between w-full">
-          <div className="text-md font-bold items-center">{review?.writer}</div>
+          <div className="text-md font-bold flex items-center">
+            <div>{review?.writer}</div>
+          </div>
           <div>
             {/**본인이면 뜨도록 수정 */}
             <div className="flex gap-3 justify-center">
-              <Link href={`/map/review/write/${review.id}`}>
+              <Link href={PATHS.REVIEW_MODIFY("1", "1")}>
                 <FaEdit className="text-gray-400 w-5 h-5" />
               </Link>
-              <ReviewDeleteButton reviewId={id} />
+              <DeleteButton
+                id={id}
+                resourceType="reviews"
+                onSuccessRedirect={PATHS.MAP}
+              />
             </div>
             <div className="text-gray-500 text-sm">{review?.createdDate}</div>
           </div>
@@ -70,16 +77,19 @@ export default function ReviewDetail({ params }: { params: { id: string } }) {
 
       </div>
       <div className="mt-6">
-        <div className="flex items-center">
-          {review?.isLiked ? (
-            <RiThumbUpFill className="text-primary w-5 h-5 items-center" aria-label="추천" />
-          ) : (
-            <RiThumbUpLine className="text-gray-400 w-5 h-5" aria-label="비추천" />
-          )}
-          <h1 className="text-lg font-bold pl-1 flex">{review?.title}</h1>
+        <div className="flex gap-1">
+          <div className="flex items-start">
+            {review?.isLiked ? (
+              <RiThumbUpFill className="text-primary w-7 h-7 " aria-label="추천" />
+            ) : (
+              <RiThumbUpLine className="text-gray-400 w-7 h-7" aria-label="비추천" />
+            )}
+          </div>
+
+          <h1 className="text-lg font-bold flex">{review?.title}</h1>
         </div>
 
-        <p className="mt-4 text-gray-700">{review?.description}</p>
+        <p className="mt-2 text-gray-700">{review?.description}</p>
       </div>
       <Footer />
     </div >

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { toggleLike } from "@/lib/api/post";
+import axiosInstance from "@/lib/axios";
 
 interface LikeButtonProps {
   postId: string;
@@ -14,9 +14,13 @@ export default function LikeButton({ postId, isLiked }: LikeButtonProps) {
 
   const handleClick = async () => {
     try {
-      const newLikeState = !liked; // 새로운 상태 계산
-      setLiked(newLikeState); // 상태 업데이트
-      await toggleLike(postId, newLikeState); // 서버 요청
+      const newLikeState = !liked;
+      setLiked(newLikeState);
+
+      await axiosInstance.post("/api/like", {
+        postId,
+        isLiked: newLikeState,
+      });
     } catch (error) {
       console.error("Failed to toggle like:", error);
       setLiked(liked); // 실패 시 상태 복구
