@@ -1,17 +1,28 @@
 "use client";
 
-import React from "react";
+import React, {useState} from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ArrowBack from "@/assets/icons/arrowBack.png";
+import { handleImamgeUploading } from "@/utils/ImageUpload";
 //import Input from "@/components/Input";
 
 export default function CommunityWritePage() {
   const router = useRouter();
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+
+  const handleChangeImage = handleImamgeUploading((file) => {
+    const imageUrl = URL.createObjectURL(file);
+
+    setUploadedImages((prev) => {
+      const totalImages = prev.concat(imageUrl);
+      return totalImages.slice(0, 4); // 이미지 최대 4개로 제한
+    });
+  });
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Nav바 */}
+      {/* 자체 Nav바 (공통x) */}
       <header className="bg-background p-2 h-12 flex items-center">
         <button
           className="text-gray-700 font-bold"
@@ -30,28 +41,47 @@ export default function CommunityWritePage() {
         {/* 이미지 업로드 */}
         <section className="mb-6">
           <div className="flex space-x-4">
+            {/* 이미지 업로더 */}
             <label
               htmlFor="image-upload"
-              className="w-24 h-24 bg-gray-200 flex items-center justify-center rounded-lg shadow cursor-pointer"
+              className={`w-24 h-24 flex items-center justify-center rounded-lg shadow cursor-pointer ${
+                uploadedImages.length >= 4 ? "bg-gray-200 cursor-not-allowed" : "bg-gray-200"
+              }`}
+              style={uploadedImages.length >= 4 ? { pointerEvents: "none" } : undefined}
             >
               <span className="text-gray-500">+</span>
             </label>
+            
             <input
               id="image-upload"
               type="file"
               accept="image/*"
               multiple
               className="hidden"
+              onChange={handleChangeImage}
             />
-            <div className="w-24 h-24 bg-cover rounded-lg shadow">
-              <img
-                src="/example.jpg"
-                alt="업로드된 이미지"
-                className="object-cover w-full h-full rounded-lg"
-              />
-            </div>
+            {/* 업로드된 이미지 */}
+            {uploadedImages.map((image, index) => (
+              <div key={index} className="relative w-24 h-24 rounded-lg shadow bg-cover">
+
+                <div
+                  className="absolute top-1 right-1 bg-white bg-opacity-30 rounded-full w-4 h-4 flex items-center justify-center cursor-pointer hover:bg-primary hover:bg-opacity-30"
+                  onClick={() =>
+                    setUploadedImages((prev) => prev.filter((_, i) => i !== index))
+                  }
+                >
+                  <span className="text-sm font-normal text-strong_gray hover:text-white">x</span>
+                </div>
+
+                <div
+                  className="w-full h-full bg-cover rounded-lg"
+                  style={{ backgroundImage: `url(${image})` }}
+                ></div>
+
+              </div>
+            ))}
           </div>
-          <p className="text-sm text-gray-500 mt-2 ml-6">최대 5장</p>
+          <p className="text-sm text-gray-500 mt-2 ml-6">최대 4장</p>
         </section>
 
         {/* 카테고리 선택 */}
