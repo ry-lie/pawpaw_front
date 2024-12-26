@@ -9,6 +9,7 @@ import Button from "@/components/Button";
 import { PATHS } from "@/constants/path";
 import KakaoLoginButton from "@/assets/images/kakaoResource/kakao_login_large_wide.png";
 import Image from "next/image";
+import { loginAPI } from "@/lib/api/auth";
 
 type LoginInputs = {
   email: string;
@@ -36,8 +37,9 @@ export default function LoginForm() {
 
     setIsLoading(true);
     try {
-      // 로그인 로직 작성 예정
-      console.log("로그인 성공");
+      const response = await loginAPI(payload);
+      console.log("로그인 성공", response);
+      //zustand로 사용자 정보 저장 예정
     } catch (error) {
       console.error("로그인 실패:", error);
     } finally {
@@ -71,13 +73,13 @@ export default function LoginForm() {
 
       <Input
         type="password"
-        placeholder="비밀번호를 입력하세요"
+        placeholder="비밀번호"
         className="w-full h-14"
         {...register("password", {
           required: "비밀번호는 필수 입력 항목입니다.",
           pattern: {
-            value: /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
-            message: "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
+            message: "대/소문자, 숫자, 특수문자 포함 최소 8자리 이상입니다."
           },
         })}
         errorMessage={errors.password?.message}
