@@ -43,7 +43,7 @@ const Carousel = ({ carouselData, height = "h-64", imageClassName, containerClas
         {carouselData.map((item) => (
           <div
             key={item.id}
-            className={`min-w-full ${height} flex items-center justify-center bg-gray-200 relative ${containerClassName}`}
+            className={`min-w-full ${height} flex items-center justify-center  relative ${containerClassName}`}
           >
             <Image
               src={item.imgUrl}

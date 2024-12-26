@@ -1,14 +1,16 @@
-import ReviewDeleteButton from "@/app/map/place/[placeId]/review/[reviewId]/ReviewDeleteButton";
 import BasicProfileIcon from "@/assets/icons/profile_icon.png";
 import Button from "@/components/Button";
+import DeleteButton from "@/components/DeleteButton";
 import Footer from '@/components/Footer'
 import Input from "@/components/Input";
 import Carousel from '@/components/Main/Carousel'
+import { PATHS } from "@/constants/path";
 import axiosInstance from '@/lib/axios';
 import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
 import { FaEdit } from "react-icons/fa";
+import { TbMessageDots } from "react-icons/tb";
 import Comment from "./Comment";
 import LikeButton from "./LikeButton";
 
@@ -85,8 +87,9 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
         containerClassName="bg-[#f9f9f9]"
         imageClassName="object-contain max-h-full max-w-full "
       />
-      <div className="mt-2 p-4 mb-14">
+      <div className=" px-4 pb-4 mb-14">
         <div className="flex items-center space-x-4 border-b-2 pb-2">
+          {/*작성자 프로필 이미지 */}
           <Image
             src={post?.profile}
             alt="프로필 이미지"
@@ -94,16 +97,26 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
             height={40}
             className="rounded-full"
           />
+          {/*작성자 */}
           <div className="flex justify-between  items-center w-full">
-            <div className="text-md font-bold items-center">{post?.writer}</div>
+            <div className="flex gap-2">
+              <div className="text-md font-bold items-center">{post?.writer}</div>
+              <button className="text-primary flex items-center"><TbMessageDots className="w-5 h-5" />채팅</button>
+            </div>
+
             <div>
               {/**본인이면 뜨도록 수정 */}
               <div className="flex gap-3 justify-center">
-                <Link href={`/map/review/write/${post.id}`}>
+                <Link href={PATHS.COMMUNITY_WRITE}>
                   <FaEdit className="text-gray-400 w-5 h-5" />
                 </Link>
-                <ReviewDeleteButton reviewId={id} />
+                <DeleteButton
+                  id={post.id}
+                  resourceType="posts"
+                  onSuccessRedirect={PATHS.COMMUNITY}
+                />
               </div>
+              {/*작성일*/}
               <div className="text-gray-500 text-sm">{post?.createdDate}</div>
             </div>
 
@@ -111,7 +124,7 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
 
         </div>
         {/*제목 + 설명*/}
-        <div className="mt-6">
+        <div className="mt-6 border-b-2 pb-4">
           <div className="flex items-center">
             <h1 className="text-lg font-bold pl-1 flex">{post?.title}</h1>
           </div>
@@ -122,9 +135,9 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
             <div>{post.likeCount}</div>
           </div>
         </div>
-        <hr className="my-3" />
+
         {/*댓글*/}
-        <div className="font-semibold text-lg">
+        <div className="font-semibold text-lg mt-4">
           <h2>댓글 ({post.comments.length})</h2>
         </div>
 
