@@ -28,6 +28,7 @@ export default function LoginForm() {
 
   const { isValid } = useFormState({ control });
   const [isLoading, setIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     const { email, password } = data;
@@ -42,6 +43,7 @@ export default function LoginForm() {
       //zustand로 사용자 정보 저장 예정
     } catch (error) {
       console.error("로그인 실패:", error);
+      setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
     } finally {
       setIsLoading(false);
     }
@@ -84,6 +86,7 @@ export default function LoginForm() {
         })}
         errorMessage={errors.password?.message}
       />
+      {loginError && <p className="text-red-500 text-sm">{loginError}</p>} {/* 에러 메시지 표시 */}
       <Button
         disabled={!isValid || isLoading}
         isLoading={isLoading}

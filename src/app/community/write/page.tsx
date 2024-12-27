@@ -1,6 +1,6 @@
 "use client";
 
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ArrowBack from "@/assets/icons/arrowBack.png";
@@ -29,8 +29,8 @@ export default function CommunityWritePage() {
           onClick={() => router.back()}
         >
           <Image
-            src= {ArrowBack}
-            alt= "뒤로가기 아이콘"
+            src={ArrowBack}
+            alt="뒤로가기 아이콘"
             className="w-8 h-8"
           />
         </button>
@@ -44,14 +44,13 @@ export default function CommunityWritePage() {
             {/* 이미지 업로더 */}
             <label
               htmlFor="image-upload"
-              className={`w-16 h-16 xs:w-24 xs:h-24 flex items-center justify-center rounded-lg shadow cursor-pointer ${
-                uploadedImages.length >= 4 ? "bg-gray-200 cursor-not-allowed" : "bg-gray-200"
-              }`}
+              className={`w-16 h-16 xs:w-24 xs:h-24 flex items-center justify-center rounded-lg shadow cursor-pointer ${uploadedImages.length >= 4 ? "bg-gray-200 cursor-not-allowed" : "bg-gray-200"
+                }`}
               style={uploadedImages.length >= 4 ? { pointerEvents: "none" } : undefined}
             >
               <span className="text-gray-500">+</span>
             </label>
-            
+
             <input
               id="image-upload"
               type="file"

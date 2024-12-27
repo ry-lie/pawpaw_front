@@ -1,7 +1,7 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { NowDate } from "@/utils/NowTime";
+import { NowDate } from "@/utils/nowTime";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import Message_notsend from "@/assets/icons/message_notsend.png";
@@ -9,7 +9,8 @@ import Message_send from "@/assets/icons/message_send.png";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ReadChatLog } from "@/lib/api";
+import { readChatLog } from "@/lib/api";
+
 
 const socket_url = process.env.SOKECT_URL
 const chatSocket: Socket = io(`ws://${socket_url}`);
@@ -36,7 +37,7 @@ export default function ChatRoomPage() {
     //이전 채팅 로그 가져오기
     const LoadChatLog = async (roomId: string) => {
       try {
-        await ReadChatLog(roomId);
+        await readChatLog(roomId);
       } catch (e) {
         console.error("채팅 로그를 가져오는데 실패하였습니다.", e)
       }
