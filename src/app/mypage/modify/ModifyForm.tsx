@@ -6,7 +6,6 @@ import { useModalStore } from "@/stores/modalStore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FindPasswordModal from "./FindPasswordModal";
 import Link from "next/link";
-import axios from "axios";
 
 type NicknameInput = {
   nickname: string;

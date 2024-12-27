@@ -33,11 +33,11 @@ export default function FindPasswordForm() {
   const checkEmail = !email || Object.keys(errors).length > 0;
   const checkCode = !code || Object.keys(errors).length > 0;
 
-  const {sendCode, verifyCode, temporaryPassword} = useFindPassword();
+  const { sendCode, verifyCodeCheck, temporaryPasswordSubmit } = useFindPassword();
 
   const onSubmit = (data:FindPasswordInput)=>{
     if(!data.code) sendCode(data.email);
-    else verifyCode(data.email, data.code).then(()=>temporaryPassword(data.email));
+    else verifyCodeCheck(data.email, data.code).then(()=>temporaryPasswordSubmit(data.email));
   };
   
   return (
