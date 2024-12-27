@@ -37,16 +37,7 @@ export default function Home() {
       <main className="mt-12 flex flex-col items-center gap-8">
 
         <Carousel carouselData={carouselData} />
-
-        {/* 1. 캐러셀 
-        <section className="w-full h-[260px] bg-gray-200 overflow-hidden">
-          <div className="h-full flex items-center justify-center text-gray-600">
-            캐러셀 영역 (이미지 슬라이드)
-          </div>
-        </section>
-        */}
-
-
+        
         {/* 컨테이너 - 인기글 섹션, 최신글 섹션 */}
         <div className="w-full max-w-mobile mx-auto px-6">
           {/* 인기글 섹션 */}

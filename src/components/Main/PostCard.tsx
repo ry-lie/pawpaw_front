@@ -36,7 +36,7 @@ export default function PostCard({ category, title, imageUrl }: PostCardProps) {
   return (
     <div className="rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow">
       {imageUrl ? (
-        <div className="relative w-44 h-28">
+        <div className="relative w-40 xs:w-44 h-24 xs:h-28">
           <Image
             src={imageUrl}
             alt={title}
@@ -48,7 +48,7 @@ export default function PostCard({ category, title, imageUrl }: PostCardProps) {
       ) : (
         // 이미지 없을 때, 카테고리 별 포스트카드 기본 디자인
         <div
-          className={`w-44 h-28 flex items-center justify-center ${categoryStyles[category]}`}
+          className={`w-40 xs:w-44 h-24 xs:h-28 flex items-center justify-center ${categoryStyles[category]}`}
         >
           <Image
             src={categoryIcons[category].src}

@@ -18,7 +18,7 @@ interface CarouselProps {
   containerClassName?: string;
 }
 
-const Carousel = ({ carouselData, height = "h-64", imageClassName, containerClassName }: CarouselProps) => {
+const Carousel = ({ carouselData, height = "h-48 xs:h-64", imageClassName, containerClassName }: CarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const handlePrev = () => {
@@ -49,9 +49,9 @@ const Carousel = ({ carouselData, height = "h-64", imageClassName, containerClas
               src={item.imgUrl}
               alt="Carousel Image"
               fill
-              className={`${imageClassName || "object-cover"} max-h-full max-w-full`}
+              className={`${imageClassName || "object-fill"} max-h-full max-w-full`}
             />
-            <div className="absolute inset-0 flex top-[20%] left-[10%] text-black text-3xl font-medium whitespace-pre-line">
+            <div className="absolute inset-0 flex top-[20%] left-[14%] xs:left-[10%] text-black text-2xl xs:text-3xl font-medium whitespace-pre-line">
               {item.text}
             </div>
           </div>
