@@ -1,29 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
 import WomanIcon from "@/assets/icons/woman_icon.png";
 import ManIcon from "@/assets/icons/man_icon.png";
 import CheckIcon from "@/assets/icons/check_icon.png";
 import TrashIcon from "@/assets/icons/trash_icon.png";
 import PetProfile from "@/assets/icons/petProfile_icon.png";
+import { handleImamgeUploading } from "@/utils/ImageUpload";
 
-export default function AddPetInfo({
-    pet,
-    onSave,
-    onDelete,
-  }: {
-    pet: any;
-    onSave: (updatedPet: any) => void;
-    onDelete: () => void;
-  }) {
-    
-    const [newPet, setNewPet] = useState({ ...pet });
+export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSave: (updatedPet: any) => void; onDelete: () => void;}) {
+  const [newPet, setNewPet] = useState({ ...pet });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setNewPet({ ...newPet, [name]: value });
-    };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewPet({ ...newPet, [name]: value });
+  };
+
+  const [profileImage, setProfileImage] = useState<string | null>(
+    pet.profileImage || null
+  );
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // 프로필 이미지 변경
+  const handleProfileImageChange = handleImamgeUploading((file) => {
+    const imageUrl = URL.createObjectURL(file); // 브라우저에서 미리보기 URL 생성
+    setProfileImage(imageUrl);
+    setNewPet({ ...newPet, profileImage: imageUrl }); // 프로필 이미지 상태 업데이트
+  });
+
 
   return (
     <section className="relative w-full max-w-mobile h-auto bg-white border border-stroke_gray rounded-lg p-10 flex flex-col gap-4 mb-5">
@@ -37,20 +42,33 @@ export default function AddPetInfo({
       </button>
 
       <div className="w-full">
-        {/* 1. 프로필 섹션 */}
-        <div className="flex justify-center mb-7">
+        {/* 1. 프로필 이미지 섹션 */}
+        <div
+          className="flex justify-center mb-7"
+          onClick={() => fileInputRef.current?.click()} // 클릭하면 파일 선택 창 열기
+        >
           <Image
-            src={PetProfile}
+            src={profileImage || PetProfile} // 이미지가 없으면 기본 이미지 표시
             alt="pet"
-            className="w-44 h-44 bg-white rounded-full"
+            className="w-44 h-44 bg-white rounded-full cursor-pointer"
+            width={176} // 44rem = 176px
+            height={176}
+            unoptimized
           />
         </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleProfileImageChange} // handleImageUploading 연결
+        />
 
         {/* 2. 이름 & 나이 (왼쪽), 성별 & 크기 섹션(오른쪽) */}
         <div className="flex justify-around mb-1">
           {/* 이름 & 나이 */}
           <div>
-            <div className="mb-2">
+            <div className="mb-3">
               <span className="text-base font-bold mr-2">이름 </span>
               <input
                 type="text"
@@ -132,16 +150,17 @@ export default function AddPetInfo({
         </div>
 
         {/* 3. 성격 섹션 */}
-        <div className="flex felx-row ml-16">
+        {/* 반응형 추가 */}
+        <div className="flex felx-row ml-1 xs:ml-9">
           <div className="w-10">
             <span className="text-base font-bold">성격 </span>
           </div>
-          <div className="w-60">
+          <div className="w-auto xs:w-60">
             <textarea
               name="description"
               value={newPet.description}
               onChange={handleChange}
-              className="border border-stroke_gray rounded px-1 w-64 h-16 resize-none overflow-auto"
+              className="border border-stroke_gray rounded px-1 w-52 xs:w-64 h-16 resize-none overflow-auto"
               maxLength={55}
             />
           </div>
