@@ -7,7 +7,7 @@ import Image from "next/image";
 import FootPrint from "@/assets/icons/footprint.png";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
-import PlaceDetail, { PlaceProps } from "./PlaceDetail";
+import PlaceDetail, { PlaceProps } from "./place/[placeId]/PlaceDetail";
 
 interface MapClientProps {
   latitude: number;

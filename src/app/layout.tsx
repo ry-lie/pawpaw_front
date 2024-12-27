@@ -19,11 +19,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
       <body>
         <QueryProvider>
           <Nav />
           <Suspense fallback={<Loading />}>
-            <div className="flex flex-col w-full min-h-screen max-w-mobile bg-background border border-stroke_gray-600">
+            <div className="flex flex-col w-full min-h-screen sm:max-w-mobile mx-auto bg-background border border-stroke_gray-600">
               {children}
               <Modal />
             </div>

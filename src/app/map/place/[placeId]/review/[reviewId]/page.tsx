@@ -16,7 +16,7 @@ interface ReviewProps {
   id: string;
   writer: string;
   title: string;
-  description: string;
+  content: string;
   createdDate: string;
   isLiked: boolean;
 }
@@ -26,11 +26,10 @@ async function fetchReviewDetail(reviewId: string): Promise<ReviewProps> {
   return data;
 }
 
-export default function ReviewDetail({ params }: { params: { id: string } }) {
-  const { id } = params;
-
+export default function ReviewDetail({ params }: { params: { placeId: string; reviewId: string } }) {
+  const { reviewId, placeId } = params;
   // const { data: review } = useQuery({
-  //   queryKey: ["review", id],
+  //   queryKey: ["review", reviewId],
   //   queryFn: () => fetchReviewDetail(id),
   // });
 
@@ -65,9 +64,11 @@ export default function ReviewDetail({ params }: { params: { id: string } }) {
                 <FaEdit className="text-gray-400 w-5 h-5" />
               </Link>
               <DeleteButton
-                id={id}
+                id={reviewId}
+                placeId={placeId}
                 resourceType="reviews"
                 onSuccessRedirect={PATHS.MAP}
+                invalidateKeys={[["placeDetails", placeId]]}
               />
             </div>
             <div className="text-gray-500 text-sm">{review?.createdDate}</div>

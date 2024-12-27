@@ -7,6 +7,7 @@ import PlusButton from "@/components/PlusButton";
 import Footer from "@/components/Footer";
 import BoardHeartIcon from "@/assets/icons/boardHeart_icon.png"
 import EmptyPicture from "@/assets/icons/emptyPicture.png";
+import useMediaQuery from "@/hooks/useMediaQuery"; // useMediaQuery를 가져옵니다.
 // 임시 게시글 이미지
 import HotDog1 from "@/assets/images/postCard/hot1.png";
 import HotDog2 from "@/assets/images/postCard/hot2.png";
@@ -81,30 +82,31 @@ export default function CommunityPage() {
   );
 
   // 글자수 제한
-  const titleMaxLength = 20;
-  const contentMaxLength = 29;
+  const isMobile = useMediaQuery("(max-width: 425px)"); // 425px 이하 감지
+  const titleMaxLength = isMobile ? 15 : 20;
+  const contentMaxLength = isMobile ? 18 : 29;
 
   return (
     <div className="relative min-h-screen">
-      <main className="mt-10 p-6">
+      <main className="mt-10 p-4 xs:p-6">
         {/* 검색창 */}
-        <div className="mb-4">
+        <div className="mb-2 xs:mb-4">
           <input
             type="text"
             placeholder="검색어를 입력하세요..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-2 border rounded-md"
+            className="text-sm xs:text-base w-full p-1 xs:p-2 border rounded-md"
           />
         </div>
 
         {/* 카테고리 필터 버튼 */}
-        <div className="mb-4 flex gap-2 justify-around">
+        <div className="mb-2 xs:mb-4 flex gap-0.5 xs:gap-2 justify-around">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`w-full px-4 py-1 rounded-xl ${
+              className={`w-full px-0.5 xs:px-4 py-1 rounded-xl text-xs xs:text-base ${
                 selectedCategory === category ? "bg-primary font-medium text-white" : "bg-white text-gray-700 border-solid border border-stroke_gray"
               }`}
             >
@@ -116,7 +118,7 @@ export default function CommunityPage() {
         {/* 게시글 컨테이너 */}
         <div className="space-y-2">
           {filteredPosts.map((post) => (
-            <div key={post.id} className="p-3 border rounded-md bg-white">
+            <div key={post.id} className="p-2 xs:p-3 border rounded-md bg-white">
               
               {/* 이미지칸, 게시글칸, 카테고리&좋아요 */}
               <div className="flex">
@@ -128,23 +130,23 @@ export default function CommunityPage() {
                       : EmptyPicture
                   }
                   alt="게시글 이미지"
-                  className="w-20 h-20 object-cover rounded-md mr-3 justify-center"
+                  className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3 justify-center"
                 />
                 {/* 2. 제목, 내용 */}
                 <div className="w-full flex flex-col justify-center">
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-0.5 xs:mb-2 xs:text-base text-sm">
                     <h3 className="font-bold">{post.title.length > titleMaxLength ? `${post.title.slice(0, titleMaxLength)}...` : post.title}</h3>
                   </div>
 
-                  <div className="flex justify-between items-center mb-2">
+                  <div className="flex justify-between items-center mb-0.5 xs:mb-2 xs:text-base text-sm">
                     <p>{post.content.length > contentMaxLength ? `${post.content.slice(0, contentMaxLength)}...` : post.content}</p>
                   </div>
                 </div>
 
                 {/* 3. 카테고리 & 좋아요 */}
-                <div className="w-1/5 flex flex-col items-end justify-between">
+                <div className="w-[30%] xs:w-1/5 flex flex-col items-end justify-between">
                   {/* 카테고리 표시 버튼 */}
-                  <span className="text-sm bg-gray-200 px-1.5 py-0.5 rounded-md">
+                  <span className="text-xs xs:text-sm bg-gray-200 px-1 xs:px-1.5 py-0.5 rounded-md">
                     {post.category}
                   </span>
                   {/* 좋아요 */}
@@ -152,7 +154,7 @@ export default function CommunityPage() {
                     <Image
                       src={BoardHeartIcon} // 좋아요 아이콘 이미지 경로
                       alt="좋아요 아이콘"
-                      className="w-6 h-7" // 아이콘 크기 조정
+                      className="w-5 h-6 xs:w-6 xs:h-7" // 아이콘 크기 조정
                     />
                   )}
                 </div>
