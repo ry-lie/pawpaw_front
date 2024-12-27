@@ -1,12 +1,20 @@
 "use client";
 
+import { QueryKey, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axios";
 import ReviewForm from "../ReviewForm";
 
-export default function ReviewCreateClient() {
-  const handleCreate = async (data: { title: string; description: string; isRecommended: boolean }) => {
+interface ReviewCreateClientProps {
+  placeId: string;
+}
+
+export default function ReviewCreateClient({ placeId }: ReviewCreateClientProps) {
+  const queryClient = useQueryClient();
+
+  const handleCreate = async (data: { title: string; content: string; isLikeCliked: boolean }) => {
     try {
-      await axiosInstance.post("/api/reviews", data);
+      await axiosInstance.post(`/api/places/${placeId}/reviews`, data);
+      queryClient.invalidateQueries({ queryKey: ["placeDetails", placeId] });
       alert("리뷰가 성공적으로 등록되었습니다!");
     } catch (error) {
       console.error("리뷰 등록 실패:", error);

@@ -1,5 +1,5 @@
 
-import { ReviewProps } from "@/app/map/PlaceDetail";
+import { ReviewProps } from "@/app/map/place/[placeId]/PlaceDetail";
 import { RiThumbUpFill } from "react-icons/ri";
 
 
@@ -11,7 +11,7 @@ export default function Review({ review }: { review: ReviewProps }) {
         <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gray-200" />
         {/* 작성자*/}
         <h3 className="font-semibold text-xs text-center break-words w-[56px]">
-          {review.writer}
+          {review.nickname}
         </h3>
       </div>
       <div className="flex flex-col gap-1">
@@ -25,7 +25,7 @@ export default function Review({ review }: { review: ReviewProps }) {
         </p>
       </div>
       <div className="flex items-end">
-        {review.isRecommanded && (
+        {review.isLikeCliked && (
           <div className="flex-shrink-0">
             <RiThumbUpFill className="w-6 h-6 text-primary" />
           </div>

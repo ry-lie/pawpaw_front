@@ -7,8 +7,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { RiThumbUpFill, RiThumbUpLine } from "react-icons/ri";
 
 interface ReviewFormProps {
-  initialValues?: { title: string; description: string; isRecommended: boolean }; // 수정 시 초기값
-  onSubmit: (data: { title: string; description: string; isRecommended: boolean }) => Promise<void>; // 작성/수정 핸들러
+  initialValues?: { title: string; content: string; isLikeCliked: boolean }; // 수정 시 초기값
+  onSubmit: (data: { title: string; content: string; isLikeCliked: boolean }) => Promise<void>; // 작성/수정 핸들러
 }
 
 export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps) {
@@ -18,16 +18,16 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
     formState: { isValid },
     reset, // 폼 초기화를 위한 reset 함수
   } = useForm({
-    defaultValues: initialValues || { title: "", description: "" }, // 초기값 설정
+    defaultValues: initialValues || { title: "", content: "" }, // 초기값 설정
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isRecommended, setIsRecommended] = useState(initialValues?.isRecommended || false); // 추천 여부 초기값
+  const [isLikeCliked, setIsLikeCliked] = useState(initialValues?.isLikeCliked || false); // 추천 여부 초기값
 
-  const handleFormSubmit: SubmitHandler<{ title: string; description: string }> = async (data) => {
+  const handleFormSubmit: SubmitHandler<{ title: string; content: string }> = async (data) => {
     setIsLoading(true);
     try {
-      await onSubmit({ ...data, isRecommended });
+      await onSubmit({ ...data, isLikeCliked });
       alert("성공적으로 처리되었습니다!");
       reset(); // 폼 초기화
     } catch (error) {
@@ -47,7 +47,7 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
       />
       <label className="block text-md font-bold text-gray-700 mt-2">내용</label>
       <textarea
-        {...register("description", { required: "내용은 필수 입력 항목입니다." })}
+        {...register("content", { required: "내용은 필수 입력 항목입니다." })}
         className="w-full border border-stroke_gray p-2 rounded-md shadow-sm focus:border-primary focus:ring-primary sm:text-sm resize-none h-96"
         placeholder="내용을 입력하세요"
       />
@@ -56,11 +56,11 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
         <div className="flex space-x-4">
           <button
             type="button"
-            className={`flex items-center justify-center w-20 h-20 rounded-full ${isRecommended ? "bg-primary text-white" : "bg-gray-200"
+            className={`flex items-center justify-center w-20 h-20 rounded-full ${isLikeCliked ? "bg-primary text-white" : "bg-gray-200"
               }`}
-            onClick={() => setIsRecommended((prev) => !prev)} // 토글 동작
+            onClick={() => setIsLikeCliked((prev) => !prev)} // 토글 동작
           >
-            {isRecommended ? (
+            {isLikeCliked ? (
               <RiThumbUpFill className="w-12 h-12" aria-label="추천됨" />
             ) : (
               <RiThumbUpLine className="w-12 h-12" aria-label="추천" />

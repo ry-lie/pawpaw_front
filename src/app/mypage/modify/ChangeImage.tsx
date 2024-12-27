@@ -5,7 +5,7 @@ import BasicProfile from "@/assets/icons/profile_icon.png";
 import Button from "@/components/Button";
 import Image from "next/image";
 import Input from "@/components/Input";
-import { handleImamgeUploading } from "@/utils/ImageUpload";
+import { handleImamgeUploading } from "@/utils/imageUpload";
 import { PutImage } from "@/lib/api/picture";
 
 
