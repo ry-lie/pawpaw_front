@@ -29,7 +29,7 @@ export default function PetInfo({ pet, onEdit, onDelete }: { pet: any; onEdit: (
       </button>
 
       <div className='w-full'>
-        {/* 1. 프로필 섹션 */}
+        {/* 1. 프로필 이미지 섹션 */}
         <div className="flex justify-center mb-7">
           <Image
             src={PetProfile}
@@ -82,7 +82,8 @@ export default function PetInfo({ pet, onEdit, onDelete }: { pet: any; onEdit: (
         </div>
 
         {/* 3. 성격 섹션 */}
-        <div className='flex felx-row ml-14'>
+        {/* 반응형 추가 */}
+        <div className='flex felx-row ml-7 xs:ml-14'>
           <div className='w-10'>
             <span className='text-base font-bold'>성격 </span>
           </div>

@@ -9,7 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       screens: {
-        sm: "600px",
+        xs: "426px", // 426px 이상
+        sm: "600px", // 600px 이상
       },
       maxWidth: {
         mobile: "600px",
