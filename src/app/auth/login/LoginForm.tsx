@@ -10,6 +10,8 @@ import { PATHS } from "@/constants/path";
 import KakaoLoginButton from "@/assets/images/kakaoResource/kakao_login_large_wide.png";
 import Image from "next/image";
 import { loginAPI } from "@/lib/api/auth";
+import { useUserStore } from "@/stores/userStore";
+import { useRouter } from "next/navigation";
 
 type LoginInputs = {
   email: string;
@@ -29,7 +31,7 @@ export default function LoginForm() {
   const { isValid } = useFormState({ control });
   const [isLoading, setIsLoading] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
-
+  const router = useRouter();
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     const { email, password } = data;
     const payload = { email, password };
@@ -39,8 +41,14 @@ export default function LoginForm() {
     setIsLoading(true);
     try {
       const response = await loginAPI(payload);
-      console.log("로그인 성공", response);
-      //zustand로 사용자 정보 저장 예정
+      if (response.status === 200) { // 로그인 성공
+        console.log("로그인 성공", response);
+        const { id, nickname } = response.data.body.data.user;
+        useUserStore.getState().login({ id, nickname });
+        router.push(PATHS.MAIN);
+      } else {
+        setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
+      }
     } catch (error) {
       console.error("로그인 실패:", error);
       setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
