@@ -1,7 +1,7 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { NowDate } from "@/utils/nowTime";
+import { NowDate } from "@/utils/NowTime";
 import { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import Message_notsend from "@/assets/icons/message_notsend.png";
@@ -9,11 +9,10 @@ import Message_send from "@/assets/icons/message_send.png";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { readChatLog } from "@/lib/api";
 
 
-const socket_url = process.env.SOKECT_URL
-const chatSocket: Socket = io(`ws://${socket_url}`);
+const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL
+const socket = io(`ws://${socket_url}`);
 
 type chatMessagetype = {
   message: string;
@@ -25,44 +24,40 @@ type chatMessagetype = {
 
 export default function ChatRoomPage() {
   const searchParams = useSearchParams();
-  const sender = searchParams.get("sender") || "자기자신";
-  const receiver = searchParams.get("receiver") || "상태방";
-  const roomId = "room1"; //하드코딩한 상태임
+  const sender = searchParams.get("sender") as string;
+  const receiver = searchParams.get("receiver") as string;
   const [chatLog, setChatLog] = useState<chatMessagetype[]>([]);
   const chatScroll = useRef<HTMLUListElement>(null);
   const [currentMessage, setCurrentMessage] = useState("");
 
-
   useEffect(() => {
-    //이전 채팅 로그 가져오기
-    const LoadChatLog = async (roomId: string) => {
-      try {
-        await readChatLog(roomId);
-      } catch (e) {
-        console.error("채팅 로그를 가져오는데 실패하였습니다.", e)
-      }
-    }
-    LoadChatLog(roomId);
+    // 소켓 연결 및 join 이벤트
+    socket.on("connect", () => {
+      console.log("소켓 연결 성공");
+      socket.emit("join", {roomId : "room1",message:sender});
+    });
 
-    //상대방이 들어왔을때 확인
-    chatSocket.on("join", (data: { body: { message: string } }) => {
-      if (data.body.message.includes(receiver)) {
-        console.log(data.body.message);
+    // 상대방이 들어왔을 때 확인
+    socket.on("join", (data) => {
+      if(data.nickname && data.nickname !== sender){
+        setChatLog((prev)=>[
+          ...prev,
+          {message : `${data.nickname}님이 채팅을 수락했습니다.`, sender :"system", receiver:"", timestamp:new Date().toISOString()},
+        ]);
       }
     });
 
-    //메세지 수신
-    chatSocket.on("receive-message", (data: chatMessagetype) => {
-      setChatLog((prev) => [...prev, data]);
+    // 메시지 수신
+    socket.on("receive-message", (data) => {
+        setChatLog((prev) => [...prev, data]);
     });
 
-    //완료되면 소켓 해제
+    //소켓 해제
     return () => {
-      chatSocket.off("join");
-      chatSocket.off("receive-message");
-    }
-  }, [])
-  //useEffect여기까지 받음
+      socket.off("join");
+      socket.off("receive-message");
+    };
+  }, []);
 
   // 메시지가 쌓일 때마다 스크롤 자동으로 이동
   useEffect(() => {
@@ -76,23 +71,24 @@ export default function ChatRoomPage() {
     e.preventDefault();
     if (currentMessage.trim()) {
       const currentTime = new Date().toISOString();
-      const newMessage: chatMessagetype = {
+      const message: chatMessagetype = {
         message: currentMessage,
         sender,
         receiver,
         timestamp: currentTime,
       };
 
-      //서버에 메세지 저장
-      chatSocket.emit("send-message", { roomId, message: currentMessage });
-      setChatLog((prev) => [...prev, newMessage])
+      // 서버에 메세지 전송
+      socket.emit("send-message", {roomId : "room1", message:currentMessage});
+      setChatLog((prev) => [...prev, message]);
       setCurrentMessage("");
     }
   };
-  //input에 내용 저장
+
+  // input에 내용 저장
   const HandleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentMessage(e.target.value);
-  }
+  };
 
   return (
     <div className="flex flex-col h-screen">
@@ -100,9 +96,6 @@ export default function ChatRoomPage() {
         ref={chatScroll}
         className="flex-1 flex flex-col overflow-y-auto border-t-4 pt-4 px-2"
       >
-        <li className="font-bold flex justify-center mb-4">
-          {receiver}님이 채팅신청을 수락했습니다.
-        </li>
         {chatLog.map((message, index) => (
           <div key={index} className="flex flex-col items-start mb-2">
             {message.sender !== sender && (
@@ -142,7 +135,6 @@ export default function ChatRoomPage() {
         </div>
 
         <Input
-          id="chatWrite"
           type="text"
           value={currentMessage}
           onChange={HandleInputChange}
