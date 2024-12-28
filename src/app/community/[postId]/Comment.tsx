@@ -24,23 +24,23 @@ export default function Comment({
   onDelete,
 }: CommentProps) {
   return (
-    <div className="flex items-start space-x-4 p-4 border-b border-gray-200">
+    <div className="flex items-center space-x-4 p-4 border-b border-gray-200">
       {/* 프로필 이미지 */}
       <Image
         src={profile}
         alt={`${writer}의 프로필 이미지`}
-        width={40}
-        height={40}
+        width={45}
+        height={45}
         className="rounded-full"
       />
       {/* 댓글 내용 */}
       <div className="flex-1">
         <div className="flex justify-between">
-          <span className="font-bold text-gray-800">{writer}</span>
-          <span className="text-sm text-gray-500">{createdDate}</span>
+          <span className="text-sm xs:text-base font-bold text-gray-800">{writer}</span>
+          <span className="text-xs xs:text-sm text-gray-500">{createdDate}</span>
         </div>
         <div className="flex justify-between">
-          <p className="text-gray-700 mt-2">{content}</p>
+          <p className="text-sm xs:text-base font-medium text-gray-700 mt-0.5">{content}</p>
           {/* 내가 작성한 댓글일 경우 수정/삭제 버튼 */}
           <div>
             {isAuthor && (

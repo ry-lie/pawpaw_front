@@ -30,9 +30,9 @@ export default function LikeButton({ postId, isLiked }: LikeButtonProps) {
   return (
     <button onClick={handleClick} className="focus:outline-none">
       {liked ? (
-        <GoHeartFill className="w-10 h-10 text-[#F9595F]" />
+        <GoHeartFill className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
       ) : (
-        <GoHeart className="w-10 h-10 text-[#F9595F]" />
+        <GoHeart className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
       )}
     </button>
   );
