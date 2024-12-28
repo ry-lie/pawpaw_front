@@ -62,12 +62,12 @@ export default function PersonRadius() {
             console.error("소켓이 연결되지 않았습니다.");
         }
     }
-//유저 찾기
+    //유저 찾기
     const findUserByRadius = () => {
         const filterUser = allUser.filter((user) => user.radius <= radius);
         setFindUsers(filterUser);
     };
-//반경선택
+    //반경선택
     const handleRadiusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setRadius(Number(e.target.value));
     };
@@ -97,54 +97,52 @@ export default function PersonRadius() {
     // }, []);
 
     return (
-        <div>
-            <div className="mt-12 flex ml-5 items-center text-xs">
-                <label>
-                    반경
-                </label>
-                <select className="border border-medium_gray rounded-md p-1 ml-1"
+        <div className="mt-12">
+            {/* 반경 라벨 컨테이너 */}
+            <div className="px-4 flex items-center text-xs">
+                <label>반경</label>
+                <select
+                    className="border border-medium_gray rounded-md p-1 ml-1"
                     onChange={handleRadiusChange}
                     value={radius}
                 >
-                    <option value="250"> 250m</option>
-                    <option value="500"> 500m</option>
-                    <option value="1000"> 1000m</option>
+                    <option value="250">250m</option>
+                    <option value="500">500m</option>
+                    <option value="1000">1000m</option>
                 </select>
                 <Button
                     btnType="submit"
-                    containerStyles="text-xs h-7 w-8 ml-1"
+                    containerStyles="text-xs h-6 w-9 ml-1"
                     onClick={findUserByRadius}
                 >
                     찾기
                 </Button>
             </div>
-  
-            <div>
-                <div className="font-bold p-2">
-                    {currentNickname} 님의 반경{radius}m
+
+            {/* 내용 컨테이너 */}
+            <div className="mt-3 px-4">
+                <div className="font-bold mb-2 ml-1">
+                    {currentNickname} 님의 반경 {radius}m
                 </div>
-                <ul className="">
+                <ul className="space-y-2">
                     {findUsers.map((user) => (
-                        <li key={user.id} className="flex w-full">
-                            <div className="w-[80%] border-2 h-10 flex items-center p-3 border-medium_gray m-2 rounded-md">
+                        <li key={user.id} className="flex items-center justify-between">
+                            {/* 유저 닉네임 */}
+                            <div className="xs:text-base text-sm w-full h-10 flex items-center bg-white border border-stroke_gray rounded-md px-2">
                                 {user.nickname}
                             </div>
-                            <div className="flex items-center">
-                                <Button containerStyles=" w-20 h-10 !text-base flex items-center justify-center"
-                                    onClick={() => handleRequestChat(user)}>
-                                    <Link
-                                        href={{ pathname: `/chat/${user.id}` }} // sender, receiver 정보 URL에 추가
-                                    >
-                                        연락하기
-                                    </Link>
-                                </Button>
-                            </div>
+                            {/* 연락하기 버튼 */}
+                            <Button
+                                containerStyles="!text-sm !xs:text-base w-24 h-10 !text-base font-semibold flex items-center justify-center ml-4"
+                                onClick={() => handleRequestChat(user)} >
+                                연락하기
+                            </Button>
                         </li>
                     ))}
                 </ul>
             </div>
         </div>
-    )
+    );
 }
 
 
