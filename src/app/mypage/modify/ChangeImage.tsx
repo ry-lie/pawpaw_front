@@ -8,12 +8,11 @@ import Input from "@/components/Input";
 import { handleImamgeUploading } from "@/utils/ImageUpload";
 import { PutImage } from "@/lib/api/Picture";
 
+
 export default function ChangeImage() {
   const [img, setImg] = useState<string>(BasicProfile.src);
   const fileInput = useRef<HTMLInputElement | null>(null);
-
-  //이메일 가져오기
-  // const [email, setEmail] = useState("");
+  const [email, setEmail] = useState("");
 
   // useEffect(()=>{
   //     const fetchEmail = async()=>{

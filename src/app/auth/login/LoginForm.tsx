@@ -9,6 +9,9 @@ import Button from "@/components/Button";
 import { PATHS } from "@/constants/path";
 import KakaoLoginButton from "@/assets/images/kakaoResource/kakao_login_large_wide.png";
 import Image from "next/image";
+import { loginAPI } from "@/lib/api/auth";
+import { useUserStore } from "@/stores/userStore";
+import { useRouter } from "next/navigation";
 
 type LoginInputs = {
   email: string;
@@ -27,7 +30,8 @@ export default function LoginForm() {
 
   const { isValid } = useFormState({ control });
   const [isLoading, setIsLoading] = useState(false);
-
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const router = useRouter();
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     const { email, password } = data;
     const payload = { email, password };
@@ -36,10 +40,18 @@ export default function LoginForm() {
 
     setIsLoading(true);
     try {
-      // 로그인 로직 작성 예정
-      console.log("로그인 성공");
+      const response = await loginAPI(payload);
+      if (response.status === 200) { // 로그인 성공
+        console.log("로그인 성공", response);
+        const { id, nickname } = response.data.body.data.user;
+        useUserStore.getState().login({ id, nickname });
+        router.push(PATHS.MAIN);
+      } else {
+        setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
+      }
     } catch (error) {
       console.error("로그인 실패:", error);
+      setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
     } finally {
       setIsLoading(false);
     }
@@ -71,17 +83,18 @@ export default function LoginForm() {
 
       <Input
         type="password"
-        placeholder="비밀번호를 입력하세요"
+        placeholder="비밀번호"
         className="w-full h-14"
         {...register("password", {
           required: "비밀번호는 필수 입력 항목입니다.",
           pattern: {
-            value: /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
-            message: "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/,
+            message: "대/소문자, 숫자, 특수문자 포함 최소 8자리 이상입니다."
           },
         })}
         errorMessage={errors.password?.message}
       />
+      {loginError && <p className="text-red-500 text-sm">{loginError}</p>} {/* 에러 메시지 표시 */}
       <Button
         disabled={!isValid || isLoading}
         isLoading={isLoading}

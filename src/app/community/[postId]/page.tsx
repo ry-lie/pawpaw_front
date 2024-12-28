@@ -1,22 +1,24 @@
-import ReviewDeleteButton from "@/app/map/review/[id]/ReviewDeleteButton";
 import BasicProfileIcon from "@/assets/icons/profile_icon.png";
 import Button from "@/components/Button";
+import DeleteButton from "@/components/DeleteButton";
 import Footer from '@/components/Footer'
 import Input from "@/components/Input";
 import Carousel from '@/components/Main/Carousel'
+import { PATHS } from "@/constants/path";
 import axiosInstance from '@/lib/axios';
 import Image from "next/image";
 import Link from "next/link";
 import React from 'react'
 import { FaEdit } from "react-icons/fa";
+import { TbMessageDots } from "react-icons/tb";
 import Comment from "./Comment";
 import LikeButton from "./LikeButton";
 
 interface CommunityProps {
   id: string;
-  writer: string;
+  nickname: string;
   title: string;
-  description: string;
+  content: string;
   createdDate: string;
   isLiked: boolean;
   likeCount: number;
@@ -27,21 +29,21 @@ async function fetchCommunityDetail(communityId: string): Promise<CommunityProps
 }
 
 const post = {
-  id: "1",
-  images: [
+
+  imageList: [
     "/images/이리온.jpg", // 임시로 public에 저장
     "/images/rioni.jpg",
     "/images/식당.png",
   ],
   profile: BasicProfileIcon,
-  writer: "리온이 누나",
-  createdDate: "2023-12-12",
+  nickname: "리온이 누나",
+  createdAt: "2023-12-12",
   title: "여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페",
-  description:
+  content:
     "여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요",
   isLiked: true,
   likeCount: 10,
-  comments: [
+  commentList: [
     {
       id: "c1",
       writer: "리온이 오빠",
@@ -76,7 +78,7 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
   return (
     <div className='mt-12'>
       <Carousel
-        carouselData={post.images.map((url, index) => ({
+        carouselData={post.imageList.map((url, index) => ({
           id: index + 1,
           imgUrl: url,
           text: "",
@@ -85,8 +87,9 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
         containerClassName="bg-[#f9f9f9]"
         imageClassName="object-contain max-h-full max-w-full "
       />
-      <div className="mt-2 p-4 mb-14">
+      <div className=" px-4 pb-4 mb-14">
         <div className="flex items-center space-x-4 border-b-2 pb-2">
+          {/*작성자 프로필 이미지 */}
           <Image
             src={post?.profile}
             alt="프로필 이미지"
@@ -94,43 +97,53 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
             height={40}
             className="rounded-full"
           />
+          {/*작성자 */}
           <div className="flex justify-between  items-center w-full">
-            <div className="text-md font-bold items-center">{post?.writer}</div>
+            <div className="flex gap-2">
+              <div className="text-md font-bold items-center">{post?.nickname}</div>
+              <button className="text-primary flex items-center"><TbMessageDots className="w-5 h-5" />채팅</button>
+            </div>
+
             <div>
               {/**본인이면 뜨도록 수정 */}
               <div className="flex gap-3 justify-center">
-                <Link href={`/map/review/write/${post.id}`}>
+                <Link href={PATHS.COMMUNITY_WRITE}>
                   <FaEdit className="text-gray-400 w-5 h-5" />
                 </Link>
-                <ReviewDeleteButton reviewId={id} />
+                <DeleteButton
+                  id={id}
+                  resourceType="posts"
+                  onSuccessRedirect={PATHS.COMMUNITY}
+                />
               </div>
-              <div className="text-gray-500 text-sm">{post?.createdDate}</div>
+              {/*작성일*/}
+              <div className="text-gray-500 text-sm">{post?.createdAt}</div>
             </div>
 
           </div>
 
         </div>
         {/*제목 + 설명*/}
-        <div className="mt-6">
+        <div className="mt-6 border-b-2 pb-4">
           <div className="flex items-center">
             <h1 className="text-lg font-bold pl-1 flex">{post?.title}</h1>
           </div>
-          <p className="mt-4 text-gray-700">{post?.description}</p>
+          <p className="mt-4 text-gray-700">{post?.content}</p>
           {/*좋아요*/}
           <div className="flex flex-col justify-center items-center mt-10">
-            <LikeButton postId={post?.id} isLiked={post.isLiked} />
+            <LikeButton postId={id} isLiked={post.isLiked} />
             <div>{post.likeCount}</div>
           </div>
         </div>
-        <hr className="my-3" />
+
         {/*댓글*/}
-        <div className="font-semibold text-lg">
-          <h2>댓글 ({post.comments.length})</h2>
+        <div className="font-semibold text-lg mt-4">
+          <h2>댓글 ({post.commentList.length})</h2>
         </div>
 
         {/* 댓글 목록 */}
         <div className="space-y-4">
-          {post.comments.map((comment) => (
+          {post.commentList.map((comment) => (
             <Comment
               key={comment.id}
               id={comment.id}

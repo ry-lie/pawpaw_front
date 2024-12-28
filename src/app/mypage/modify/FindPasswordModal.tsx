@@ -3,6 +3,7 @@ import Input from "@/components/Input";
 import Image from "next/image";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import Confirm_icon from "@/assets/icons/confirm_icon.png";
+import axios from "axios";
 
 export default function FindPasswordModal() {
   type FindPasswordInput = {
@@ -20,16 +21,19 @@ export default function FindPasswordModal() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<FindPasswordInput> = (data) => {
+  const onSubmit: SubmitHandler<FindPasswordInput> = async (data) => {
     const { password, newPassword, confirmPassword } = data;
     const payload = { password, newPassword, confirmPassword };
-    // fetch('/nickname',{
-    //     method:"POST",
-    //     headers:{
-    //         "Content-Type" : "application/json",
+    // try {
+    //   const res = await axios.post(`/api/password/reset`, payload, {
+    //     headers: {
+    //       "Content-Type": "application/json"
     //     },
-    //     body:JSON.stringify(data)
-    // });
+    //   });
+    //   console.log("res", res.data)
+    // } catch (e) {
+    //   console.error("Error:", e)
+    // }
     console.log("data", payload);
   };
 
@@ -73,10 +77,11 @@ export default function FindPasswordModal() {
           >
             <Button
               btnType="submit"
-              containerStyles="w-12 h-8 mr-10 flex justify-center items-center text-primary border-solid border-primary border bg-transparent hover:text-white"
+              containerStyles="w-12 h-8 mr-10 flex justify-center items-center !text-primary border-solid border-primary border bg-transparent hover:bg-primary hover:!text-white"
             >
               인증
             </Button>
+
           </Input>
 
           <Input
