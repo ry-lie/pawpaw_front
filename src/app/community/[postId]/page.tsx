@@ -84,11 +84,13 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
           text: "",
         }))}
         height="h-[500px]"
-        containerClassName="bg-[#f9f9f9]"
-        imageClassName="object-contain max-h-full max-w-full "
+        containerClassName="bg-white"
+        imageClassName="object-contain max-h-full max-w-full border border-x-0 border-stroke_gray"
       />
-      <div className=" px-4 pb-4 mb-14">
-        <div className="flex items-center space-x-4 border-b-2 pb-2">
+
+      {/* 1. 글 섹션 */}
+      <div className="mt-2 px-4 pb-4 border-b border-stroke_gray">
+        <div className="flex items-center space-x-2 border-b border-stroke_gray pb-2">
           {/*작성자 프로필 이미지 */}
           <Image
             src={post?.profile}
@@ -101,12 +103,12 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
           <div className="flex justify-between  items-center w-full">
             <div className="flex gap-2">
               <div className="text-md font-bold items-center">{post?.nickname}</div>
-              <button className="text-primary flex items-center"><TbMessageDots className="w-5 h-5" />채팅</button>
+              <button className="text-accent_orange text-sm flex items-center"><TbMessageDots className="mb-0.5 w-4 h-4" />채팅</button>
             </div>
 
             <div>
               {/**본인이면 뜨도록 수정 */}
-              <div className="flex gap-3 justify-center">
+              <div className="flex gap-2 justify-end mb-0.5">
                 <Link href={PATHS.COMMUNITY_WRITE}>
                   <FaEdit className="text-gray-400 w-5 h-5" />
                 </Link>
@@ -119,30 +121,32 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
               {/*작성일*/}
               <div className="text-gray-500 text-sm">{post?.createdAt}</div>
             </div>
-
           </div>
-
         </div>
+
         {/*제목 + 설명*/}
-        <div className="mt-6 border-b-2 pb-4">
+        <div className="mt-6 pb-4">
           <div className="flex items-center">
-            <h1 className="text-lg font-bold pl-1 flex">{post?.title}</h1>
+            <h1 className="text-base xs:text-lg font-bold pl-1 flex">{post?.title}</h1>
           </div>
-          <p className="mt-4 text-gray-700">{post?.content}</p>
+          <p className="mt-4 text-sm xs:text-base text-gray-700">{post?.content}</p>
           {/*좋아요*/}
           <div className="flex flex-col justify-center items-center mt-10">
             <LikeButton postId={id} isLiked={post.isLiked} />
-            <div>{post.likeCount}</div>
+            <div className="text-sm xs:text-lg">{post.likeCount}</div>
           </div>
         </div>
-
+      </div>
+      
+      {/* 2. 댓글 섹션 */}
+      <div className="mt-2 px-4 pb-4 border-b border-stroke_gray mb-14">
         {/*댓글*/}
-        <div className="font-semibold text-lg mt-4">
-          <h2>댓글 ({post.commentList.length})</h2>
+        <div className="font-semibold text-lg mt-4 border-b border-stroke_gray">
+          <h2 className="ml-2 mb-1 text-base xs:text-lg">댓글 ({post.commentList.length})</h2>
         </div>
 
         {/* 댓글 목록 */}
-        <div className="space-y-4">
+        <div className="bg-white border-x mb-4">
           {post.commentList.map((comment) => (
             <Comment
               key={comment.id}
@@ -151,16 +155,15 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
               profile={comment.profile}
               createdDate={comment.createdDate}
               content={comment.content}
-
             />
           ))}
         </div>
         <div className="flex gap-2">
           <Input name="comment" className="w-full" />
-          <Button containerStyles="w-10 text-xs">등록</Button>
+          <Button containerStyles="w-14 !text-sm !font-medium">등록</Button>
         </div>
-
       </div >
+
       <Footer />
     </div>
   )
