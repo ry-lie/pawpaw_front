@@ -6,6 +6,8 @@ import { Suspense } from "react";
 
 import "./globals.css";
 import Loading from "./loading";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 export const metadata: Metadata = {
   title: "포포(pawpaw) - 네 발 달린 친구들(4paws)과 행복한 추억 만들기를 위한 커뮤니티",
@@ -29,6 +31,7 @@ export default function RootLayout({
             <div className="flex flex-col w-full min-h-screen sm:max-w-mobile mx-auto bg-background border border-stroke_gray-600">
               {children}
               <Modal />
+              <ToastContainer position="top-right" autoClose={2000}/>
             </div>
           </Suspense>
         </QueryProvider>

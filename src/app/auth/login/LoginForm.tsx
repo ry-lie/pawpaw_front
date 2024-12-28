@@ -12,6 +12,7 @@ import Image from "next/image";
 import { loginAPI } from "@/lib/api/auth";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 type LoginInputs = {
   email: string;

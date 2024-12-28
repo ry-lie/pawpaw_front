@@ -26,7 +26,6 @@ export default function ChatRoomPage() {
   const searchParams = useSearchParams();
   const sender = searchParams.get("sender") as string;
   const receiver = searchParams.get("receiver") as string;
-  //const roomId = `${sender}-${receiver}`;
   const [chatLog, setChatLog] = useState<chatMessagetype[]>([]);
   const chatScroll = useRef<HTMLUListElement>(null);
   const [currentMessage, setCurrentMessage] = useState("");
@@ -39,16 +38,18 @@ export default function ChatRoomPage() {
     });
 
     // 상대방이 들어왔을 때 확인
-    // socket.on("receive-message", (data) => {
-    //   console.log(data.message);
-    // });
+    socket.on("join", (data) => {
+      if(data.nickname && data.nickname !== sender){
+        setChatLog((prev)=>[
+          ...prev,
+          {message : `${data.nickname}님이 채팅을 수락했습니다.`, sender :"system", receiver:"", timestamp:new Date().toISOString()},
+        ]);
+      }
+    });
 
     // 메시지 수신
     socket.on("receive-message", (data) => {
-      console.log("join",data)
-      // if (data.receiver === sender) {
-      //   setChatLog((prev) => [...prev, data]);
-      // }
+        setChatLog((prev) => [...prev, data]);
     });
 
     //소켓 해제
@@ -95,9 +96,6 @@ export default function ChatRoomPage() {
         ref={chatScroll}
         className="flex-1 flex flex-col overflow-y-auto border-t-4 pt-4 px-2"
       >
-        <li className="font-bold flex justify-center mb-4">
-          {receiver}님이 채팅신청을 수락했습니다.
-        </li>
         {chatLog.map((message, index) => (
           <div key={index} className="flex flex-col items-start mb-2">
             {message.sender !== sender && (
@@ -137,7 +135,6 @@ export default function ChatRoomPage() {
         </div>
 
         <Input
-          id="chatWrite"
           type="text"
           value={currentMessage}
           onChange={HandleInputChange}
