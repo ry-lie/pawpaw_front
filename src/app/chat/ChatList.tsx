@@ -20,16 +20,20 @@ type ConversationType = {
     lastMessage: LastMessageType;
 }
 
-const socket_url = process.env.SOCKET_URL
+const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL
 
 export default function ChatList() {
     const [conversation, setConversation] = useState<ConversationType[]>([]);
     const [newMessage, setNewMessage] = useState<{ [key: string]: Boolean }>({});
-    const socket = io(`${socket_url}`);
+    const socket = io(`${socket_url}`,{withCredentials:true});
+    
+
+
 
     //유저 정보 가져오기
-    const currentUser = sessionStorage.getItem("UserId") || "";
 
+    // const currentUser = sessionStorage.getItem("userId") || "";
+    const currentUser = "1"
 
     //방 목록 가져오기
     useEffect(() => {
@@ -65,10 +69,7 @@ export default function ChatList() {
         socket.on("receive-message", (message: LastMessageType & { roomId: string }) => {
             setNewMessage(prev => ({ ...prev, [message.roomId]: true }));
         });
-        return () => {
-            socket.disconnect();
-        };
-    }, [socket]);
+    }, []);
 
     //방나가기 함수
     const deleteChatRoom = (roomId: string) => {
