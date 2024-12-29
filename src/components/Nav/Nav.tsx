@@ -5,6 +5,8 @@ import { useUserStore } from "@/stores/userStore";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import Button from "../Button";
+import { toast } from "react-toastify";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
@@ -15,6 +17,47 @@ export default function Nav() {
   useEffect(() => {
     useUserStore.getState().initialize();
   }, []);
+
+  //채팅 요청
+  const handleChatToastify = (another: string) => {
+    toast(
+      <div>
+        <div className="flex items-center w-full">
+          <p className="mb-2">{another}님이 채팅 요청하셨습니다.</p>
+        </div>
+
+        <div className="flex ">
+          <Button
+            onClick={() => handleApprove(another)}>수락</Button>
+          <Button onClick={() => handleReject(another)}>거절</Button>
+        </div>
+      </div>,
+      {
+        position: "top-right",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        hideProgressBar: true,
+      }
+    )
+  }
+
+  //채팅 요청수락
+  const handleApprove = (another: string) => {
+    toast.info(`${another}님의 채팅을 수락했습니다.`,{
+      autoClose:800,
+      position:"top-right"
+    });
+   
+  }
+
+  //채팅 요청거절
+  const handleReject = (another: string) => {
+    toast.info(`${another}님의 채팅을 거절했습니다.`,{
+      autoClose:800,
+      position:"top-right"
+    });
+  }
 
   // 로그아웃
   const handleLogout = () => {
@@ -39,6 +82,13 @@ export default function Nav() {
           <Link href={PATHS.MAIN} className="text-lg font-semibold text-gray-800">
             LOGO
           </Link>
+        </div>
+        {/*알람 버튼 진행 */}
+        <div className="ml-56">
+          <Button 
+          onClick={() => handleChatToastify("빠알간두볼")}
+          containerStyles="text-black hover:!bg-white hover:!text-black hover:underline">알람테스트</Button>
+
         </div>
 
         {/* 로그인 및 로그아웃 버튼 */}
