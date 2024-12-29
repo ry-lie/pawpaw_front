@@ -31,6 +31,8 @@ export default function ChatRoomPage() {
   const [currentMessage, setCurrentMessage] = useState("");
 
   useEffect(() => {
+    //roomid생성
+    const roomId = [sender, receiver].sort().join("-");
     // 소켓 연결 및 join 이벤트
     socket.on("connect", () => {
       console.log("소켓 연결 성공");
@@ -42,7 +44,10 @@ export default function ChatRoomPage() {
       if(data.nickname && data.nickname !== sender){
         setChatLog((prev)=>[
           ...prev,
-          {message : `${data.nickname}님이 채팅을 수락했습니다.`, sender :"system", receiver:"", timestamp:new Date().toISOString()},
+          {message : `${data.nickname}님이 채팅을 수락했습니다.`, 
+          sender :"system",
+          receiver:"", 
+          timestamp:new Date().toISOString()},
         ]);
       }
     });
@@ -70,6 +75,7 @@ export default function ChatRoomPage() {
   const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMessage.trim()) {
+      const roomId = [sender, receiver].sort().join("-");
       const currentTime = new Date().toISOString();
       const message: chatMessagetype = {
         message: currentMessage,
@@ -79,7 +85,7 @@ export default function ChatRoomPage() {
       };
 
       // 서버에 메세지 전송
-      socket.emit("send-message", {roomId : "room1", message:currentMessage});
+      socket.emit("send-message", {roomId, message:currentMessage});
       setChatLog((prev) => [...prev, message]);
       setCurrentMessage("");
     }
