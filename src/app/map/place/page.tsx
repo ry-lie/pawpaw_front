@@ -1,5 +1,5 @@
+import { redirect } from "next/navigation";
+
 export default function PlacePage() {
-  return (
-    <div></div>
-  );
+  redirect("/map");
 }

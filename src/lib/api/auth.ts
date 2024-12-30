@@ -21,7 +21,7 @@ export interface RegisterPayload {
   password: string;
   name: string;
   nickname: string;
-  profileImage: string;
+  profileImage: File | null;
 }
 export const registerAPI = async (payload: RegisterPayload) => {
   const formData = new FormData();
@@ -29,7 +29,22 @@ export const registerAPI = async (payload: RegisterPayload) => {
   formData.append("password", payload.password);
   formData.append("name", payload.name);
   formData.append("nickname", payload.nickname);
-  formData.append("profileImage", payload.profileImage);
+
+  if (payload.profileImage) {
+    formData.append("profileImage", payload.profileImage);
+  } else {
+    // 기본 이미지 파일을 추가
+    const defaultImageResponse = await fetch("/images/profile_icon.png");
+    const defaultImageBlob = await defaultImageResponse.blob();
+    const defaultImageFile = new File(
+      [defaultImageBlob],
+      "default_profile.png",
+      {
+        type: defaultImageBlob.type,
+      },
+    );
+    formData.append("profileImage", defaultImageFile);
+  }
 
   const response = await axiosInstance.post(`/auth/register`, formData, {
     headers: {

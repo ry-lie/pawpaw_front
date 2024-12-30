@@ -7,266 +7,110 @@ import Image from "next/image";
 import FootPrint from "@/assets/icons/footprint.png";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
-import PlaceDetail, { PlaceProps } from "./place/[placeId]/PlaceDetail";
+import { useGeolocation } from "@/utils/useGeolocation";
+import { useUserStore } from "@/stores/userStore";
+import Loading from "../loading";
+import { fetchNearbyPlaces } from "@/lib/api/place";
+import PlaceDetail from "./place/[placeId]/PlaceDetail";
+export interface PlaceProps {
+  id: number; // Primary Key
+  name: string; // 시설명
+  category: string; // 카테고리
+  postalCode: string | number; // 우편번호
+  roadNameAddress: string; // 도로명주소
+  postalAddress: string; // 지번주소
+  contact: string; // 전화번호
+  closingDays: string; // 휴무일
+  openingHour: string; // 운영시간
+  hasParkingArea: boolean; // 주차 가능 여부
+  allowSize: string; // 입장 가능 동물 크기
+  restrictions: string; // 반려동물 제한사항
+  description: string; // 기본 정보_장소설명
+  additionalFees: string; // 애견 동반 추가 요금
+  latitude?: number; // 위도 (데이터에서 누락된 경우 optional로 설정)
+  longitude?: number; // 경도 (데이터에서 누락된 경우 optional로 설정)
+  lastUpdate: string; // 최종작성일
+  createdAt: string; // 생성 일자
+  createdUser: string; // 생성한 사용자
+  updatedAt: string; // 업데이트 일자
+  updatedUser?: string | null; // 업데이트한 사용자 (null 가능)
+}
 
 interface MapClientProps {
   latitude: number;
   longitude: number;
 }
-const data = [
-  {
-    "id": 1,
-    "name": "1004 약국",
-    "category": "동물약국",
-    "postalCode": 10598,
-    "roadNameAddress": "경기도 고양시 덕양구 동세로 19",
-    "postalAddress": "경기도 고양시 덕양구 동산동 352-1",
-    "contact": "02-381-5052",
-    "latitude": 37.64454276,
-    "longitude": 126.886336,
-    "closingDays": "매주 토, 일, 법정공휴일",
-    "openingHour": "월~금 09:00~18:00",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "동물약국",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": true,
-    "reviews": [
-      {
-        "id": 1,
-        "writer": "깡깡이",
-        "content": "의사쌤이 엄청 친절하시고 시설 굳",
-        "date": "2023-12-24",
-        "isRecommanded": true
-      },
-      {
-        "id": 2,
-        "writer": "리온",
-        "content": "강아지가 편하게 진료를 받았어요!",
-        "date": "2023-12-23",
-        "isRecommanded": false
-      },
-      {
-        "id": 2,
-        "writer": "리온",
-        "content": "강아지가 편하게 진료를 받았어요!",
-        "date": "2023-12-23",
-        "isRecommanded": false
-      },
-      {
-        "id": 2,
-        "writer": "리온",
-        "content": "강아지가 편하게 진료를 받았어요!",
-        "date": "2023-12-23",
-        "isRecommanded": false
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "name": "1004섬수석미술관",
-    "category": "미술관",
-    "postalCode": 58831,
-    "roadNameAddress": "전라남도 신안군 자은면 자은서부2길 508-68",
-    "postalAddress": "전라남도 신안군 자은면 백산리 633-54",
-    "contact": "061-240-8359",
-    "latitude": 34.8800925,
-    "longitude": 125.996874,
-    "closingDays": "매주 월요일",
-    "openingHour": "화~일 09:00~18:00",
-    "allowSize": "해당없음",
-    "restrictions": "해당없음",
-    "description": "미술관",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": false
-  },
-  {
-    "id": 3,
-    "name": "100세건강약국",
-    "category": "동물약국",
-    "postalCode": 13989,
-    "roadNameAddress": "경기도 안양시 만안구 안양로 408",
-    "postalAddress": "경기도 안양시 만안구 안양동 856-4",
-    "contact": "031-465-1320",
-    "latitude": 37.40715043,
-    "longitude": 126.914837,
-    "closingDays": "매주 일요일, 법정공휴일",
-    "openingHour": "월~금 09:00~21:00, 토 09:00~20:00",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "동물약국",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": true
-  },
-  {
-    "id": 4,
-    "name": "100세약국",
-    "category": "동물약국",
-    "postalCode": 7223,
-    "roadNameAddress": "서울특별시 영등포구 양평로 24",
-    "postalAddress": "서울특별시 영등포구 당산동6가 217-4",
-    "contact": "02-2678-8217",
-    "latitude": 37.53325958,
-    "longitude": 126.903741,
-    "closingDays": "매주 일요일, 법정공휴일",
-    "openingHour": "월~금 08:30~21:00, 토 08:30~18:30",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "동물약국",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": true
-  },
-  {
-    "id": 5,
-    "name": "100세약국",
-    "category": "동물약국",
-    "postalCode": 16484,
-    "roadNameAddress": "경기도 수원시 팔달구 경수대로 568",
-    "postalAddress": "경기도 수원시 팔달구 인계동 942-4",
-    "contact": "031-239-4801",
-    "latitude": 37.27627151,
-    "longitude": 127.030911,
-    "closingDays": "매주 일요일, 법정공휴일",
-    "openingHour": "월~금 09:00~19:00, 토 09:00~15:00",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "동물약국",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": false
-  },
-  {
-    "id": 6,
-    "name": "100세약국",
-    "category": "동물약국",
-    "postalCode": 21545,
-    "roadNameAddress": "인천광역시 남동구 남동대로 892",
-    "postalAddress": "인천광역시 남동구 간석동 207-3",
-    "contact": "032-427-7585",
-    "latitude": 37.4620717,
-    "longitude": 126.708644,
-    "closingDays": "매주 토, 일",
-    "openingHour": "월~금 08:30~22:00",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "동물약국",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": true
-  },
-  {
-    "id": 7,
-    "name": "100코달리 와인바",
-    "category": "카페",
-    "postalCode": 4585,
-    "roadNameAddress": "서울특별시 중구 다산로38길 11",
-    "postalAddress": "서울특별시 중구 신당동 292-152",
-    "contact": "0507-1346-6774",
-    "latitude": 37.56330525,
-    "longitude": 127.016417,
-    "closingDays": "매주 월요일",
-    "openingHour": "화~일 18:00~02:00",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "애견카페",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": false
-  },
-  {
-    "id": 8,
-    "name": "100평 광장약국",
-    "category": "동물약국",
-    "postalCode": 11758,
-    "roadNameAddress": "경기도 의정부시 동일로 732",
-    "postalAddress": "경기도 의정부시 금오동 441-65",
-    "contact": "031-847-1269",
-    "latitude": 37.75195739,
-    "longitude": 127.049286,
-    "closingDays": "매주 토, 일, 법정공휴일",
-    "openingHour": "월~금 10:00~18:00",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "동물약국",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": true
-  },
-  {
-    "id": 9,
-    "name": "107page",
-    "category": "카페",
-    "postalCode": 39204,
-    "roadNameAddress": "경상북도 구미시 봉곡서로 87-34",
-    "postalAddress": "경상북도 구미시 봉곡동 56-2",
-    "contact": "0507-1331-7179",
-    "latitude": 36.15863384,
-    "longitude": 128.30627,
-    "closingDays": "매주 월요일",
-    "openingHour": "화~일 12:00~22:00",
-    "allowSize": "모두 가능",
-    "restrictions": "마당, 1층만 입장 가능, 목줄, 배변봉투",
-    "description": "애견카페",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": true
-  },
-  {
-    "id": 10,
-    "name": "119동물병원",
-    "category": "동물병원",
-    "postalCode": 42913,
-    "roadNameAddress": "대구광역시 달성군 다사읍 달구벌대로 893",
-    "postalAddress": "대구광역시 달성군 다사읍 매곡리 1551-1",
-    "contact": "053-585-1195",
-    "latitude": 35.85715733,
-    "longitude": 128.466544,
-    "closingDays": "연중무휴",
-    "openingHour": "월~금 09:30~18:30, 토 09:30~16:00, 일 12:00~12:30, 법정공휴일 09:30~16:00",
-    "allowSize": "모두 가능",
-    "restrictions": "제한사항 없음",
-    "description": "일반동물병원",
-    "additionalFees": "없음",
-    "lastUpdate": "2022-11-30",
-    "hasParkingArea": false
-  }
-]
+
 {/**지도페이지 상태, 이벤트 처리 담당 컴포넌트 */ }
 export default function MapClient({ latitude, longitude }: MapClientProps) {
+  const { location } = useGeolocation();
   const { openModal } = useModalStore();
   const [places, setPlaces] = useState<PlaceProps[]>([]);
   const [radius, setRadius] = useState(250); // 기본 반경 250m
   const [category, setCategory] = useState("동물약국"); // 기본 카테고리
 
-  // useEffect(() => {
-  //   // 반경과 카테고리에 따라 서버에서 장소 데이터를 가져옴
-  //   async function fetchPlaces() {
-  //     try {
-  //       const response = await fetch(
-  //         `/api/places?radius=${radius}&category=${encodeURIComponent(category)}&latitude=${latitude}&longitude=${longitude}`
-  //       );
-  //       const data = await response.json();
-  //       setPlaces(data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch places:", error);
-  //     }
-  //   }
-  //   fetchPlaces();
-  // }, [radius, category, latitude, longitude]);
+  useEffect(() => {
+    async function loadPlaces() {
+      try {
+        if (!location) return;
 
+        const data = await fetchNearbyPlaces({
+          category,
+          radius,
+          latitude: location.latitude,
+          longitude: location.longitude,
+        });
+        setPlaces(data.body.data);
+      } catch (error) {
+        console.error("장소 데이터를 가져오는 중 오류 발생:", error);
+      }
+    }
+
+    loadPlaces();
+  }, [radius, category, location]);
+
+  const nickname = useUserStore((state) => state.nickname);
+  console.log("ssssssssss", places)
+  if (!location) {
+    return (
+      <div className="flex items-center justify-center w-full h-screen">
+        <Loading />
+      </div>
+    );
+  }
+  console.log(location.latitude, location.longitude, "내 위도경도")
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
       const mapContainer = document.getElementById("map");
       const mapOption = {
-        center: new window.kakao.maps.LatLng(latitude, longitude),
+        center: new window.kakao.maps.LatLng(location.latitude, location.longitude),
         level: 3,
       };
 
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
+
+
+      // 내 위치 마커 이미지 설정
+      const myLocationImageSrc = "/images/mapMaker/my_location.png";
+      const myLocationImageSize = new window.kakao.maps.Size(101, 68);
+      const myLocationImageOption = { offset: new window.kakao.maps.Point(25, 34) };
+
+      const myLocationMarkerImage = new window.kakao.maps.MarkerImage(
+        myLocationImageSrc,
+        myLocationImageSize,
+        myLocationImageOption
+      );
+
+      // 내 위치 마커 생성
+      const myLocationMarker = new window.kakao.maps.Marker({
+        position: new window.kakao.maps.LatLng(location.latitude, location.longitude),
+        image: myLocationMarkerImage,
+        title: `${nickname}님의 위치`,
+      });
+
+      // 내 위치 마커를 지도에 추가
+      myLocationMarker.setMap(map);
+
       // 카테고리에 따른 마커 이미지 매핑
       const markerImages: Record<string, string> = {
         "동물약국": "/images/mapMaker/animal_pharmacy.png",
@@ -285,15 +129,13 @@ export default function MapClient({ latitude, longitude }: MapClientProps) {
       };
 
       // 마커 생성
-
-      data.forEach((place) => {
-        console.log("Marker Image Path:", markerImages[place.category]);
+      places.forEach((place) => {
         const markerPosition = new window.kakao.maps.LatLng(place.latitude, place.longitude);
 
         const markerImage = new window.kakao.maps.MarkerImage(
-          markerImages[place.category], // 카테고리에 맞는 이미지 URL
-          new window.kakao.maps.Size(50, 68), // 마커 크기 설정
-          { offset: new window.kakao.maps.Point(16, 32) } // 중심점 설정
+          markerImages[place.category],
+          new window.kakao.maps.Size(50, 68),
+          { offset: new window.kakao.maps.Point(16, 32) }
         );
 
         const marker = new window.kakao.maps.Marker({

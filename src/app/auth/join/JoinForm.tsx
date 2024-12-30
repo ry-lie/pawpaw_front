@@ -6,7 +6,6 @@ import { useForm, useFormState, SubmitHandler } from "react-hook-form";
 import Button from "@/components/Button";
 import Image from "next/image";
 import BasicProfile from "@/assets/icons/profile_icon.png";
-import { convertFileToBase64, convertImageToBase64 } from "@/utils/imageConverter";
 import { checkEmailDuplicate, checkNicknameDuplicate, registerAPI, RegisterPayload, sendVerificationCode, verifyCode } from "@/lib/api/auth";
 
 interface JoinInputs {
@@ -31,43 +30,40 @@ export default function JoinForm() {
 
   const { isValid } = useFormState({ control });
   const [isLoading, setIsLoading] = useState(false);
-  const [profileImage, setProfileImage] = useState<string>("/images/profile_icon.png"); // 기본 프로필 이미지 경로
   const [isEmailChecked, setIsEmailChecked] = useState(false);  // 이메일 중복 확인
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);  // 닉네임 중복 확인
-  // 기본 프로필 이미지를 Base64로 변환하여 상태에 설정
-  useEffect(() => {
-    const initializeProfileImage = async () => {
-      try {
-        const base64Image = await convertImageToBase64(BasicProfile.src);
-        setProfileImage(base64Image);
-      } catch (error) {
-        console.error("기본 프로필 이미지 변환 실패:", error);
-      }
-    };
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null); // 업로드된 이미지 파일 상태
+  const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null); // 미리보기 URL
 
-    initializeProfileImage();
-  }, []);
-
-  // 업로드된 프로필 이미지를 Base64로 변환하여 상태에 설정
-  const handleProfileImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      try {
-        const base64Image = await convertFileToBase64(file);
-        setProfileImage(base64Image);
-      } catch (error) {
-        console.error("이미지 업로드 변환 실패:", error);
+      setProfileImageFile(file);
+
+      if (profileImageUrl) {
+        URL.revokeObjectURL(profileImageUrl);
       }
+      setProfileImageUrl(URL.createObjectURL(file));
     }
   };
+  // 컴포넌트 언마운트 시 URL 해제
+  useEffect(() => {
+    return () => {
+      if (profileImageUrl) {
+        URL.revokeObjectURL(profileImageUrl);
+      }
+    };
+  }, [profileImageUrl]);
+
   const onSubmit: SubmitHandler<JoinInputs> = async (data) => {
     const payload: RegisterPayload = {
       email: data.email,
       password: data.password,
       name: data.name,
       nickname: data.nickname,
-      profileImage,
+      profileImage: profileImageFile,
     };
+
     setIsLoading(true);
     try {
       const response = await registerAPI(payload);
@@ -79,7 +75,17 @@ export default function JoinForm() {
     }
   };
 
+
   const handleEmailDuplicateCheck = async () => {
+    const email = getValues("email") || "";
+
+    if (!email.trim()) {
+      control.setError("email", {
+        type: "manual",
+        message: "이메일을 먼저 입력해주세요.",
+      });
+      return;
+    }
     try {
       const email = getValues("email") || "";
       const response = await checkEmailDuplicate(email);
@@ -89,7 +95,7 @@ export default function JoinForm() {
       console.error("이메일 중복 확인 실패:", error);
       control.setError("email", {
         type: "manual",
-        message: "이미 사용 중인 이메일입니다. 다른 이메일을 입력해주세요.",
+        message: "이미 사용 중인 이메일입니다.",
       });
     }
   };
@@ -101,10 +107,23 @@ export default function JoinForm() {
       console.log("인증 코드 요청 성공:", response);
     } catch (error) {
       console.error("인증 코드 요청 실패:", error);
+      control.setError("emailCode", {
+        type: "manual",
+        message: "다시 요청해주세요.",
+      });
     }
   };
 
   const handleVerifyCode = async () => {
+    const emailCode = getValues("emailCode") || "";
+
+    if (!emailCode.trim()) {
+      control.setError("emailCode", {
+        type: "manual",
+        message: "인증코드를 먼저 입력해주세요.",
+      });
+      return;
+    }
     try {
       const email = getValues("email") || "";
       const verificationCode = getValues("emailCode") || "";
@@ -112,10 +131,23 @@ export default function JoinForm() {
       console.log("인증 코드 확인 성공:", response);
     } catch (error) {
       console.error("인증 코드 확인 실패:", error);
+      control.setError("emailCode", {
+        type: "manual",
+        message: "인증코드가 올바르지 않습니다.",
+      });
     }
   };
 
   const handleNicknameDuplicateCheck = async () => {
+    const nickname = getValues("nickname") || "";
+
+    if (!nickname.trim()) {
+      control.setError("nickname", {
+        type: "manual",
+        message: "닉네임을 먼저 입력해주세요.",
+      });
+      return;
+    }
     try {
       const nickname = getValues("nickname") || "";
       const response = await checkNicknameDuplicate(nickname);
@@ -125,7 +157,7 @@ export default function JoinForm() {
       console.error("닉네임 중복 확인 실패:", error);
       control.setError("nickname", {
         type: "manual",
-        message: "이미 사용 중인 닉네임입니다. 다른 닉네임을 입력해주세요.",
+        message: "이미 사용 중인 닉네임입니다.",
       });
     }
   };
@@ -136,7 +168,7 @@ export default function JoinForm() {
       <div className="flex justify-center mb-4">
         <label htmlFor="profile-image-input" className="cursor-pointer">
           <Image
-            src={profileImage || BasicProfile.src}
+            src={profileImageUrl || BasicProfile.src}
             alt="프로필 이미지"
             className="rounded-full border-2 border-gray-300 w-24 h-24 object-cover"
             width={96}
