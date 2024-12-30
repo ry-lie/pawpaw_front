@@ -12,6 +12,7 @@ import { AlarmProps } from "@/stores/alarmStore";
 import Alrem_off from "@/assets/icons/alrem_off.png";
 import Alrem_on from "@/assets/icons/alrem_on.png";
 import Image from "next/image";
+import MiniLogo from "@/assets/images/logo/miniLogo.png";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
@@ -161,11 +162,12 @@ export default function Nav() {
       {/* 로고 영역 */}
       <div className="flex justify-between items-center h-full">
         <div className="flex items-center">
-          <Link
-            href={PATHS.MAIN}
-            className="text-lg font-semibold text-gray-800"
-          >
-            LOGO
+          <Link href={PATHS.MAIN}>
+            <Image
+              src={MiniLogo}
+              alt="미니 로고"
+              className="xs:w-20 xs:h-8 w-14 h-6"
+            />
           </Link>
         </div>
 
