@@ -36,26 +36,39 @@ export interface PlaceProps {
   updatedUser?: string | null; // 업데이트한 사용자 (null 가능)
 }
 
-interface MapClientProps {
-  latitude: number;
-  longitude: number;
-}
 
+const CATEGORY_MAP: Record<string, string> = {
+  동물약국: "ANIMAL_PHARMACY",
+  미술관: "ART_GALLERY",
+  동물병원: "ANIMAL",
+  미용: "BEAUTY",
+  반려동물용품: "PET_SUPPLIES",
+  문예회관: "CULTURAL_CENTER",
+  펜션: "GUESTHOUSE",
+  카페: "CAFE",
+  호텔: "HOTEL",
+  박물관: "MUSEUM",
+  위탁관리: "PET_BOARDING",
+  여행지: "TOURIST_ATTRACTION",
+  식당: "RESTAURANT"
+};
 {/**지도페이지 상태, 이벤트 처리 담당 컴포넌트 */ }
-export default function MapClient({ latitude, longitude }: MapClientProps) {
+export default function MapClient() {
   const { location } = useGeolocation();
   const { openModal } = useModalStore();
   const [places, setPlaces] = useState<PlaceProps[]>([]);
   const [radius, setRadius] = useState(250); // 기본 반경 250m
   const [category, setCategory] = useState("동물약국"); // 기본 카테고리
-
   useEffect(() => {
     async function loadPlaces() {
       try {
         if (!location) return;
 
+        // 카테고리를 영어로 변환
+        const mappedCategory = CATEGORY_MAP[category] || category;
+
         const data = await fetchNearbyPlaces({
-          category,
+          category: mappedCategory, // 영어로 변환된 카테고리 전달
           radius,
           latitude: location.latitude,
           longitude: location.longitude,
@@ -79,6 +92,7 @@ export default function MapClient({ latitude, longitude }: MapClientProps) {
     );
   }
   console.log(location.latitude, location.longitude, "내 위도경도")
+
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
       const mapContainer = document.getElementById("map");
@@ -108,9 +122,12 @@ export default function MapClient({ latitude, longitude }: MapClientProps) {
         title: `${nickname}님의 위치`,
       });
 
-      // 내 위치 마커를 지도에 추가
+      // 내 위치 마커를 지도에 추가 
       myLocationMarker.setMap(map);
-
+      // 삭제 예정
+      window.kakao.maps.event.addListener(myLocationMarker, "click", () => {
+        openModal(<PlaceDetail placeId={1} />);
+      });
       // 카테고리에 따른 마커 이미지 매핑
       const markerImages: Record<string, string> = {
         "동물약국": "/images/mapMaker/animal_pharmacy.png",
