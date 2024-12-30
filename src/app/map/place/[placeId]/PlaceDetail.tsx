@@ -41,40 +41,6 @@ export interface ReviewProps {
   isLikeCliked: boolean;
 }
 
-// const placeDetails = {
-//   "name": "1004 약국",
-//   "roadNameAddress": "경기도 고양시 덕양구 동세로 19",
-//   "postalAddress": "경기도 고양시 덕양구 동산동 352-1",
-//   "postalCode": "10598",
-//   "openingHour": "월~금 09:00~18:00",
-//   "closingDays": "매주 토, 일, 법정공휴일",
-//   "hasParkingArea": true,
-//   "contact": "02-381-5052",
-//   "price": "없음",
-//   "allowSize": "모두 가능",
-//   "restrictions": "제한사항 없음",
-//   "description": "동물약국",
-//   "additionalFees": "없음",
-//   "reviewList": [
-//     {
-//       "id": 1,
-//       "nickname": "깡깡이",
-//       "imageUrl": "",
-//       "title": "대박 추천 병원",
-//       "content": "의사쌤이 엄청 친절하시고 시설 굳의사쌤이 엄청 친절하시고 시설 굳의사쌤이 엄청 친절하시고 시설 굳 ",
-//       "isLikeCliked": true
-//     },
-//     {
-//       "id": 2,
-//       "nickname": "평택평택싸나이",
-//       "imageUrl": "",
-//       "title": "대박 추천 병원",
-//       "content": "강아지가 편하게 진료를 받았어요!",
-//       "isLikeCliked": false
-//     }
-//   ]
-// }
-
 {/**장소 상세 모달 */ }
 export default function PlaceDetail({ placeId }: { placeId: number }) {
   const { closeModal } = useModalStore();

@@ -83,7 +83,7 @@ export default function MapClient() {
   }, [radius, category, location]);
 
   const nickname = useUserStore((state) => state.nickname);
-  console.log("ssssssssss", places)
+
   if (!location) {
     return (
       <div className="flex items-center justify-center w-full h-screen">
@@ -91,7 +91,6 @@ export default function MapClient() {
       </div>
     );
   }
-  console.log(location.latitude, location.longitude, "내 위도경도")
 
   const loadKakaoMap = () => {
     window.kakao.maps.load(() => {
