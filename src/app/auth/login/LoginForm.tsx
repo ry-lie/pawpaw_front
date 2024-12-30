@@ -42,6 +42,7 @@ export default function LoginForm() {
     setIsLoading(true);
     try {
       const response = await loginAPI(payload);
+      console.log(response, "ssssssssss");
       if (response.status === 200) { // 로그인 성공
         console.log("로그인 성공", response);
         const { id, nickname } = response.data.body.data.user;
