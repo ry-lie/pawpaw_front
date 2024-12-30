@@ -12,6 +12,7 @@ import { AlarmProps } from "@/stores/alarmStore";
 import Alrem_off from "@/assets/icons/alrem_off.png";
 import Alrem_on from "@/assets/icons/alrem_on.png";
 import Image from "next/image";
+import MiniLogo from "@/assets/images/logo/miniLogo.png";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
@@ -25,13 +26,15 @@ export default function Nav() {
 
   useEffect(() => {
     useUserStore.getState().initialize();
-
-    // 하드코딩된 알람 추가 (빠알간 두볼의 채팅 요청)
-    handleRequestChat("빠알간 두볼");
-
-    // 하드코딩된 새로운 메시지 추가 (노래진 두볼이 "뭐해"라고 보냄)
-    addAlarm({ sender: "노래진 두볼", message: "뭐해", status: "accepted" });
-  }, []);
+    if (isLoggedIn) {
+      if (!alarms.some((alarm) => alarm.sender === "빠알간두볼")) {
+        handleRequestChat("빠알간두볼");
+      }
+      if (!alarms.some((alarm) => alarm.sender === "노래진두볼")) {
+        addAlarm({ sender: "노래진두볼", message: "뭐해", status: "accepted" });
+      }
+    }
+  }, [isLoggedIn]);
 
   //알람이 없음
   const handleNoMessage = () => {
@@ -159,11 +162,12 @@ export default function Nav() {
       {/* 로고 영역 */}
       <div className="flex justify-between items-center h-full">
         <div className="flex items-center">
-          <Link
-            href={PATHS.MAIN}
-            className="text-lg font-semibold text-gray-800"
-          >
-            LOGO
+          <Link href={PATHS.MAIN}>
+            <Image
+              src={MiniLogo}
+              alt="미니 로고"
+              className="xs:w-20 xs:h-8 w-14 h-6"
+            />
           </Link>
         </div>
 
@@ -195,7 +199,7 @@ export default function Nav() {
                 }}
                 containerStyles="h-6 w-6 !bg-transparent"
               >
-                <Image src={alarmsIcon} alt="알람아이콘" width={6} height={6} />
+                <Image src={alarmsIcon} alt="알람아이콘" />
               </Button>
             </>
           ) : (
