@@ -1,5 +1,28 @@
 import { QueryKey, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "../axios";
+// 장소 목록 조회 (반경 및 카테고리 기준)
+export const fetchNearbyPlaces = async ({
+  category,
+  radius,
+  latitude,
+  longitude,
+}: {
+  category: string;
+  radius: number;
+  latitude: number;
+  longitude: number;
+}) => {
+  const response = await axiosInstance.get("/places/nearby-place-list", {
+    params: {
+      category: encodeURIComponent(category),
+      radius,
+      latitude,
+      longitude,
+    },
+  });
+
+  return response.data;
+};
 
 // 장소 상세 조회
 export const fetchPlaceDetails = async (placeId: number) => {
