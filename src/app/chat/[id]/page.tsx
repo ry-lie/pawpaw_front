@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import DetailChat from "./DetailChat";
 
 export const metadata = {

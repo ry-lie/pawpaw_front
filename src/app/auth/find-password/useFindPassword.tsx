@@ -1,4 +1,4 @@
-import { sendVerificationCode } from "@/lib/api/auth";
+import { sendVerificationCode, temporaryPassword, verifyCode } from "@/lib/api/auth";
 
 export const useFindPassword = () => {
     //인증코드 전송
@@ -10,15 +10,15 @@ export const useFindPassword = () => {
         }
     }
     //인증코드 확인
-    const verifyCode = async (email: string, verificationCode: string) => {
+    const verifyCodeCheck = async (email: string, verificationCode: string) => {
         try {
             await verifyCode(email, verificationCode)
         } catch (e) {
             console.error("인증코드를 확인해주세요", e)
         }
     }
-
-    const temporaryPassword = async (email: string) => {
+//인증코드 제출
+    const temporaryPasswordSubmit = async (email: string) => {
         try {
             await temporaryPassword(email)
         } catch (e) {
@@ -26,5 +26,5 @@ export const useFindPassword = () => {
         }
     };
 
-    return { sendCode, verifyCode, temporaryPassword };
+    return { sendCode, verifyCodeCheck, temporaryPasswordSubmit };
 };

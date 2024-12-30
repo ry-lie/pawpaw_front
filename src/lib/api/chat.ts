@@ -1,7 +1,6 @@
 import axiosInstance from "../axios";
 
-//이 코드부터는 chat에서 사용할것
-const socket_url = process.env.SOCKET_URL;
+const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 //이전 로그 가져오기
 export const readChatLog = async (roomId: string) => {
@@ -13,3 +12,12 @@ export const roomList = async () => {
   const response = await axiosInstance.get(`${socket_url}`);
   return response.data;
 };
+
+//방생성하기
+export const makeRoom = async()=>{
+  const response = await axiosInstance.post(`${socket_url}`, {
+    action : "create-room",
+    roomName : "room1"
+  });
+  return response.data;
+}
