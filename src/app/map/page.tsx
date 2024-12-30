@@ -1,6 +1,5 @@
 
 import Footer from "@/components/Footer";
-import axiosInstance from "@/lib/axios";
 import MapClient from "./MapClient";
 export const metadata = {
   title: "반려동물 동반 가능 장소 찾기 - 포포",
