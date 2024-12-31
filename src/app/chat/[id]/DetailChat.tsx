@@ -10,8 +10,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-
-const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL
+const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 const socket = io(`ws://${socket_url}`);
 
 type chatMessagetype = {
@@ -21,7 +20,6 @@ type chatMessagetype = {
   timestamp: string; // 현재 시간을 저장하기 위한 속성 추가
 };
 
-
 export default function ChatRoomPage() {
   const searchParams = useSearchParams();
   const sender = searchParams.get("sender") as string;
@@ -29,6 +27,7 @@ export default function ChatRoomPage() {
   const [chatLog, setChatLog] = useState<chatMessagetype[]>([]);
   const chatScroll = useRef<HTMLUListElement>(null);
   const [currentMessage, setCurrentMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     //roomid생성
@@ -36,25 +35,27 @@ export default function ChatRoomPage() {
     // 소켓 연결 및 join 이벤트
     socket.on("connect", () => {
       console.log("소켓 연결 성공");
-      socket.emit("join", {roomId : "room1",message:sender});
+      socket.emit("join", { roomId: "room1", message: sender });
     });
 
     // 상대방이 들어왔을 때 확인
     socket.on("join", (data) => {
-      if(data.nickname && data.nickname !== sender){
-        setChatLog((prev)=>[
+      if (data.nickname && data.nickname !== sender) {
+        setChatLog((prev) => [
           ...prev,
-          {message : `${data.nickname}님이 채팅을 수락했습니다.`, 
-          sender :"system",
-          receiver:"", 
-          timestamp:new Date().toISOString()},
+          {
+            message: `${data.nickname}님이 채팅을 수락했습니다.`,
+            sender: "system",
+            receiver: "",
+            timestamp: new Date().toISOString(),
+          },
         ]);
       }
     });
 
     // 메시지 수신
     socket.on("receive-message", (data) => {
-        setChatLog((prev) => [...prev, data]);
+      setChatLog((prev) => [...prev, data]);
     });
 
     //소켓 해제
@@ -85,7 +86,7 @@ export default function ChatRoomPage() {
       };
 
       // 서버에 메세지 전송
-      socket.emit("send-message", {roomId, message:currentMessage});
+      socket.emit("send-message", { roomId, message: currentMessage });
       setChatLog((prev) => [...prev, message]);
       setCurrentMessage("");
     }
@@ -108,16 +109,18 @@ export default function ChatRoomPage() {
               <span className="font-bold text-sm pl-2">{message.sender}</span>
             )}
             <li
-              className={`m-1 p-2 ${message.sender === sender
-                ? "ml-auto bg-primary text-white"
-                : "mr-auto bg-stroke_gray text-black"
-                } rounded-lg`}
+              className={`m-1 p-2 ${
+                message.sender === sender
+                  ? "ml-auto bg-primary text-white"
+                  : "mr-auto bg-stroke_gray text-black"
+              } rounded-lg`}
             >
               <div className="font-bold text-sm">{message.message}</div>
             </li>
             <span
-              className={`text-gray-500 text-xs ${message.sender === sender ? "ml-auto mr-2" : "mr-auto ml-2"
-                }`}
+              className={`text-gray-500 text-xs ${
+                message.sender === sender ? "ml-auto mr-2" : "mr-auto ml-2"
+              }`}
             >
               {NowDate(message.timestamp)}
             </span>
@@ -133,10 +136,9 @@ export default function ChatRoomPage() {
           <Button
             btnType="submit"
             containerStyles="h-8 w-20 !text-sm"
+            disabled={isLoading}
           >
-            <Link href={'/chat'}>
-              채팅목록
-            </Link>
+            <Link href={"/chat"}>채팅목록</Link>
           </Button>
         </div>
 
@@ -148,7 +150,11 @@ export default function ChatRoomPage() {
           className="w-full border border-gray-300 rounded-md p-2"
           name="chatWrite"
         />
-        <Button btnType="submit" containerStyles="bg-transparent hover:bg-transparent p-2">
+        <Button
+          btnType="submit"
+          containerStyles="bg-transparent hover:bg-transparent p-2"
+          disabled={!currentMessage.trim()}
+        >
           <Image
             src={currentMessage.trim() ? Message_send : Message_notsend}
             alt="send icon"

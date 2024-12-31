@@ -23,49 +23,49 @@ export default function FindPasswordForm() {
 
   const email = useWatch({
     control,
-    name: "email"
-  })
+    name: "email",
+  });
 
   const code = useWatch({
     control,
-    name: "code"
+    name: "code",
   });
 
   const checkEmail = !email || Object.keys(errors).length > 0;
   const checkCode = !code || Object.keys(errors).length > 0;
 
-  const { sendCode, verifyCodeCheck, temporaryPasswordSubmit } = useFindPassword();
+  const { sendCode, verifyCodeCheck, temporaryPasswordSubmit } =
+    useFindPassword();
 
   const onSubmit = async (data: FindPasswordInput) => {
     try {
       if (!data.code) {
         await sendCode(data.email);
         toast.info("인증코드가 이메일로 전송되었습니다.");
-      }
-      else {
+      } else {
         await verifyCodeCheck(data.email, data.code);
         await temporaryPasswordSubmit(data.email);
-        toast.success("비밀번호가 성공적으로 변경되었습니다.")
+        toast.success("비밀번호가 성공적으로 변경되었습니다.");
       }
-    }
-    catch (e) {
+    } catch (e) {
       if (e instanceof Error) {
         console.error(e.message);
 
-        const status = (e as { response?: { status?: number } }).response?.status;
-        const message = status === 400
-          ? "잘못된 인증코드입니다. 다시 확인해주세요"
-          : e.message || "오류가 발생하였습니다. 다시 확인해주세요"
+        const status = (e as { response?: { status?: number } }).response
+          ?.status;
+        const message =
+          status === 400
+            ? "잘못된 인증코드입니다. 다시 확인해주세요"
+            : e.message || "오류가 발생하였습니다. 다시 확인해주세요";
         toast.error(message);
       } else {
         console.error(e);
         toast.error("다시 확인해주세요");
       }
     }
-  }
+  };
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-5">
-
       <Input
         label="이메일"
         type="email"
@@ -78,12 +78,11 @@ export default function FindPasswordForm() {
             message: "유효한 이메일 주소를 입력하세요",
           },
         })}
-        errorMessage={errors.email?.message}>
-
-        <Button btnType="submit" containerStyles="mt-2">
+        errorMessage={errors.email?.message}
+      >
+        <Button btnType="submit" containerStyles="mt-2" disabled={checkEmail}>
           요청
         </Button>
-
       </Input>
 
       <Input
@@ -95,11 +94,12 @@ export default function FindPasswordForm() {
           required: "인증번호를 입력하세요",
           pattern: {
             value: /^\d{6}$/,
-            message: "올바른 숫자를 입력해주세요"
-          }
+            message: "올바른 숫자를 입력해주세요",
+          },
         })}
-        errorMessage={errors.code?.message}>
-        <Button btnType="submit" containerStyles="mt-2">
+        errorMessage={errors.code?.message}
+      >
+        <Button btnType="submit" containerStyles="mt-2" disabled={checkCode}>
           확인
         </Button>
       </Input>
@@ -110,7 +110,6 @@ export default function FindPasswordForm() {
       >
         전송
       </Button>
-
     </form>
   );
 }

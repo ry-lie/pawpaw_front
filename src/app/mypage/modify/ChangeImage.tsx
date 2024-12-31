@@ -8,11 +8,11 @@ import Input from "@/components/Input";
 import { handleImamgeUploading } from "@/utils/ImageUpload";
 import { PutImage } from "@/lib/api/Picture";
 
-
 export default function ChangeImage() {
   const [img, setImg] = useState<string>(BasicProfile.src);
   const fileInput = useRef<HTMLInputElement | null>(null);
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   // useEffect(()=>{
   //     const fetchEmail = async()=>{
@@ -51,6 +51,7 @@ export default function ChangeImage() {
           fileInput.current?.click();
         }}
         containerStyles="bg-transparent hover:bg-transparent"
+        disabled={isLoading}
       >
         <Image
           src={BasicProfile}
