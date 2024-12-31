@@ -23,6 +23,7 @@ export default function Nav() {
   const updateAlarmStatus = useAlarmStore((state) => state.updateAlarmStatus);
   const removeAlarm = useAlarmStore((state) => state.removeAlarm);
   const { isLoggedIn, logout } = useUserStore(); // Zustand에서 상태 가져오기
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     useUserStore.getState().initialize();
@@ -61,12 +62,14 @@ export default function Nav() {
         <p>{message}</p>
         <div>
           <Button
+            disabled={isLoading}
             onClick={() => handleApprove(sender, toastId)}
             containerStyles="!text-base !bg-white !text-blue-500 !font-normal hover:!underline hover:!underline-offset-4 mr-1"
           >
             수락
           </Button>
           <Button
+            disabled={isLoading}
             onClick={() => handleReject(sender, toastId)}
             containerStyles="!text-base !bg-white !text-red-500 !font-normal hover:!underline hover:!underline-offset-4 mr-1"
           >
@@ -87,6 +90,7 @@ export default function Nav() {
 
   //채팅 요청수락
   const handleApprove = (sender: string, toastId: React.ReactText) => {
+    setIsLoading(true);
     toast.dismiss(toastId);
     toast.success(`${sender}님의 채팅을 수락했습니다.`, {
       autoClose: 800,
@@ -103,6 +107,7 @@ export default function Nav() {
 
   //채팅 요청거절
   const handleReject = (sender: string, toastId: React.ReactText) => {
+    setIsLoading(true);
     toast.dismiss(toastId);
     toast.error(`${sender}님의 채팅을 거절했습니다.`, {
       autoClose: 800,
@@ -179,6 +184,7 @@ export default function Nav() {
               <button
                 onClick={handleLogout}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
+                disabled={isLoading}
               >
                 로그아웃
               </button>
@@ -208,12 +214,18 @@ export default function Nav() {
               <Link
                 href={PATHS.LOGIN}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
+                onClick={(e) => {
+                  if (isLoading) e.preventDefault();
+                }}
               >
                 로그인
               </Link>
               <Link
                 href={PATHS.JOIN}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
+                onClick={(e) => {
+                  if (isLoading) e.preventDefault();
+                }}
               >
                 회원가입
               </Link>

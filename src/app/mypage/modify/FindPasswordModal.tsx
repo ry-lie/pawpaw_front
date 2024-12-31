@@ -39,27 +39,30 @@ export default function FindPasswordModal() {
 
   const password = useWatch({
     control,
-    name: "password"
-  })
+    name: "password",
+  });
   const newPassword = useWatch({
     control,
-    name: "newPassword"
-  })
+    name: "newPassword",
+  });
   const confirmPassword = useWatch({
     control,
-    name: "confirmPassword"
-  })
+    name: "confirmPassword",
+  });
 
   const isPasswordMatch =
     newPassword && confirmPassword && newPassword === confirmPassword;
 
-  const DisabledBtn = !password || !newPassword || !confirmPassword || Object.keys(errors).length > 0;
+  const DisabledBtn =
+    !password ||
+    !newPassword ||
+    !confirmPassword ||
+    Object.keys(errors).length > 0;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
         <div className="p-3">
-
           <Input
             label="비밀번호"
             id="password"
@@ -78,10 +81,10 @@ export default function FindPasswordModal() {
             <Button
               btnType="submit"
               containerStyles="w-12 h-8 mr-10 flex justify-center items-center !text-primary border-solid border-primary border bg-transparent hover:bg-primary hover:!text-white"
+              disabled={!password}
             >
               인증
             </Button>
-
           </Input>
 
           <Input
@@ -99,7 +102,6 @@ export default function FindPasswordModal() {
             })}
             errorMessage={errors.newPassword?.message}
           />
-
 
           <Input
             label="비밀번호 확인"
@@ -134,7 +136,5 @@ export default function FindPasswordModal() {
         </Button>
       </div>
     </form>
-
-
   );
 }

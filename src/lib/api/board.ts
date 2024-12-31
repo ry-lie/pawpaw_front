@@ -10,23 +10,21 @@ export const getBoardList = async (category: string) => {
 
 // 게시글 생성
 export interface postProps {
-  imageList: [];
+  imageList: { isPrimary: boolean; url: string }[]; // 이미지 객체 배열
   category: string;
   title: string;
   content: string;
 }
-
 export const addPost = async (data: postProps) => {
   const formData = new FormData();
   // 필드 추가
-  // imageList가 배열일 때 -> 각 이미지를 추가
+  // imageList 처리
   data.imageList.forEach((image) => {
-    formData.append("imageList", image);
+    formData.append("imageList", image.url); // url만 추가
   });
   formData.append("category", data.category);
   formData.append("title", data.title);
   formData.append("content", data.content);
-
   // API 요청
   const response = await axios.post(`/api/boards`, formData, {
     headers: {
@@ -36,7 +34,14 @@ export const addPost = async (data: postProps) => {
   return response;
 };
 
-// 게사글 조화
+// 게시글 수정
+
+
+
+
+
+
+// 게사글 상세 조회
 export const fetchBoardDetail = async (postId: string) => {
   return await axiosInstance.get(`/boards/${postId}`);
 };

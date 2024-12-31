@@ -6,6 +6,7 @@ import { useModalStore } from "@/stores/modalStore";
 import { SubmitHandler, useForm } from "react-hook-form";
 import FindPasswordModal from "./FindPasswordModal";
 import Link from "next/link";
+import { useState } from "react";
 
 type NicknameInput = {
   nickname: string;
@@ -13,6 +14,7 @@ type NicknameInput = {
 
 export default function ModifyForm() {
   const { openModal } = useModalStore();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     watch,
@@ -23,7 +25,7 @@ export default function ModifyForm() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<NicknameInput> = async(data) => {
+  const onSubmit: SubmitHandler<NicknameInput> = async (data) => {
     // try{
     //   const res = await axios.post('/nickname', data,{
     //     headers:{
@@ -39,7 +41,7 @@ export default function ModifyForm() {
     //const payload = { nickname };
     console.log("data");
   };
-  const DisableBtn = !watch("nickname")||Object.keys(errors).length>0;
+  const DisableBtn = !watch("nickname") || Object.keys(errors).length > 0;
 
   return (
     <div className="flex flex-col justify-center items-center">
@@ -53,7 +55,10 @@ export default function ModifyForm() {
           })}
           errorMessage={errors.nickname?.message}
         >
-          <Button containerStyles="!text-base font-normal border bg-transparent !text-primary border-solid border-primary hover:!text-white">
+          <Button
+            disabled={!watch("nickname")}
+            containerStyles="!text-base font-normal border bg-transparent !text-primary border-solid border-primary hover:!text-white"
+          >
             중복확인
           </Button>
         </Input>
@@ -67,12 +72,18 @@ export default function ModifyForm() {
         </div>
       </div>
       <div className="space-x-10 mt-10">
-        <Button btnType="button" containerStyles="bg-stroke_gray w-20 h-10">
-          <Link href={'/mypage'}>
-          취소
-          </Link>
+        <Button
+          btnType="button"
+          containerStyles="bg-stroke_gray w-20 h-10"
+          disabled={isLoading}
+        >
+          <Link href={"/mypage"}>취소</Link>
         </Button>
-        <Button btnType="submit" disabled={DisableBtn} containerStyles="w-20 h-10">
+        <Button
+          btnType="submit"
+          disabled={DisableBtn}
+          containerStyles="w-20 h-10"
+        >
           확인
         </Button>
       </div>

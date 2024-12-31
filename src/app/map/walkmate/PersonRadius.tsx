@@ -23,6 +23,7 @@ export default function PersonRadius() {
   const [findUsers, setFindUsers] = useState<User[]>([]);
   const [radius, setRadius] = useState(250);
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // 소켓 연결
@@ -112,6 +113,7 @@ export default function PersonRadius() {
           btnType="submit"
           containerStyles="text-xs h-6 w-9 ml-1"
           onClick={findUserByRadius}
+          disabled={isLoading}
         >
           찾기
         </Button>
@@ -133,6 +135,7 @@ export default function PersonRadius() {
               <Button
                 containerStyles="!text-sm !xs:text-base w-24 h-10 !text-base font-semibold flex items-center justify-center ml-4"
                 onClick={() => handleRequestChat(user)}
+                disabled={isLoading}
               >
                 연락하기
               </Button>
