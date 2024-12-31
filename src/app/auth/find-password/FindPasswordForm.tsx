@@ -4,7 +4,7 @@ import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useForm, useWatch } from "react-hook-form";
 import { useFindPassword } from "./useFindPassword";
-import { toast } from "react-toastify";
+import { infoToast, successToast } from "@/utils/Toast";
 
 type FindPasswordInput = {
   email: string;
@@ -41,27 +41,14 @@ export default function FindPasswordForm() {
     try {
       if (!data.code) {
         await sendCode(data.email);
-        toast.info("인증코드가 이메일로 전송되었습니다.");
+        infoToast("인증코드가 이메일로 전송되었습니다.");
       } else {
         await verifyCodeCheck(data.email, data.code);
         await temporaryPasswordSubmit(data.email);
-        toast.success("비밀번호가 성공적으로 변경되었습니다.");
+        successToast("비밀번호가 성공적으로 변경되었습니다.");
       }
     } catch (e) {
-      if (e instanceof Error) {
-        console.error(e.message);
-
-        const status = (e as { response?: { status?: number } }).response
-          ?.status;
-        const message =
-          status === 400
-            ? "잘못된 인증코드입니다. 다시 확인해주세요"
-            : e.message || "오류가 발생하였습니다. 다시 확인해주세요";
-        toast.error(message);
-      } else {
-        console.error(e);
-        toast.error("다시 확인해주세요");
-      }
+      console.error(e);
     }
   };
   return (
