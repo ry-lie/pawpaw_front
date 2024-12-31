@@ -51,7 +51,6 @@ export const registerAPI = async (payload: RegisterPayload) => {
       "Content-Type": "multipart/form-data",
     },
   });
-
   return response;
 };
 

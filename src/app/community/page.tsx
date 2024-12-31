@@ -1,84 +1,57 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PATHS } from "@/constants/path";
 import Image from "next/image";
 import PlusButton from "@/components/PlusButton";
 import Footer from "@/components/Footer";
 import BoardHeartIcon from "@/assets/icons/boardHeart_icon.png"
 import EmptyPicture from "@/assets/icons/emptyPicture.png";
-import useMediaQuery from "@/hooks/useMediaQuery"; // useMediaQuery를 가져옵니다.
+import useMediaQuery from "@/hooks/useMediaQuery";
+import { getBoardList } from "@/lib/api/board"; // getBoardList 가져오기
 // 임시 게시글 이미지
 import HotDog1 from "@/assets/images/postCard/hot1.png";
 import HotDog2 from "@/assets/images/postCard/hot2.png";
- 
+
+// 게시글 데이터 타입 정의
+type Post = {
+  id: number;
+  category: string;
+  title: string;
+  content: string;
+  isLikeClicked: boolean;
+  imageList: { isPrimary: boolean; url: string }[];
+};
 
 export default function CommunityPage() {
   const [selectedCategory, setSelectedCategory] = useState("전체");
   const [searchQuery, setSearchQuery] = useState("");
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const categories = ["전체", "펫 자랑", "고민 상담", "임시 보호", "일상"];
 
-  // 임시 게시글들
-  const posts = [
-    {
-      id: 1,
-      category: "일상",
-      title: "우리 한식, 두식, 삼식이를 여러분들께 소개합니다.",
-      content: "백구이고요, 이제 한살 먹은 베이비들입니다. 애기들이라서 돌보기 조금 힘들지만 그래도 넘 귀여워요ㅠㅠ",
-      isLike: false,
-      imageList: [
-        { isPrimary: true, url: HotDog1 },
-        { isPrimary: false, url: HotDog2 },
-      ],
-    },
-    {
-      id: 2,
-      category: "펫 자랑",
-      title: "저의 강아지 이리온군을 소개합니다~",
-      content: "10살 푸들입니다!",
-      isLike: true,
-      imageList: [],
-    },
-    {
-      id: 3,
-      category: "고민 상담",
-      title: "평택 싸나이를 소개합니다.",
-      content: "저의 애착 인형입니다.",
-      isLike: false,
-      imageList: [],
-    },
-    {
-      id: 4,
-      category: "고민 상담",
-      title: "평택 싸나이를 소개합니다.",
-      content: "저의 애착 인형입니다.",
-      isLike: false,
-      imageList: [],
-    },
-    {
-      id: 5,
-      category: "고민 상담",
-      title: "평택 싸나이를 소개합니다.",
-      content: "저의 애착 인형입니다.",
-      isLike: false,
-      imageList: [],
-    },
-    {
-      id: 6,
-      category: "고민 상담",
-      title: "평택 싸나이를 소개합니다.",
-      content: "저의 애착 인형입니다.",
-      isLike: false,
-      imageList: [],
-    },
-  ];
+  // 게시글 데이터 가져오기 함수
+  const fetchPosts = async (category: string) => {
+    setIsLoading(true);
+    try {
+      const response = await getBoardList(category === "전체" ? "" : category);
+      setPosts(response.data);
+    } catch (error) {
+      console.error("게시글을 가져오는 중 오류 발생:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  // 카테고리별 게시글 필터링
-  const filteredPosts = posts.filter(
-    (post) =>
-      (selectedCategory === "전체" || post.category === selectedCategory) &&
-      post.title.includes(searchQuery)
+  // 카테고리 변경 시 게시글 다시 가져오기
+  useEffect(() => {
+    fetchPosts(selectedCategory);
+  }, [selectedCategory]);
+
+  // 카테고리 및 검색어에 따른 게시글 필터링
+  const filteredPosts = posts.filter((post) =>
+    post.title.includes(searchQuery)
   );
 
   // 글자수 제한
@@ -150,7 +123,7 @@ export default function CommunityPage() {
                     {post.category}
                   </span>
                   {/* 좋아요 */}
-                  {post.isLike && (
+                  {post.isLikeClicked && (
                     <Image
                       src={BoardHeartIcon} // 좋아요 아이콘 이미지 경로
                       alt="좋아요 아이콘"
