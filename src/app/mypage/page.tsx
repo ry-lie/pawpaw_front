@@ -15,57 +15,6 @@ import { addPetInfo, updatePetInfo } from "@/lib/api/pet";
 import { useRouter } from "next/navigation";
 
 export default function MyPage() {
-
-  /*
-  // 임시 펫 정보
-  const [petContainers, setPetContainers] = useState<
-    { id: number; pet: any; isEditing: boolean }[]
-  >([
-    {
-      id: Date.now(),
-      pet: {
-        name: "댕댕이",
-        age: 3,
-        description: "귀엽고 씩씩하며 사람을 잘 따르는 편! 그치만 처음에는 친해지는 시간이 필요",
-        gender: "여자",
-        size: "소형",
-        image: "",
-        imageUrl: "",
-      },
-      isEditing: false,
-    },
-  ]);
-
-  // 새 컨테이너 추가
-  const handleAddContainer = () => {
-    const newContainer = {
-      id: Date.now(),
-      pet: {
-        name: "",
-        age: 0,
-        description: "",
-        gender: "",
-        size: "",
-        image: "",
-        imageUrl: "",
-      },
-      isEditing: true,
-    };
-    setPetContainers([...petContainers, newContainer]);
-  };
-
-  // 저장 (새 컨테이너에 작성한 것 or 기존거 수정한 것)
-  const handleSave = (id: number, updatedPet: any) => {
-    setPetContainers((prev) =>
-      prev.map((container) =>
-        container.id === id
-          ? { ...container, pet: updatedPet, isEditing: false }
-          : container
-      )
-    );
-  };
-  */
-
   const [userInfo, setUserInfo] = useState<any>(null);
   const [petContainers, setPetContainers] = useState<
     { id: number; pet: any; isEditing: boolean }[]
@@ -192,11 +141,11 @@ export default function MyPage() {
                 onDelete={() => handleDelete(id)} // 삭제 콜백
               />
             ) : (
-              <PetInfo 
-                key={id} 
-                pet={pet} 
+              <PetInfo
+                key={id}
+                pet={pet}
                 onEdit={() => handleEdit(id)}
-                onDelete={() => handleDelete(id)} 
+                onDelete={() => handleDelete(id)}
               />
             )
           )}
