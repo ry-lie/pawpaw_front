@@ -77,12 +77,15 @@ export const sendVerificationCode = async (email: string) => {
 };
 
 // 인증 코드 확인
-export const verifyCode = async (email: string, verificationCode: string) => {
+export const verifyCode = async (
+  email: string,
+  verificationCode: string,
+): Promise<{ success: boolean }> => {
   const response = await axiosInstance.post(
     `/auth/validate-verification-code`,
     { email, verificationCode },
   );
-  return response;
+  return { success: response.status === 200 };
 };
 
 //임시 비밀번호 발급
