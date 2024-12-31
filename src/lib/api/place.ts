@@ -27,7 +27,6 @@ export const fetchNearbyPlaces = async ({
 // 장소 상세 조회
 export const fetchPlaceDetails = async (placeId: number) => {
   const response = await axiosInstance.get(`/places/${placeId}`);
-  console.log("장소상세111111", response.data);
   return response.data.body.data;
 };
 

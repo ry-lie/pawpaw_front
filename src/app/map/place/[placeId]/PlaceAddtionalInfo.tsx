@@ -42,7 +42,6 @@ export function PlaceAdditionalInfo({
           src={TimeIcon}
           alt="운영시간 아이콘"
           width={20}
-          height={20}
           className="flex-shrink-0 object-contain"
         />
         <span>운영시간 :</span>
@@ -69,7 +68,6 @@ export function PlaceAdditionalInfo({
           src={PhoneIcon}
           alt="전화아이콘"
           width={16}
-          height={16}
           className=""
         />
         {contact}
@@ -81,7 +79,6 @@ export function PlaceAdditionalInfo({
           src={CarIcon}
           alt="주차아이콘"
           width={18}
-          height={18}
           className="flex-shrink-0 object-contain"
         />
         <span>{hasParkingArea ? "주차 가능" : "주차 불가"}</span>
@@ -93,7 +90,6 @@ export function PlaceAdditionalInfo({
           src={PriceIcon}
           alt="가격아이콘"
           width={18}
-          height={18}
           className="flex-shrink-0 object-contain"
         />
         {additionalFees}
@@ -106,7 +102,6 @@ export function PlaceAdditionalInfo({
           src={InfoIcon} // 적합한 아이콘으로 교체
           alt="추가 정보 아이콘"
           width={20}
-          height={20}
           className="flex-shrink-0 object-contain"
         />
 

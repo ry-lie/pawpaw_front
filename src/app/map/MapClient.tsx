@@ -8,32 +8,15 @@ import FootPrint from "@/assets/icons/footprint.png";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
 import { useGeolocation } from "@/utils/useGeolocation";
-import { useUserStore } from "@/stores/userStore";
 import Loading from "../loading";
 import { fetchNearbyPlaces } from "@/lib/api/place";
 import PlaceDetail from "./place/[placeId]/PlaceDetail";
 export interface PlaceProps {
-  id: number; // Primary Key
-  name: string; // 시설명
-  category: string; // 카테고리
-  postalCode: string | number; // 우편번호
-  roadNameAddress: string; // 도로명주소
-  postalAddress: string; // 지번주소
-  contact: string; // 전화번호
-  closingDays: string; // 휴무일
-  openingHour: string; // 운영시간
-  hasParkingArea: boolean; // 주차 가능 여부
-  allowSize: string; // 입장 가능 동물 크기
-  restrictions: string; // 반려동물 제한사항
-  description: string; // 기본 정보_장소설명
-  additionalFees: string; // 애견 동반 추가 요금
-  latitude?: number; // 위도 (데이터에서 누락된 경우 optional로 설정)
-  longitude?: number; // 경도 (데이터에서 누락된 경우 optional로 설정)
-  lastUpdate: string; // 최종작성일
-  createdAt: string; // 생성 일자
-  createdUser: string; // 생성한 사용자
-  updatedAt: string; // 업데이트 일자
-  updatedUser?: string | null; // 업데이트한 사용자 (null 가능)
+  id: number;
+  name: string;
+  category: string;
+  latitude: number;
+  longitude: number;
 }
 
 
@@ -58,7 +41,7 @@ export default function MapClient() {
   const { openModal } = useModalStore();
   const [places, setPlaces] = useState<PlaceProps[]>([]);
   const [radius, setRadius] = useState(250); // 기본 반경 250m
-  const [category, setCategory] = useState("동물약국"); // 기본 카테고리
+  const [category, setCategory] = useState(""); // 기본 카테고리
   useEffect(() => {
     async function loadPlaces() {
       try {
@@ -68,12 +51,13 @@ export default function MapClient() {
         const mappedCategory = CATEGORY_MAP[category] || category;
 
         const data = await fetchNearbyPlaces({
-          category: mappedCategory, // 영어로 변환된 카테고리 전달
+          category: mappedCategory,
           radius,
           latitude: location.latitude,
           longitude: location.longitude,
         });
         setPlaces(data.body.data);
+        loadKakaoMap();
       } catch (error) {
         console.error("장소 데이터를 가져오는 중 오류 발생:", error);
       }
@@ -82,8 +66,7 @@ export default function MapClient() {
     loadPlaces();
   }, [radius, category, location]);
 
-  const nickname = useUserStore((state) => state.nickname);
-
+  useEffect(() => { if (!places) return; if (places.length > 0) { loadKakaoMap(); } }, [places]);
   if (!location) {
     return (
       <div className="flex items-center justify-center w-full h-screen">
@@ -99,34 +82,27 @@ export default function MapClient() {
         center: new window.kakao.maps.LatLng(location.latitude, location.longitude),
         level: 3,
       };
-
       const map = new window.kakao.maps.Map(mapContainer, mapOption);
-
-
       // 내 위치 마커 이미지 설정
-      const myLocationImageSrc = "/images/mapMaker/my_location.png";
-      const myLocationImageSize = new window.kakao.maps.Size(101, 68);
-      const myLocationImageOption = { offset: new window.kakao.maps.Point(25, 34) };
-
       const myLocationMarkerImage = new window.kakao.maps.MarkerImage(
-        myLocationImageSrc,
-        myLocationImageSize,
-        myLocationImageOption
+        "/images/mapMaker/my_location.png",
+        new window.kakao.maps.Size(101, 68),
+        { offset: new window.kakao.maps.Point(25, 34) }
       );
 
       // 내 위치 마커 생성
       const myLocationMarker = new window.kakao.maps.Marker({
         position: new window.kakao.maps.LatLng(location.latitude, location.longitude),
         image: myLocationMarkerImage,
-        title: `${nickname}님의 위치`,
+        title: `현재 위치`,
       });
 
-      // 내 위치 마커를 지도에 추가 
+      // 내 위치 마커를 지도에 추가
       myLocationMarker.setMap(map);
-      // 삭제 예정
-      window.kakao.maps.event.addListener(myLocationMarker, "click", () => {
-        openModal(<PlaceDetail placeId={1} />);
-      });
+
+      if (!places || places.length === 0) {
+        return; // 장소가 없으면 내 위치 마커만 추가하고 종료
+      }
       // 카테고리에 따른 마커 이미지 매핑
       const markerImages: Record<string, string> = {
         "동물약국": "/images/mapMaker/animal_pharmacy.png",
@@ -144,13 +120,14 @@ export default function MapClient() {
         "호텔": "/images/mapMaker/hotel.png",
       };
 
+
       // 마커 생성
       places.forEach((place) => {
         const markerPosition = new window.kakao.maps.LatLng(place.latitude, place.longitude);
 
         const markerImage = new window.kakao.maps.MarkerImage(
           markerImages[place.category],
-          new window.kakao.maps.Size(50, 68),
+          new window.kakao.maps.Size(35, 53),
           { offset: new window.kakao.maps.Point(16, 32) }
         );
 
@@ -165,9 +142,13 @@ export default function MapClient() {
         window.kakao.maps.event.addListener(marker, "click", () => {
           openModal(<PlaceDetail placeId={place.id} />);
         });
+
       });
+
     });
   };
+
+
   return (
     <>
       {/* 반경 및 카테고리 선택 */}
@@ -194,6 +175,7 @@ export default function MapClient() {
               onChange={(e) => setCategory(e.target.value)}
               className="border border-gray-300 rounded-md p-1"
             >
+              <option value="">전체</option>
               <option value="동물약국">동물약국</option>
               <option value="미술관">미술관</option>
               <option value="카페">카페</option>
@@ -211,7 +193,7 @@ export default function MapClient() {
           </div>
         </div>
         <div className="flex items-center bg-primary hover:bg-hover text-white rounded-md h-fit p-1 gap-1">
-          <Image src={FootPrint} alt="발자국" width={16} height={16} />
+          <Image src={FootPrint} alt="발자국" width={16} />
           <Link href={PATHS.WALKMATE}>산책메이트</Link>
         </div>
       </div>
