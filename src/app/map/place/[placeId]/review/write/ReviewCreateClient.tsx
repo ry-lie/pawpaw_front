@@ -15,10 +15,9 @@ export default function ReviewCreateClient({ placeId }: ReviewCreateClientProps)
     try {
       await axiosInstance.post(`/api/places/${placeId}/reviews`, data);
       queryClient.invalidateQueries({ queryKey: ["placeDetails", placeId] });
-      alert("리뷰가 성공적으로 등록되었습니다!");
+      console.log('리뷰 등록 성공')
     } catch (error) {
       console.error("리뷰 등록 실패:", error);
-      alert("리뷰 등록에 실패했습니다.");
     }
   };
 

@@ -101,26 +101,7 @@ export default function JoinForm() {
     }
   };
 
-  // const handleSendVerificationCode = async () => {
-  //   try {
-  //     const email = getValues("email") || "";
-  //     const response = await sendVerificationCode(email);
-  //     console.log("인증 코드 요청 성공:", response);
-  //   } catch (error) {
-  //     console.error("인증 코드 요청 실패:", error);
-  //     control.setError("emailCode", {
-  //       type: "manual",
-  //       message: "다시 요청해주세요.",
-  //     });
-  //   }
-  // };
-
-  const [isRequesting, setIsRequesting] = useState(false); // 요청 상태 관리
-
   const handleSendVerificationCode = async () => {
-    if (isRequesting) return;
-
-    setIsRequesting(true);
     try {
       const email = getValues("email") || "";
       const response = await sendVerificationCode(email);
@@ -131,8 +112,6 @@ export default function JoinForm() {
         type: "manual",
         message: "다시 요청해주세요.",
       });
-    } finally {
-      setIsRequesting(false);
     }
   };
 
@@ -223,10 +202,13 @@ export default function JoinForm() {
         <Button
           btnType="button"
           onClick={handleEmailDuplicateCheck}
-          containerStyles="w-[70px] h-[30px] font-normal text-xs"
+          disabled={!getValues("email") || isEmailChecked}
+          containerStyles={`w-[70px] h-[30px] font-normal text-xs ${!getValues("email") || isEmailChecked ? "bg-gray-300 text-gray-500" : "bg-primary text-white"
+            }`}
         >
           중복 확인
         </Button>
+
       </Input>
 
       {/* 이메일 인증 */}
@@ -244,18 +226,21 @@ export default function JoinForm() {
           <Button
             btnType="button"
             onClick={handleSendVerificationCode}
-            disabled={isRequesting}
-            isLoading={isRequesting}
-            containerStyles="w-[50px] h-[30px] font-normal text-xs !bg-alarm_orange !text-primary"
+            disabled={!getValues("email") || isEmailChecked}
+
+            containerStyles={`w-[50px] h-[30px] font-normal text-xs !bg-alarm_orange !text-primary ${!getValues("email") || isEmailChecked
+              ? "bg-gray-300 text-gray-500"
+              : "bg-primary text-white"
+              }`}
           >
             요청
           </Button>
           <Button
             btnType="button"
             onClick={handleVerifyCode}
-            disabled={isRequesting}
-            isLoading={isRequesting}
-            containerStyles="w-[50px] h-[30px] font-normal text-xs"
+            disabled={!getValues("emailCode")}
+            containerStyles={`w-[50px] h-[30px] font-normal text-xs ${!getValues("emailCode") ? "bg-gray-300 text-gray-500" : "bg-primary text-white"
+              }`}
           >
             인증
           </Button>
@@ -326,7 +311,11 @@ export default function JoinForm() {
         <Button
           btnType="button"
           onClick={handleNicknameDuplicateCheck}
-          containerStyles="w-[70px] h-[30px] font-normal text-xs"
+          disabled={!getValues("nickname") || isNicknameChecked} // 닉네임 입력 여부와 중복 확인 상태 반영
+          containerStyles={`w-[70px] h-[30px] font-normal text-xs ${!getValues("nickname") || isNicknameChecked
+            ? "bg-gray-300 text-gray-500"
+            : "bg-primary text-white"
+            }`}
         >
           중복 확인
         </Button>

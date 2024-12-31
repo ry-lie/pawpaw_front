@@ -172,6 +172,7 @@ export default function Nav() {
               src={MiniLogo}
               alt="미니 로고"
               className="xs:w-20 xs:h-8 w-14 h-6"
+              priority
             />
           </Link>
         </div>
