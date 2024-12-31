@@ -15,12 +15,11 @@ export default function ReviewModifyClient({ initialData, reviewId, placeId }: R
   const handleUpdate = async (data: { title: string; content: string; isLikeCliked: boolean }) => {
     try {
       await updateReview(placeId, reviewId, data);
-      alert("리뷰가 성공적으로 수정되었습니다!");
+      console.log('리뷰 수정 성공')
       queryClient.invalidateQueries({ queryKey: ["placeDetails", placeId] });
       //queryClient.invalidateQueries({ queryKey: ["reviews", reviewId] }); //만약 리뷰 상세가 업데이트되지 않는다면 주석해제
     } catch (error) {
       console.error("리뷰 수정 실패:", error);
-      alert("리뷰 수정에 실패했습니다.");
     }
   };
 

@@ -50,3 +50,11 @@ export const deletePost = async (postId: string) => {
 export const deleteComment = async (postId: string, commentId: string) => {
   return await axiosInstance.delete(`/boards/${postId}/comments/${commentId}`);
 };
+
+/*좋아요*/
+export const toggleLike = async (postId: string, newLikeState: boolean) => {
+  axiosInstance.post("/api/like", {
+    postId,
+    isLikeClicked: newLikeState,
+  });
+};

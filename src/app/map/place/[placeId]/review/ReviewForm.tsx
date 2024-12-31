@@ -18,21 +18,20 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
     formState: { isValid },
     reset, // 폼 초기화를 위한 reset 함수
   } = useForm({
-    defaultValues: initialValues || { title: "", content: "" }, // 초기값 설정
+    defaultValues: initialValues || { title: "", content: "" },
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [isLikeCliked, setIsLikeCliked] = useState(initialValues?.isLikeCliked || false); // 추천 여부 초기값
+  const [isLikeCliked, setIsLikeCliked] = useState(initialValues?.isLikeCliked || false);
 
   const handleFormSubmit: SubmitHandler<{ title: string; content: string }> = async (data) => {
     setIsLoading(true);
     try {
       await onSubmit({ ...data, isLikeCliked });
-      alert("성공적으로 처리되었습니다!");
+      console.log("리뷰 등록 성공")
       reset(); // 폼 초기화
     } catch (error) {
       console.error("작업 실패:", error);
-      alert("작업에 실패했습니다.");
     } finally {
       setIsLoading(false);
     }

@@ -45,12 +45,10 @@ export default function DeleteButton({ id, postId, placeId, resourceType, invali
       }
 
       invalidateKeys.forEach((key) => queryClient.invalidateQueries({ queryKey: key }));
-      alert(`${resourceType} 삭제 완료`);
 
       if (onSuccessRedirect) router.push(onSuccessRedirect);
     } catch (error) {
       console.error(`${resourceType} 삭제 실패`, error);
-      alert("삭제 실패");
     }
   };
 

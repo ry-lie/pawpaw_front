@@ -18,7 +18,7 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
   const [post, setPost] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [comment, setComment] = useState("");
   useEffect(() => {
     const loadPost = async () => {
       try {
@@ -127,7 +127,7 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
         </div>
         <div className="flex gap-2">
           <Input name="comment" className="w-full" />
-          <Button containerStyles="w-14 !text-sm !font-medium">등록</Button>
+          <Button containerStyles="w-14 !text-sm !font-medium" disabled={!comment.trim()}>등록</Button>
         </div>
       </div>
 

@@ -37,13 +37,10 @@ export default function LoginForm() {
     const { email, password } = data;
     const payload = { email, password };
 
-    console.log("서버로 전송할 데이터:", payload);
-
     setIsLoading(true);
     try {
       const response = await loginAPI(payload);
-      console.log(response, "ssssssssss");
-      if (response.status === 200) { // 로그인 성공
+      if (response.status === 200) {
         console.log("로그인 성공", response);
         const { id, nickname } = response.data.body.data.user;
         useUserStore.getState().login({ id, nickname });

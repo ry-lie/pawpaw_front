@@ -226,7 +226,7 @@ export default function JoinForm() {
           <Button
             btnType="button"
             onClick={handleSendVerificationCode}
-            disabled={!getValues("email") || isEmailChecked} // 이메일 입력 및 요청 상태 반영
+            disabled={!getValues("email") || isEmailChecked}
 
             containerStyles={`w-[50px] h-[30px] font-normal text-xs !bg-alarm_orange !text-primary ${!getValues("email") || isEmailChecked
               ? "bg-gray-300 text-gray-500"
@@ -238,7 +238,7 @@ export default function JoinForm() {
           <Button
             btnType="button"
             onClick={handleVerifyCode}
-            disabled={!getValues("emailCode")} // 인증 코드 입력 여부 반영
+            disabled={!getValues("emailCode")}
             containerStyles={`w-[50px] h-[30px] font-normal text-xs ${!getValues("emailCode") ? "bg-gray-300 text-gray-500" : "bg-primary text-white"
               }`}
           >
