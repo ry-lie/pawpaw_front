@@ -1,4 +1,3 @@
-"use client"
 import ReviewCreateClient from "./ReviewCreateClient";
 
 export default function ReviewWritePage({ params }: { params: { placeId: number } }) {

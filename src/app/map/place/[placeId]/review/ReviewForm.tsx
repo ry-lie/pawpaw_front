@@ -15,25 +15,22 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
   const {
     register,
     handleSubmit,
-    formState: { isValid },
+    formState: { isValid, isSubmitting },
     reset, // 폼 초기화를 위한 reset 함수
   } = useForm({
     defaultValues: initialValues || { title: "", content: "" },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isLikeCliked, setIsLikeCliked] = useState(initialValues?.isLikeCliked || false);
 
   const handleFormSubmit: SubmitHandler<{ title: string; content: string }> = async (data) => {
-    setIsLoading(true);
+
     try {
       await onSubmit({ ...data, isLikeCliked });
       console.log("리뷰 등록 성공")
       reset(); // 폼 초기화
     } catch (error) {
       console.error("작업 실패:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -71,8 +68,8 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
 
       <div className="flex">
         <Button
-          disabled={!isValid || isLoading}
-          isLoading={isLoading}
+          disabled={!isValid || isSubmitting}
+          isLoading={isSubmitting}
           btnType="submit"
           containerStyles="text-[16px] font-medium ml-auto px-2 mt-2"
         >

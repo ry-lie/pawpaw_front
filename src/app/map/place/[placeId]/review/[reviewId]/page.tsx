@@ -1,15 +1,17 @@
 "use client"
-import { RiThumbUpLine, RiThumbUpFill } from "react-icons/ri";
+import { RiThumbUpLine, RiThumbUpFill, RiDeleteBinLine } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
-import DeleteButton from "@/components/DeleteButton";
-import { fetchReviewDetails } from "@/lib/api/place";
+import { deleteReview, fetchReviewDetails } from "@/lib/api/place";
 import { useUserStore } from "@/stores/userStore";
 import DefaultProfileImage from "@/assets/icons/profile_icon.png";
+import { useRouter } from "next/navigation";
+
+
 
 export default function ReviewDetail({
   params,
@@ -21,12 +23,26 @@ export default function ReviewDetail({
   const { id } = useUserStore();
   const { reviewId, placeId } = params;
   const { nickname } = searchParams;
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const { data: review } = useQuery({
     queryKey: ["review", reviewId],
     queryFn: () => fetchReviewDetails(placeId, reviewId),
     enabled: !!reviewId,
   });
 
+  const handleDeleteReview = async () => {
+    if (!confirm("리뷰를 삭제하시겠습니까?")) return;
+
+    try {
+      await deleteReview(placeId, reviewId);
+      queryClient.invalidateQueries({ queryKey: ["placeDetails", placeId] });
+      queryClient.invalidateQueries({ queryKey: ["reviewDetails", reviewId] });
+      router.push(PATHS.MAP);
+    } catch (error) {
+      console.error("리뷰 삭제 실패:", error);
+    }
+  };
   const profileImageUrl = review?.data.author.imageUrl || DefaultProfileImage;
 
   return (
@@ -50,13 +66,9 @@ export default function ReviewDetail({
                 <Link href={PATHS.REVIEW_MODIFY(placeId, reviewId)}>
                   <FaEdit className="text-gray-400 w-5 h-5" />
                 </Link>
-                <DeleteButton
-                  id={reviewId}
-                  placeId={placeId}
-                  resourceType="reviews"
-                  onSuccessRedirect={PATHS.MAP}
-                  invalidateKeys={[["placeDetails", placeId]]}
-                />
+                <button onClick={handleDeleteReview} aria-label="삭제">
+                  <RiDeleteBinLine className="text-gray-400 w-5 h-5" />
+                </button>
               </div>
             )}
             <div className="text-gray-500 text-sm">{review?.createdAt}</div>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { toggleLike } from "@/lib/api/board";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface LikeButtonProps {
   postId: string;
@@ -11,12 +12,14 @@ interface LikeButtonProps {
 
 export default function LikeButton({ postId, isLiked }: LikeButtonProps) {
   const [liked, setLiked] = useState(isLiked);
+  const queryClient = useQueryClient();
 
   const handleClick = async () => {
     try {
       const newLikeState = !liked;
       setLiked(newLikeState);
       await toggleLike(postId, liked);
+      queryClient.invalidateQueries({ queryKey: ["post", postId] });
     } catch (error) {
       console.error("좋아요 실패:", error);
       setLiked(liked);

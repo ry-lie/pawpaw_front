@@ -19,6 +19,7 @@ export default function ReviewCreateClient({ placeId }: ReviewCreateClientProps)
       const response = await createReview(placeId, data);
       const { reviewId } = response.data;
       queryClient.invalidateQueries({ queryKey: ["placeDetails", placeId] });
+      queryClient.invalidateQueries({ queryKey: ["review", reviewId] });
       console.log('리뷰 등록 성공');
       router.push(PATHS.REVIEW_DETAIL(placeId, reviewId))
 
