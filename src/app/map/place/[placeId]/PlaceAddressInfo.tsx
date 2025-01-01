@@ -21,7 +21,7 @@ export function PlaceAddressInfo({
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 text-[12px] xs:text-[16px]">
       <p className="flex items-center">
         <Image
           src={LocationIcon}
@@ -33,7 +33,7 @@ export function PlaceAddressInfo({
         <span className="w-14">도로명: </span>
         <span>{roadNameAddress}</span>
         <button
-          className="ml-2 text-strong_gray "
+          className="ml-2 text-strong_gray"
           onClick={toggleAddressVisibility}
         >
           {isAddressVisible ? <IoIosArrowUp /> : <IoIosArrowDown />}

@@ -1,53 +1,40 @@
-
-import BasicProfileIcon from "@/assets/icons/profile_icon.png";
-import { RiThumbUpLine, RiThumbUpFill, RiDeleteBinLine } from "react-icons/ri";
+"use client"
+import { RiThumbUpLine, RiThumbUpFill } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
-import axiosInstance from "@/lib/axios";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
 import DeleteButton from "@/components/DeleteButton";
+import { fetchReviewDetails } from "@/lib/api/place";
+import { useUserStore } from "@/stores/userStore";
+import DefaultProfileImage from "@/assets/icons/profile_icon.png";
 
-
-
-interface ReviewProps {
-  id: string;
-  writer: string;
-  title: string;
-  content: string;
-  createdDate: string;
-  isLiked: boolean;
-}
-
-async function fetchReviewDetail(reviewId: string): Promise<ReviewProps> {
-  const { data } = await axiosInstance.get(`/api/reviews/${reviewId}`);
-  return data;
-}
-
-export default function ReviewDetail({ params }: { params: { placeId: string; reviewId: string } }) {
+export default function ReviewDetail({
+  params,
+  searchParams,
+}: {
+  params: { placeId: string; reviewId: string };
+  searchParams: { nickname: string };
+}) {
+  const { id } = useUserStore();
   const { reviewId, placeId } = params;
-  // const { data: review } = useQuery({
-  //   queryKey: ["review", reviewId],
-  //   queryFn: () => fetchReviewDetail(id),
-  // });
+  const { nickname } = searchParams;
+  const { data: review } = useQuery({
+    queryKey: ["review", reviewId],
+    queryFn: () => fetchReviewDetails(placeId, reviewId),
+    enabled: !!reviewId,
+  });
 
-  const review = {
-    id: 1,
-    profile: BasicProfileIcon,
-    writer: "리온이 누나",
-    createdDate: "2023-12-12",
-    title: "여기 카페 너무 비싸요 여기 카페 너무싸요 여기 카페 너무싸요 ",
-    description: "여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요 여기 카페 너무 비싸요",
-    isLiked: true
-  }
+  const profileImageUrl = review?.data.author.imageUrl || DefaultProfileImage;
+
   return (
 
     <div className="mt-14 p-5">
       <div className="flex items-center space-x-4 border-b-2 pb-2">
         <Image
-          src={review?.profile}
+          src={profileImageUrl}
           alt="프로필 이미지"
           width={40}
           height={40}
@@ -55,23 +42,24 @@ export default function ReviewDetail({ params }: { params: { placeId: string; re
         />
         <div className="flex justify-between w-full">
           <div className="text-md font-bold flex items-center">
-            <div>{review?.writer}</div>
+            <div>{nickname}</div>
           </div>
           <div>
-            {/**본인이면 뜨도록 수정 */}
-            <div className="flex gap-3 justify-center">
-              <Link href={PATHS.REVIEW_MODIFY("1", "1")}>
-                <FaEdit className="text-gray-400 w-5 h-5" />
-              </Link>
-              <DeleteButton
-                id={reviewId}
-                placeId={placeId}
-                resourceType="reviews"
-                onSuccessRedirect={PATHS.MAP}
-                invalidateKeys={[["placeDetails", placeId]]}
-              />
-            </div>
-            <div className="text-gray-500 text-sm">{review?.createdDate}</div>
+            {review?.data.author.id === id && (
+              <div className="flex gap-3 justify-center">
+                <Link href={PATHS.REVIEW_MODIFY(placeId, reviewId)}>
+                  <FaEdit className="text-gray-400 w-5 h-5" />
+                </Link>
+                <DeleteButton
+                  id={reviewId}
+                  placeId={placeId}
+                  resourceType="reviews"
+                  onSuccessRedirect={PATHS.MAP}
+                  invalidateKeys={[["placeDetails", placeId]]}
+                />
+              </div>
+            )}
+            <div className="text-gray-500 text-sm">{review?.createdAt}</div>
           </div>
 
         </div>
@@ -80,7 +68,7 @@ export default function ReviewDetail({ params }: { params: { placeId: string; re
       <div className="mt-6">
         <div className="flex gap-1">
           <div className="flex items-start">
-            {review?.isLiked ? (
+            {review?.isLikeClicked ? (
               <RiThumbUpFill className="text-primary w-7 h-7 " aria-label="추천" />
             ) : (
               <RiThumbUpLine className="text-gray-400 w-7 h-7" aria-label="비추천" />
@@ -90,7 +78,7 @@ export default function ReviewDetail({ params }: { params: { placeId: string; re
           <h1 className="text-lg font-bold flex">{review?.title}</h1>
         </div>
 
-        <p className="mt-2 text-gray-700">{review?.description}</p>
+        <p className="mt-2 text-gray-700">{review?.content}</p>
       </div>
       <Footer />
     </div >

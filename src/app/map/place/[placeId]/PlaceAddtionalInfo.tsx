@@ -33,19 +33,21 @@ export function PlaceAdditionalInfo({
   const toggleScheduleVisibility = () => {
     setIsScheduleVisible(!isScheduleVisible);
   };
+  const getDisplayValue = (value: string | null | undefined) =>
+    value && value.trim() !== "" ? value : "정보 없음";
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-2 xs:gap-3 text-[12px] xs:text-[16px]">
       {/* 운영시간 */}
-      <p className="flex items-center gap-1">
+      <p className="flex items-start gap-1">
         <Image
           src={TimeIcon}
           alt="운영시간 아이콘"
           width={20}
           className="flex-shrink-0 object-contain"
         />
-        <span>운영시간 :</span>
-        <span className="ml-2">{openingHour}</span>
+        <span className="whitespace-nowrap">운영시간 :</span>
+        <span className="ml-2 break-words">{openingHour}</span>
         <button
           className="ml-2 text-strong_gray"
           onClick={toggleScheduleVisibility}
@@ -58,7 +60,7 @@ export function PlaceAdditionalInfo({
       {isScheduleVisible && (
         <p className="flex ml-6">
           <span className="w-16">휴무일 :</span>
-          <span>{closingDays}</span>
+          <span>{getDisplayValue(closingDays)}</span>
         </p>
       )}
 
@@ -70,7 +72,7 @@ export function PlaceAdditionalInfo({
           width={16}
           className=""
         />
-        {contact}
+        {getDisplayValue(contact)}
       </p>
 
       {/* 주차 여부 */}
@@ -81,7 +83,11 @@ export function PlaceAdditionalInfo({
           width={18}
           className="flex-shrink-0 object-contain"
         />
-        <span>{hasParkingArea ? "주차 가능" : "주차 불가"}</span>
+        <span>  {hasParkingArea !== null && hasParkingArea !== undefined
+          ? hasParkingArea
+            ? "주차 가능"
+            : "주차 불가"
+          : "정보 없음"}</span>
       </p>
 
       {/* 추가 요금 */}
@@ -92,7 +98,7 @@ export function PlaceAdditionalInfo({
           width={18}
           className="flex-shrink-0 object-contain"
         />
-        {additionalFees}
+        {getDisplayValue(additionalFees)}
       </p>
 
       {/* 추가 정보 */}
@@ -107,9 +113,9 @@ export function PlaceAdditionalInfo({
 
         {/* 정보 텍스트 */}
         <div className="flex flex-col gap-1">
-          <p>입장 가능 동물 크기: {allowSize}</p>
-          <p>설명: {description}</p>
-          <p>제한사항: {restrictions}</p>
+          <p>입장 가능 동물 크기: {getDisplayValue(allowSize)}</p>
+          <p>설명: {getDisplayValue(description)}</p>
+          <p>제한사항: {getDisplayValue(restrictions)}</p>
         </div>
       </div>
 

@@ -27,7 +27,7 @@ export const fetchNearbyPlaces = async ({
 // 장소 상세 조회
 export const fetchPlaceDetails = async (placeId: number) => {
   const response = await axiosInstance.get(`/places/${placeId}`);
-  return response.data.body.data;
+  return response.data.body.data.data;
 };
 
 /*리뷰*/
@@ -37,12 +37,12 @@ export const fetchReviewDetails = async (placeId: string, reviewId: string) => {
   const response = await axiosInstance.get(
     `/places/${placeId}/reviews/${reviewId}`,
   );
-  return response.data.body.data;
+  return response.data.body;
 };
 
 // 리뷰 생성
 export const createReview = async (
-  placeId: string,
+  placeId: number,
   data: { title: string; content: string; isLikeCliked: boolean },
 ) => {
   return await axiosInstance.post(`/places/${placeId}/reviews`, data);

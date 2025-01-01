@@ -57,7 +57,7 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
             type="button"
             className={`flex items-center justify-center w-20 h-20 rounded-full ${isLikeCliked ? "bg-primary text-white" : "bg-gray-200"
               }`}
-            onClick={() => setIsLikeCliked((prev) => !prev)} // 토글 동작
+            onClick={() => setIsLikeCliked((prev) => !prev)}
           >
             {isLikeCliked ? (
               <RiThumbUpFill className="w-12 h-12" aria-label="추천됨" />
