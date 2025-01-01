@@ -1,9 +1,14 @@
-
-import { ReviewProps } from "@/app/map/place/[placeId]/PlaceDetail";
 import { RiThumbUpFill } from "react-icons/ri";
 import DefaultProfileImage from "@/assets/icons/profile_icon.png";
 import Image from "next/image";
-
+interface ReviewProps {
+  id: number;
+  nickname: string;
+  title: string
+  content: string;
+  isLikeCliked: boolean;
+  imageUrl: string;
+}
 export default function Review({ review }: { review: ReviewProps }) {
   const profileImageUrl = review?.imageUrl || DefaultProfileImage;
   return (

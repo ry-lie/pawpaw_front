@@ -13,28 +13,8 @@ import Loading from "../../../loading";
 import { PlaceAddressInfo } from "./PlaceAddressInfo";
 import { PlaceAdditionalInfo } from "./PlaceAddtionalInfo";
 import { RiThumbUpFill } from "react-icons/ri";
-export interface PlaceProps {
-  id: number; // Primary Key
-  name: string; // 시설명
-  category: string; // 카테고리3
-  postalCode: string | number; // 우편번호
-  roadNameAddress: string; // 도로명주소
-  postalAddress: string; // 지번주소
-  contact: string; // 전화번호
-  closingDays: string; // 휴무일
-  openingHour: string; // 운영시간
-  hasParkingArea: boolean; // 주차 가능 여부
-  //price: string; // 입장(이용료)가격 정보
-  allowSize: string; // 입장 가능 동물 크기
-  restrictions: string; // 반려동물 제한사항
-  description: string; // 기본 정보_장소설명
-  additionalFees: string; // 애견 동반 추가 요금
-  latitude: number; // 위도
-  longitude: number; // 경도
-  lastUpdate: string; // 최종작성일
-  reviewList?: ReviewProps[]; // 리뷰 배열 추가
-}
-export interface ReviewProps {
+
+interface ReviewProps {
   id: number;
   nickname: string;
   title: string
@@ -46,21 +26,20 @@ export interface ReviewProps {
 {/**장소 상세 모달 */ }
 export default function PlaceDetail({ placeId }: { placeId: number }) {
   const { closeModal } = useModalStore();
-
-  const { data: placeDetails, isLoading, error } = useQuery({
+  const { data: placeDetails, error, isFetching } = useQuery({
     queryKey: ["placeDetails", placeId], // 쿼리 키
     queryFn: () => fetchPlaceDetails(placeId), // 데이터 가져오기 함수
     enabled: !!placeId, // placeId가 존재할 때만 쿼리 실행
   });
-  console.log("장소 상세 데이터 : ", placeDetails);
+  //추천 수
   const likeCount = placeDetails?.reviewList
     ? placeDetails.reviewList.filter((review: any) => review?.isLikeClicked === true).length
     : 0;
-
-
+  // 장소 리뷰 존재 여부
+  const isReviewListEmpty = placeDetails?.reviewList && placeDetails?.reviewList.length > 0;
   return (
     <div className="h-[450px] xs:h-[650px] flex flex-col">
-      {isLoading ? (
+      {isFetching ? (
         <div className="flex items-center justify-center h-full w-full">
           <Loading />
         </div>
@@ -74,7 +53,7 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
         </div>
       ) : (
         <div className="overflow-y-auto p-2 flex-1 ">
-          {/* 로딩 완료 화면 */}
+          {/* 로딩 후 장세 상세 조회*/}
           <div className="flex items-center gap-2 mb-4">
             <h2 className="text-lg font-bold">{placeDetails.name}</h2>
             <div className="flex items-center gap-1">
@@ -83,24 +62,13 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
             </div>
           </div>
 
-
-          <PlaceAddressInfo
-            roadNameAddress={placeDetails?.roadNameAddress}
-            postalAddress={placeDetails?.postalAddress}
-            postalCode={placeDetails?.postalCode}
-          />
+          {/* 장소 주소 정보*/}
+          <PlaceAddressInfo placeId={placeId} />
           <hr className="my-4" />
-          <PlaceAdditionalInfo
-            openingHour={placeDetails?.openingHour}
-            closingDays={placeDetails?.closingDays}
-            contact={placeDetails?.contact}
-            hasParkingArea={placeDetails?.hasParkingArea}
-            additionalFees={placeDetails?.additionalFees}
-            allowSize={placeDetails?.allowSize}
-            description={placeDetails?.description}
-            restrictions={placeDetails?.restrictions}
-          />
+          {/* 장소 추가 정보*/}
+          <PlaceAdditionalInfo placeId={placeId} />
           <hr className="my-4" />
+          {/* 리뷰컨테이너*/}
           <div>
             <div className="flex items-center gap-2 mb-2">
               <h2 className="text-lg font-bold">리뷰</h2>
@@ -108,8 +76,9 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
                 <Image src={PlusIcon} alt="리뷰추가" width={20} height={20} onClick={closeModal} />
               </Link>
             </div>
+            {/* 리뷰*/}
             <div className="flex flex-col gap-2">
-              {placeDetails?.reviewList && placeDetails?.reviewList.length > 0 ? (
+              {isReviewListEmpty ? (
                 placeDetails?.reviewList.map((review: ReviewProps) => (
                   <Link
                     key={review.id}
