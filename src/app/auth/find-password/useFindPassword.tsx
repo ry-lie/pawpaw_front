@@ -5,9 +5,9 @@ import {
 } from "@/lib/api/auth";
 import { isAxiosError } from "axios";
 
-export const useFindPassword = () => {
+export const findPasswordApis = () => ({
   //인증코드 전송
-  const sendCode = async (email: string) => {
+  sendCode : async (email: string) => {
     try {
       await sendVerificationCode(email);
     } catch (e) {
@@ -17,12 +17,9 @@ export const useFindPassword = () => {
         throw new Error("서버에 문제가 발생하였습니다.");
       }
     }
-  };
+  },
   //인증코드 확인
-  const verifyCodeCheck = async (
-    email: string,
-    verificationCode: string,
-  ): Promise<{ success: boolean }> => {
+  verifyCodeCheck: async (email: string, verificationCode: string) => {
     try {
       return await verifyCode(email, verificationCode);
     } catch (e) {
@@ -32,9 +29,9 @@ export const useFindPassword = () => {
         throw new Error("서버에 문제가 발생하였습니다.");
       }
     }
-  };
+  },
   //인증코드 제출
-  const temporaryPasswordSubmit = async (email: string) => {
+ temporaryPasswordSubmit : async (email: string) => {
     try {
       await temporaryPassword(email);
     } catch (e) {
@@ -44,7 +41,5 @@ export const useFindPassword = () => {
         throw new Error("서버에 문제가 발생하였습니다.");
       }
     }
-  };
-
-  return { sendCode, verifyCodeCheck, temporaryPasswordSubmit };
-};
+  },
+});

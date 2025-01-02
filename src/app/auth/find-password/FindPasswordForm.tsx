@@ -3,9 +3,8 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useForm, useWatch } from "react-hook-form";
-import { useFindPassword } from "./useFindPassword";
+import { findPasswordApis } from "./useFindPassword";
 import { errorToast, infoToast, successToast } from "@/utils/Toast";
-import { isAxiosError } from "axios";
 import { useState } from "react";
 
 type FindPasswordInput = {
@@ -46,11 +45,11 @@ export default function FindPasswordForm() {
     name: "code",
   });
 
-  const checkEmail = !email || !!errorsRequest.email;
-  const checkCode = !code || !!errorsCode.code;
+  const isValidEmail = !email || !!errorsRequest.email;
+  const isValidCode = !code || !!errorsCode.code;
 
   const { sendCode, verifyCodeCheck, temporaryPasswordSubmit } =
-    useFindPassword();
+  findPasswordApis();
 
   const onSubmitOfRequest = async (data: FindPasswordInput) => {
     try {
@@ -122,7 +121,7 @@ export default function FindPasswordForm() {
           })}
           errorMessage={errorsRequest.email?.message}
         >
-          <Button btnType="submit" containerStyles="mt-2" disabled={checkEmail}>
+          <Button btnType="submit" containerStyles="mt-2" disabled={isValidEmail}>
             요청
           </Button>
         </Input>
@@ -144,7 +143,7 @@ export default function FindPasswordForm() {
           errorMessage={errorsCode.code?.message}
           disabled={!isEmailCheck || isLoading}
         >
-          <Button btnType="submit" disabled={checkCode}>
+          <Button btnType="submit" disabled={isValidCode}>
             확인
           </Button>
         </Input>
@@ -153,7 +152,7 @@ export default function FindPasswordForm() {
       <form onSubmit={onSubmitCheck}>
         <Button
           btnType="submit"
-          disabled={!checkEmail || !checkCode || isLoading}
+          disabled={!isValidEmail || !isValidCode || isLoading}
           containerStyles="h-10 w-80 mt-10"
         >
           전송
