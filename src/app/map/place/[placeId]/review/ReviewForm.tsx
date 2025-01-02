@@ -7,8 +7,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { RiThumbUpFill, RiThumbUpLine } from "react-icons/ri";
 
 interface ReviewFormProps {
-  initialValues?: { title: string; content: string; isLikeCliked: boolean }; // 수정 시 초기값
-  onSubmit: (data: { title: string; content: string; isLikeCliked: boolean }) => Promise<void>; // 작성/수정 핸들러
+  initialValues?: { title: string; content: string; isLikeClicked: boolean }; // 수정 시 초기값
+  onSubmit: (data: { title: string; content: string; isLikeClicked: boolean }) => Promise<void>; // 작성/수정 핸들러
 }
 
 export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps) {
@@ -21,13 +21,12 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
     defaultValues: initialValues || { title: "", content: "" },
   });
 
-  const [isLikeCliked, setIsLikeCliked] = useState(initialValues?.isLikeCliked || false);
-
+  const [isLikeClicked, setIsLikeClicked] = useState(initialValues?.isLikeClicked || false);
+  console.log("tttttttttttttttt", initialValues)
   const handleFormSubmit: SubmitHandler<{ title: string; content: string }> = async (data) => {
 
     try {
-      await onSubmit({ ...data, isLikeCliked });
-      console.log("리뷰 등록 성공")
+      await onSubmit({ ...data, isLikeClicked });
       reset(); // 폼 초기화
     } catch (error) {
       console.error("작업 실패:", error);
@@ -52,14 +51,14 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
         <div className="flex space-x-4">
           <button
             type="button"
-            className={`flex items-center justify-center w-20 h-20 rounded-full ${isLikeCliked ? "bg-primary text-white" : "bg-gray-200"
+            className={`flex items-center justify-center w-20 h-20 rounded-full ${isLikeClicked ? "bg-primary text-white" : "bg-gray-200"
               }`}
-            onClick={() => setIsLikeCliked((prev) => !prev)}
+            onClick={() => setIsLikeClicked((prev) => !prev)}
           >
-            {isLikeCliked ? (
+            {isLikeClicked ? (
               <RiThumbUpFill className="w-12 h-12" aria-label="추천됨" />
             ) : (
-              <RiThumbUpLine className="w-12 h-12" aria-label="추천" />
+              <RiThumbUpLine className="w-12 h-12" aria-label="추천안됨" />
             )}
           </button>
         </div>

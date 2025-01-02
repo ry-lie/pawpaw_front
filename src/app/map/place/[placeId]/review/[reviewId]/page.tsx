@@ -10,19 +10,18 @@ import { deleteReview, fetchReviewDetails } from "@/lib/api/place";
 import { useUserStore } from "@/stores/userStore";
 import DefaultProfileImage from "@/assets/icons/profile_icon.png";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/utils/formatISODate";
 
 
 
 export default function ReviewDetail({
   params,
-  searchParams,
 }: {
-  params: { placeId: string; reviewId: string };
+  params: { placeId: number; reviewId: number };
   searchParams: { nickname: string };
 }) {
   const { id } = useUserStore();
   const { reviewId, placeId } = params;
-  const { nickname } = searchParams;
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: review } = useQuery({
@@ -30,7 +29,7 @@ export default function ReviewDetail({
     queryFn: () => fetchReviewDetails(placeId, reviewId),
     enabled: !!reviewId,
   });
-
+  console.log(review, "리뷰상세");
   const handleDeleteReview = async () => {
     if (!confirm("리뷰를 삭제하시겠습니까?")) return;
 
@@ -43,7 +42,7 @@ export default function ReviewDetail({
       console.error("리뷰 삭제 실패:", error);
     }
   };
-  const profileImageUrl = review?.data.author.imageUrl || DefaultProfileImage;
+  const profileImageUrl = review?.author.imageUrl || DefaultProfileImage;
 
   return (
 
@@ -58,11 +57,11 @@ export default function ReviewDetail({
         />
         <div className="flex justify-between w-full">
           <div className="text-md font-bold flex items-center">
-            <div>{nickname}</div>
+            <div>{review?.author.nickname}</div>
           </div>
           <div>
-            {review?.data.author.id === id && (
-              <div className="flex gap-3 justify-center">
+            {review?.author.id === id && (
+              <div className="flex gap-3 justify-end">
                 <Link href={PATHS.REVIEW_MODIFY(placeId, reviewId)}>
                   <FaEdit className="text-gray-400 w-5 h-5" />
                 </Link>
@@ -71,7 +70,7 @@ export default function ReviewDetail({
                 </button>
               </div>
             )}
-            <div className="text-gray-500 text-sm">{review?.createdAt}</div>
+            <div className="text-gray-500 text-sm">{formatDate(review?.createdAt)}</div>
           </div>
 
         </div>

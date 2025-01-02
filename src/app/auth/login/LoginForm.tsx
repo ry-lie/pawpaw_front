@@ -37,8 +37,8 @@ export default function LoginForm() {
       const response = await loginAPI(payload);
       if (response.status === 200) {
         console.log("로그인 성공", response);
-        const { id, nickname } = response.data.body.data.user;
-        userStore.login({ id, nickname });
+        const { id, canWalkingMate } = response.data.body.data.user;
+        userStore.login({ id, canWalkingMate });
         router.push(PATHS.MAIN);
       } else {
         setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
