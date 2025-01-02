@@ -2,26 +2,24 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useState } from "react";
 import Image from "next/image";
 import LocationIcon from "@/assets/icons/place/place_location.png";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PlaceAddressInfoProps {
-  roadNameAddress: string;
-  postalAddress: string;
-  postalCode: string | number;
+  placeId: number;
 }
 
 export function PlaceAddressInfo({
-  roadNameAddress,
-  postalAddress,
-  postalCode,
+  placeId
 }: PlaceAddressInfoProps) {
   const [isAddressVisible, setIsAddressVisible] = useState(false);
-
+  const queryClient = useQueryClient();
+  const placeDetails = queryClient.getQueryData<any>(["placeDetails", placeId]);
   const toggleAddressVisibility = () => {
     setIsAddressVisible(!isAddressVisible);
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1 text-[12px] xs:text-[16px]">
       <p className="flex items-center">
         <Image
           src={LocationIcon}
@@ -31,9 +29,9 @@ export function PlaceAddressInfo({
           className="h-5 w-5 flex-shrink-0 object-contain"
         />
         <span className="w-14">도로명: </span>
-        <span>{roadNameAddress}</span>
+        <span>{placeDetails.roadNameAddress}</span>
         <button
-          className="ml-2 text-strong_gray "
+          className="ml-2 text-strong_gray"
           onClick={toggleAddressVisibility}
         >
           {isAddressVisible ? <IoIosArrowUp /> : <IoIosArrowDown />}
@@ -45,13 +43,13 @@ export function PlaceAddressInfo({
             <span className="border border-stroke_gray rounded-md mr-2 text-strong_gray">
               지번
             </span>
-            {postalAddress}
+            {placeDetails.postalAddress}
           </p>
           <p>
             <span className="border border-stroke_gray rounded-md mr-2 text-strong_gray">
               우편번호
             </span>
-            {postalCode}
+            {placeDetails.postalCode}
           </p>
         </div>
       )}

@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { fetchBoardDetail } from "@/lib/api/board";
+import { deletePost, fetchBoardDetail } from "@/lib/api/board";
 import Image from "next/image";
-import DeleteButton from "@/components/DeleteButton";
 import Footer from "@/components/Footer";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -12,6 +11,8 @@ import Carousel from "@/components/Main/Carousel";
 import LikeButton from "./LikeButton";
 import Comment from "./Comment";
 import Loading from "@/app/loading";
+import { RiDeleteBinLine } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 export default function CommunityDetailPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -19,6 +20,7 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [comment, setComment] = useState("");
+  const router = useRouter();
   useEffect(() => {
     const loadPost = async () => {
       try {
@@ -59,6 +61,16 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
     );
   }
 
+  const handleDeletePost = async () => {
+    if (!confirm("리뷰를 삭제하시겠습니까?")) return;
+
+    try {
+      await deletePost(post.id);
+      router.push(PATHS.MAP);
+    } catch (error) {
+      console.error("리뷰 삭제 실패:", error);
+    }
+  };
   return (
     <div className="mt-12">
       <Carousel
@@ -91,7 +103,9 @@ export default function CommunityDetailPage({ params }: { params: { id: string }
             </div>
             <div>
               <div className="flex gap-2 justify-end mb-0.5">
-                <DeleteButton id={id} resourceType="posts" onSuccessRedirect={PATHS.COMMUNITY} />
+                <button onClick={handleDeletePost} aria-label="삭제">
+                  <RiDeleteBinLine className="text-gray-400 w-5 h-5" />
+                </button>
               </div>
               <div className="text-gray-500 text-sm">{post?.createdAt}</div>
             </div>

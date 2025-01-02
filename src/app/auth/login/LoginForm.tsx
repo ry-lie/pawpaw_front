@@ -12,7 +12,6 @@ import Image from "next/image";
 import { loginAPI } from "@/lib/api/auth";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 
 type LoginInputs = {
   email: string;
@@ -22,28 +21,24 @@ type LoginInputs = {
 export default function LoginForm() {
   const {
     register,
-    control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting, isValid },
   } = useForm<LoginInputs>({
     mode: "onChange",
   });
-
-  const { isValid } = useFormState({ control });
-  const [isLoading, setIsLoading] = useState(false);
+  const userStore = useUserStore();
   const [loginError, setLoginError] = useState<string | null>(null);
   const router = useRouter();
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     const { email, password } = data;
     const payload = { email, password };
 
-    setIsLoading(true);
     try {
       const response = await loginAPI(payload);
       if (response.status === 200) {
         console.log("로그인 성공", response);
         const { id, nickname } = response.data.body.data.user;
-        useUserStore.getState().login({ id, nickname });
+        userStore.login({ id, nickname });
         router.push(PATHS.MAIN);
       } else {
         setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
@@ -51,8 +46,6 @@ export default function LoginForm() {
     } catch (error) {
       console.error("로그인 실패:", error);
       setLoginError("아이디 또는 비밀번호가 올바르지 않습니다.");
-    } finally {
-      setIsLoading(false);
     }
   };
   const handleKakaoLogin = async () => {
@@ -95,8 +88,8 @@ export default function LoginForm() {
       />
       {loginError && <p className="text-red-500 text-sm">{loginError}</p>} {/* 에러 메시지 표시 */}
       <Button
-        disabled={!isValid || isLoading}
-        isLoading={isLoading}
+        disabled={!isValid || isSubmitting}
+        isLoading={isSubmitting}
         btnType="submit"
         containerStyles="w-full h-14"
       >

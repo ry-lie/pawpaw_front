@@ -15,25 +15,22 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
   const {
     register,
     handleSubmit,
-    formState: { isValid },
+    formState: { isValid, isSubmitting },
     reset, // 폼 초기화를 위한 reset 함수
   } = useForm({
     defaultValues: initialValues || { title: "", content: "" },
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isLikeCliked, setIsLikeCliked] = useState(initialValues?.isLikeCliked || false);
 
   const handleFormSubmit: SubmitHandler<{ title: string; content: string }> = async (data) => {
-    setIsLoading(true);
+
     try {
       await onSubmit({ ...data, isLikeCliked });
       console.log("리뷰 등록 성공")
       reset(); // 폼 초기화
     } catch (error) {
       console.error("작업 실패:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -57,7 +54,7 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
             type="button"
             className={`flex items-center justify-center w-20 h-20 rounded-full ${isLikeCliked ? "bg-primary text-white" : "bg-gray-200"
               }`}
-            onClick={() => setIsLikeCliked((prev) => !prev)} // 토글 동작
+            onClick={() => setIsLikeCliked((prev) => !prev)}
           >
             {isLikeCliked ? (
               <RiThumbUpFill className="w-12 h-12" aria-label="추천됨" />
@@ -71,8 +68,8 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
 
       <div className="flex">
         <Button
-          disabled={!isValid || isLoading}
-          isLoading={isLoading}
+          disabled={!isValid || isSubmitting}
+          isLoading={isSubmitting}
           btnType="submit"
           containerStyles="text-[16px] font-medium ml-auto px-2 mt-2"
         >

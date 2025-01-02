@@ -1,7 +1,6 @@
-"use client"
 import ReviewCreateClient from "./ReviewCreateClient";
 
-export default function ReviewWritePage({ params }: { params: { placeId: string } }) {
+export default function ReviewWritePage({ params }: { params: { placeId: number } }) {
   const { placeId } = params;
   return (
     <div className="mt-14 px-4">
