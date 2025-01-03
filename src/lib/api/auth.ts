@@ -39,17 +39,7 @@ export const registerAPI = async (payload: RegisterPayload) => {
   if (payload.image) {
     formData.append("image", payload.image);
   } else {
-    // 기본 이미지 파일을 추가
-    const defaultImageResponse = await fetch("/images/profile_icon.png");
-    const defaultImageBlob = await defaultImageResponse.blob();
-    const defaultImageFile = new File(
-      [defaultImageBlob],
-      "default_profile.png",
-      {
-        type: defaultImageBlob.type,
-      },
-    );
-    formData.append("profileImage", defaultImageFile);
+    formData.append("image", "null");
   }
 
   const response = await axiosInstance.post(`/auth/register`, formData, {
