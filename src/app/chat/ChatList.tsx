@@ -9,17 +9,17 @@ import { io } from "socket.io-client";
 import { roomList } from "@/lib/api";
 import { useUserStore } from "@/stores/userStore";
 
-type LastMessageType = {
+interface LastMessageType {
   text: string;
   sender: string;
   timestamp: string;
-};
+}
 
-type ConversationType = {
+interface ConversationType {
   id: string;
   participants: string[];
   lastMessage: LastMessageType;
-};
+}
 
 const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 
