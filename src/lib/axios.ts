@@ -26,6 +26,7 @@ axiosInstance.interceptors.response.use(
         errorToast("로그인이 필요합니다.");
         redirect(PATHS.LOGIN);
       }
+
       if (isServerApiError(error)) {
         errorToast(error.response.data.message);
       }
@@ -33,6 +34,7 @@ axiosInstance.interceptors.response.use(
     }
     errorToast(error.message);
     console.error("응답 인터셉터 에러:", error);
+    return Promise.reject(error);
   },
 );
 
@@ -49,7 +51,7 @@ interface ErrorMeta {
 }
 
 const isServerApiError = (error: any): error is ErrorMeta => {
-  return isAxiosError(error) && !!error.response?.data?.message;
+  return isAxiosError(error) && !!error.response?.data;
   //전달될 에러가 axios 라이브러리를 통해 전달된것인가?
 
   //참일때, 전달된 인자를 ErrorMeta라는 타입으로 간주

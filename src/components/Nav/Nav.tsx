@@ -11,6 +11,8 @@ import Alrem_on from "@/assets/icons/alrem_on.png";
 import Image from "next/image";
 import MiniLogo from "@/assets/images/logo/miniLogo.png";
 import ChatEventAlram from "./ChatEventAlarm";
+import axiosInstance from "@/lib/axios";
+import { loginAPI, logoutAPI } from "@/lib/api/auth";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
@@ -21,11 +23,16 @@ export default function Nav() {
   const [isLoading, setIsLoading] = useState(false);
 
   // 로그아웃
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (confirm("로그아웃 하시겠습니까?")) {
-      // Zustand 상태 초기화
-      useUserStore.getState().logout();
-      router.push(PATHS.LOGIN);
+      try {
+        await logoutAPI();
+        useUserStore.getState().logout();
+        router.push(PATHS.LOGIN);
+      } catch (error) {
+        console.error("로그아웃 실패:", error);
+        alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+      }
     }
   };
 
