@@ -167,7 +167,7 @@ export default function JoinForm() {
             }}
             isLoading={isSubmitting}
             disabled={!isVerificationEnabled}
-            containerStyles={`w-[50px] h-[30px] font-normal text-xs ${isVerificationEnabled ? "!bg-alarm_orange !text-primary" : "bg-gray-300 text-gray-500"
+            containerStyles={`w-[50px] h-[30px] font-normal text-xs !bg-alarm_orange !text-primary ${isVerificationEnabled ? "!bg-alarm_orange !text-primary" : "bg-gray-300 text-gray-500"
               }`}
           >
             요청
