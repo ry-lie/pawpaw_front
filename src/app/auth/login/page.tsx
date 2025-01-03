@@ -15,7 +15,7 @@ export default function LoginPage() {
         <Image
           src={LoginPageLogo}
           alt="로그인로고이미지"
-          className="pb-5 h-48 w-48"
+          className="pb-5 xs:mb-10 mb-5 h-48 w-48"
         />
         <LoginForm />
       </div>
