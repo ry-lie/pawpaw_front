@@ -25,18 +25,6 @@ export default function Nav() {
   const { isLoggedIn, logout } = useUserStore(); // Zustand에서 상태 가져오기
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    useUserStore.getState().initialize();
-    if (isLoggedIn) {
-      if (!alarms.some((alarm) => alarm.sender === "빠알간두볼")) {
-        handleRequestChat("빠알간두볼");
-      }
-      if (!alarms.some((alarm) => alarm.sender === "노래진두볼")) {
-        addAlarm({ sender: "노래진두볼", message: "뭐해", status: "accepted" });
-      }
-    }
-  }, [isLoggedIn]);
-
   //알람이 없음
   const handleNoMessage = () => {
     if (alarms.length === 0) {
@@ -236,5 +224,3 @@ export default function Nav() {
     </nav>
   );
 }
-
-//알람이 자동적으로 뜨게 하는건 socket으로 진행?
