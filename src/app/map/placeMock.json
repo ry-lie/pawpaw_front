@@ -9,14 +9,48 @@
     "contact": "02-381-5052",
     "latitude": 37.64454276,
     "longitude": 126.886336,
-    "closingDays": "매주 토, 일, 법정공휴일 ",
+    "closingDays": "매주 토, 일, 법정공휴일",
     "openingHour": "월~금 09:00~18:00",
     "allowSize": "모두 가능",
     "restrictions": "제한사항 없음",
     "description": "동물약국",
     "additionalFees": "없음",
     "lastUpdate": "2022-11-30",
-    "hasParkingArea": true
+    "hasParkingArea": true,
+    "reviews": [
+      {
+        "id": 1,
+        "writer": "깡깡이",
+        "title": "대박 추천 병원",
+        "content": "의사쌤이 엄청 친절하시고 시설 굳의사쌤이 엄청 친절하시고 시설 굳의사쌤이 엄청 친절하시고 시설 굳 ",
+        "date": "2023-12-24",
+        "isRecommanded": true
+      },
+      {
+        "id": 2,
+        "writer": "평택평택싸나이",
+        "title": "대박 추천 병원",
+        "content": "강아지가 편하게 진료를 받았어요!",
+        "date": "2023-12-23",
+        "isRecommanded": false
+      },
+      {
+        "id": 2,
+        "writer": "슬픔이피디",
+        "title": "대박 추천 병원",
+        "content": "강아지가 편하게 진료를 받았어요!",
+        "date": "2023-12-23",
+        "isRecommanded": false
+      },
+      {
+        "id": 2,
+        "writer": "리온",
+        "title": "대박 추천 병원",
+        "content": "강아지가 편하게 진료를 받았어요!",
+        "date": "2023-12-23",
+        "isRecommanded": false
+      }
+    ]
   },
   {
     "id": 2,

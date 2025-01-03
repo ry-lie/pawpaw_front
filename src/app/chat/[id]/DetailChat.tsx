@@ -1,112 +1,150 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import Nav from "@/components/Nav/Nav";
 import { NowDate } from "@/utils/NowTime";
 import { useEffect, useRef, useState } from "react";
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
+import Message_notsend from "@/assets/icons/message_notsend.png";
+import Message_send from "@/assets/icons/message_send.png";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import CoustomNav from "./CustomNav";
 
-const chatSocket: Socket = io("ws://localhost:5000");
+const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
+const socket = io(`ws://${socket_url}`);
 
 type chatMessagetype = {
   message: string;
   sender: string;
+  receiver: string;
   timestamp: string; // 현재 시간을 저장하기 위한 속성 추가
 };
 
 export default function ChatRoomPage() {
+  const searchParams = useSearchParams();
+  const sender = searchParams.get("sender") as string;
+  const receiver = searchParams.get("receiver") as string;
   const [chatLog, setChatLog] = useState<chatMessagetype[]>([]);
-  const chatRef = useRef<HTMLInputElement>(null);
   const chatScroll = useRef<HTMLUListElement>(null);
-  const [nickname, setNickname] = useState("");
-  const [isNicknameSet, setIsNicknameSet] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState("");
 
-  //닉네임 설정
   useEffect(() => {
-    const inputNickname = prompt("닉네임을 입력하세요");
-    if (inputNickname) {
-      setNickname(inputNickname);
-    }
-  }, []);
+    const roomId = [sender, receiver].sort().join("-");
+    socket.on("connect", () => {
+      console.log("소켓 연결 성공");
+      socket.emit("join", { roomId: "room1", message: sender });
+    });
 
-  //메세지 주고 받기
-  useEffect(() => {
-    const getMessage = (data: chatMessagetype) => {
-      setChatLog((prev) => [...prev, data]); 
-    };
+    socket.on("join", (data) => {
+      if (data.nickname && data.nickname !== sender) {
+        setChatLog((prev) => [
+          ...prev,
+          {
+            message: `${data.nickname}님이 채팅을 수락했습니다.`,
+            sender: "system",
+            receiver: "",
+            timestamp: new Date().toISOString(),
+          },
+        ]);
+      }
+    });
 
-    chatSocket.on("message", getMessage);
+    socket.on("receive-message", (data) => {
+      setChatLog((prev) => [...prev, data]);
+    });
+
     return () => {
-      chatSocket.off("message", getMessage);
+      socket.off("join");
+      socket.off("receive-message");
     };
   }, []);
 
-  // 메시지가 쌓일 때마다 스크롤 자동으로 이동
   useEffect(() => {
     if (chatScroll.current) {
       chatScroll.current.scrollTop = chatScroll.current.scrollHeight;
     }
   }, [chatLog]);
 
-
-  // 메시지 전송
   const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (chatRef.current?.value && nickname) {
+    if (currentMessage.trim()) {
+      const roomId = [sender, receiver].sort().join("-");
       const currentTime = new Date().toISOString();
-      const newMessage: chatMessagetype = {
-        message: chatRef.current.value,
-        sender: nickname,
+      const message: chatMessagetype = {
+        message: currentMessage,
+        sender,
+        receiver,
         timestamp: currentTime,
       };
-      chatSocket.emit("message", newMessage); // 서버로 메시지 전송
-      chatRef.current.value = ""; // 입력 필드 초기화
+
+      socket.emit("send-message", { roomId, message: currentMessage });
+      setChatLog((prev) => [...prev, message]);
+      setCurrentMessage("");
     }
   };
-  if (!nickname) {
-    return null;
-  }
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="w-full flex-1 flex flex-col justify-end">  
+    <div className="relative z-50">
+      <CoustomNav />
+      <div className="absolute ml-28 mt-2">
+
+      </div>
+      <div className="flex flex-col h-screen pt-10">
         <ul
           ref={chatScroll}
-          className="flex flex-col overflow-y-auto border-t-4 pt-12 h-full"
+          className="flex-1 flex flex-col overflow-y-auto pt-2 px-2"
         >
-            {chatLog.map((message, index) => (
+          {chatLog.map((message, index) => (
+            <div key={index} className="flex flex-col items-start mb-2">
+              {message.sender !== sender && (
+                <span className="font-bold text-sm pl-2">{message.sender}</span>
+              )}
               <li
-                key={index}
-                className={`m-2 p-3 ${message.sender === nickname
-                  ? "ml-auto bg-primary"
-                  : "mr-auto bg-stroke_gray"
-                  } rounded-lg max-w-[60%]`}
+                className={`m-1 p-2 ${
+                  message.sender === sender
+                    ? "ml-auto bg-primary text-white"
+                    : "mr-auto bg-stroke_gray text-black"
+                } rounded-lg`}
               >
-                <div className="flex justify-between mb-1">
-                  <span className="font-bold text-sm">{message.sender}</span>
-                  <span className="text-gray-500 text-xs">
-                    {NowDate(message.timestamp)}
-                  </span>
-                </div>
-                <div className="text-sm">{message.message}</div>
+                <div className="font-bold text-sm">{message.message}</div>
               </li>
-            ))}
-          </ul>
-          <form onSubmit={submitMessage} className="w-full flex gap-2 mt-2">
-            <Input
-              id="chatWrite"
-              type="text"
-              ref={chatRef}
-              placeholder="메세지를 입력하세요"
-              className="w-full"
-              name="chatWrite"
+              <span
+                className={`text-gray-500 text-xs ${
+                  message.sender === sender ? "ml-auto mr-2" : "mr-auto ml-2"
+                }`}
+              >
+                {NowDate(message.timestamp)}
+              </span>
+            </div>
+          ))}
+        </ul>
+
+        <form
+          onSubmit={submitMessage}
+          className="w-full flex gap-2 border-t p-4 bg-white"
+        >
+          <Input
+          name="메세지"
+            type="text"
+            value={currentMessage}
+            onChange={(e) => setCurrentMessage(e.target.value)}
+            placeholder="메세지를 입력하세요"
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+          <Button
+            btnType="submit"
+            containerStyles="bg-transparent hover:bg-transparent p-2"
+            disabled={!currentMessage.trim()}
+          >
+            <Image
+              src={currentMessage.trim() ? Message_send : Message_notsend}
+              alt="send icon"
+              className="h-6 w-6"
             />
-            <Button btnType="submit" containerStyles="h-10 w-14">
-              전송
-            </Button>
-          </form>
-        </div>
-  
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

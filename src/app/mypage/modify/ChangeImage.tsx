@@ -1,75 +1,61 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BasicProfile from "@/assets/icons/profile_icon.png";
-import Button from "@/components/Button";
 import Image from "next/image";
 import Input from "@/components/Input";
-import { handleImamgeUploading } from "@/utils/ImageUpload";
-import { PutImage } from "@/lib/api/Picture";
+import { useUserStore } from "@/stores/userStore";
+
 
 export default function ChangeImage() {
-  const [img, setImg] = useState<string>(BasicProfile.src);
-  const fileInput = useRef<HTMLInputElement | null>(null);
+  const [profileImageFile, setProfileImageFile] = useState<File|null>(null);
+  const [profileImageUrl, setProfileImageUrl] = useState<string|null>(null);
 
-  //이메일 가져오기
-  // const [email, setEmail] = useState("");
+  //유저정보 가져오기
+  const currentUser = useUserStore((state)=>state.id);
+  console.log("로그인된 사용자 이메일 : ",  currentUser)
+  
+  const handleProfileImageChange =  (e:React.ChangeEvent<HTMLInputElement>)=>{
+    const file = e.target.files?.[0];
+    if (file){
+      setProfileImageFile(file);
 
-  // useEffect(()=>{
-  //     const fetchEmail = async()=>{
-  //         const res = await fetch("/api/givemeEmail");
-  //         if(res.ok){
-  //             const data = await res.json();
-  //             setEmail(data.email);
+      if(profileImageUrl){
+        URL.revokeObjectURL(profileImageUrl);
+      }
+      setProfileImageUrl(URL.createObjectURL(file));
+    }
+  };
 
-  //         }else{
-  //             console.error("이메일 못찾아요!")
-  //         }
-  //     };
-  //     fetchEmail();
-  // },[]);
-
-  const handleChangeImage = handleImamgeUploading(async (file) => {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onload = () => {
-      if (fileReader.readyState === 2) {
-        setImg(fileReader.result as string);
+  useEffect(()=>{
+    return() => {
+      if(profileImageUrl){
+        URL.revokeObjectURL(profileImageUrl)
       }
     };
+  },[profileImageUrl]);
 
-    try {
-      await PutImage(file);
-    } catch (e) {
-      console.error(e);
-    }
-  });
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <Button
-        onClick={() => {
-          fileInput.current?.click();
-        }}
-        containerStyles="bg-transparent hover:bg-transparent"
-      >
-        <Image
-          src={BasicProfile}
-          alt="기본이미지"
-          className="h-36 w-36 rounded-full"
+      <label htmlFor="profile-image-input" className="cursor-pointer">
+        <Image src={profileImageUrl || BasicProfile}
+        alt="프로필 이미지"
+        width={96} height={96}
+        className="rounded-full w-36 h-36"
         />
-      </Button>
 
+      </label>
       <Input
         name="fileInput"
         type="file"
-        id="input-file"
+        id="profile-image-input"
         accept="image/png, image/jpeg"
-        style={{ display: "none" }}
-        ref={fileInput}
-        onChange={handleChangeImage}
-      />
-      <div className="text-base mt-2">hjh268100@gmail.com</div>
+        //style={{ display: "none" }}
+className="hidden"
+        onChange={handleProfileImageChange}
+      /> 
+      <div className="text-base mt-2">{currentUser}</div>
     </div>
   );
 }
