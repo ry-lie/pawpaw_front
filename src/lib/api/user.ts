@@ -51,3 +51,14 @@ export const updateUser = async(id : number, data : Partial<UserInfo>) : Promise
   });
   return response.data;
 }
+
+// 내가 쓴 글 조회 (myposts, myreviews)
+export const getMyPosts = async (id: number, cursor: number | null = null, take: number = 7) => {
+  const response = await axiosInstance.get(`/users/${id}/boards`, {
+    params: {
+      cursor,
+      take,
+    },
+  });
+  return response.data;
+};
