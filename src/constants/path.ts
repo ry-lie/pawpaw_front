@@ -15,7 +15,7 @@ export const PATHS = {
     `/map/place/${placeId}/review/${reviewId}`,
   REVIEW_WRITE: (placeId: number) => `/map/place/${placeId}/review/write`,
   REVIEW_MODIFY: (placeId: number, reviewId: number) =>
-    `/map/place/${placeId}/review/${reviewId}}/write`,
+    `/map/place/${placeId}/review/${reviewId}/write`,
 
   COMMUNITY: "/community",
   COMMUNITY_DETAIL: (id: number) => `/community/${id}`,

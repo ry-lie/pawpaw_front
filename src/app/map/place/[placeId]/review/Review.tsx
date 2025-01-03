@@ -6,7 +6,7 @@ interface ReviewProps {
   nickname: string;
   title: string
   content: string;
-  isLikeCliked: boolean;
+  isLikeClicked: boolean;
   imageUrl: string;
 }
 export default function Review({ review }: { review: ReviewProps }) {
@@ -27,7 +27,7 @@ export default function Review({ review }: { review: ReviewProps }) {
           {review.nickname}
         </h3>
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 w-full">
         {/* 리뷰 제목 */}
         <p className="xs:text-sm text-[12px] font-semibold overflow-hidden text-ellipsis whitespace-nowrap max-w-[200px]">
           {review.title}
@@ -38,9 +38,9 @@ export default function Review({ review }: { review: ReviewProps }) {
         </p>
       </div>
       <div className="flex items-end">
-        {review.isLikeCliked && (
+        {review.isLikeClicked && (
           <div className="flex-shrink-0">
-            <RiThumbUpFill className="w-6 h-6 text-primary" />
+            <RiThumbUpFill className="w-4 h-4 text-primary" />
           </div>
         )}
       </div>

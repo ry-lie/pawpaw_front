@@ -1,12 +1,12 @@
 /**
  * 날짜 형식을 지정된 형식으로 변환하는 함수
  * @param isoDate - ISO 8601 형식의 날짜 문자열
- * @param format - 변환할 날짜 형식 (기본값: 'YYYY-MM-DD HH:mm:ss')
+ * @param format - 변환할 날짜 형식 (기본값: 'YYYY-MM-DD')
  * @returns 변환된 날짜 문자열
  */
 export function formatDate(
   isoDate: string,
-  format: string = "YYYY-MM-DD HH:mm:ss",
+  format: string = "YYYY-MM-DD",
 ): string {
   const date = new Date(isoDate);
 

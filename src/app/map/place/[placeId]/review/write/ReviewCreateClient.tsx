@@ -1,11 +1,11 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axios";
 import ReviewForm from "../ReviewForm";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/constants/path";
 import { createReview } from "@/lib/api/place";
+import { errorToast, successToast } from "@/utils/Toast";
 
 interface ReviewCreateClientProps {
   placeId: number;
@@ -13,18 +13,17 @@ interface ReviewCreateClientProps {
 export default function ReviewCreateClient({ placeId }: ReviewCreateClientProps) {
   const queryClient = useQueryClient();
   const router = useRouter();
-
   const handleCreate = async (data: { title: string; content: string; isLikeClicked: boolean }) => {
     try {
       const response = await createReview(placeId, data);
-      const { reviewId } = response.data;
+      const reviewId = response.data.body.data.reviewId;
+
       queryClient.invalidateQueries({ queryKey: ["placeDetails", placeId] });
       queryClient.invalidateQueries({ queryKey: ["reviewDetails", reviewId] });
-      console.log('리뷰 등록 성공');
       router.push(PATHS.REVIEW_DETAIL(placeId, reviewId))
-
+      successToast("리뷰 등록을 성공했습니다.")
     } catch (error) {
-      console.error("리뷰 등록 실패:", error);
+      errorToast("다시 시도해주세요.")
     }
   };
 

@@ -22,7 +22,6 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
   });
 
   const [isLikeClicked, setIsLikeClicked] = useState(initialValues?.isLikeClicked || false);
-  console.log("tttttttttttttttt", initialValues)
   const handleFormSubmit: SubmitHandler<{ title: string; content: string }> = async (data) => {
 
     try {

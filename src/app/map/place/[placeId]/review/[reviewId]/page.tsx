@@ -77,13 +77,11 @@ export default function ReviewDetail({
 
       </div>
       <div className="mt-6">
-        <div className="flex gap-1">
+        <div className="flex">
           <div className="flex items-start">
             {review?.isLikeClicked ? (
-              <RiThumbUpFill className="text-primary w-7 h-7 " aria-label="추천" />
-            ) : (
-              <RiThumbUpLine className="text-gray-400 w-7 h-7" aria-label="비추천" />
-            )}
+              <RiThumbUpFill className="text-primary w-7 h-7 mr-1" aria-label="추천" />
+            ) : null}
           </div>
 
           <h1 className="text-lg font-bold flex">{review?.title}</h1>

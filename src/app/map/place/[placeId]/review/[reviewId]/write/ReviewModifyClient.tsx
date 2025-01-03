@@ -3,6 +3,7 @@
 import { PATHS } from "@/constants/path";
 import { updateReview } from "@/lib/api/place";
 import { useUserStore } from "@/stores/userStore";
+import { errorToast, successToast } from "@/utils/Toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import ReviewForm from "../../ReviewForm";
@@ -24,8 +25,9 @@ export default function ReviewModifyClient({ initialData, reviewId, placeId, use
       queryClient.invalidateQueries({ queryKey: ["placeDetails", placeId] });
       //queryClient.invalidateQueries({ queryKey: ["reviews", reviewId] }); //만약 리뷰 상세가 업데이트되지 않는다면 주석해제
       router.push(PATHS.REVIEW_DETAIL(placeId, reviewId))
+      successToast("리뷰 수정 성공했습니다.")
     } catch (error) {
-      console.error("리뷰 수정 실패:", error);
+      errorToast("다시 시도해주세요.")
     }
   };
 

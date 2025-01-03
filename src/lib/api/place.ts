@@ -55,11 +55,14 @@ export const updateReview = async (
   data: { title: string; content: string; isLikeClicked: boolean },
 ) => {
   const requestData = {
-    ...data,
+    title: data.title,
+    content: data.content,
+    isLikeClicked: data.isLikeClicked,
     id: placeId,
     userId,
     reviewId,
   };
+
   return await axiosInstance.put(
     `/places/${placeId}/reviews/${reviewId}`,
     requestData,

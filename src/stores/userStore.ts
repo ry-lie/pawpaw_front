@@ -4,7 +4,7 @@ import { create } from "zustand";
 
 interface UserState {
   id: number;
-  // nickname: string;
+  nickname: string;
   canWalkingMate: boolean;
   isLoggedIn: boolean;
   login: (user: { id: number; canWalkingMate: boolean }) => void; // 로그인
@@ -14,7 +14,7 @@ interface UserState {
 
 export const useUserStore = create<UserState>((set) => ({
   id: 0,
-  // nickname: "",
+  nickname: "",
   isLoggedIn: false,
   canWalkingMate: false,
   // 로그인

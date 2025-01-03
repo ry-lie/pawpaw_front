@@ -15,13 +15,19 @@ export const loginAPI = async ({
   return response;
 };
 
+// 로그아웃
+export const logoutAPI = async () => {
+  const response = await axiosInstance.post(`/auth/logout`);
+  return response;
+};
+
 // 회원가입
 export interface RegisterPayload {
   email: string;
   password: string;
   name: string;
   nickname: string;
-  profileImage: File | null;
+  image: File | null;
 }
 export const registerAPI = async (payload: RegisterPayload) => {
   const formData = new FormData();
@@ -30,8 +36,8 @@ export const registerAPI = async (payload: RegisterPayload) => {
   formData.append("name", payload.name);
   formData.append("nickname", payload.nickname);
 
-  if (payload.profileImage) {
-    formData.append("profileImage", payload.profileImage);
+  if (payload.image) {
+    formData.append("image", payload.image);
   } else {
     // 기본 이미지 파일을 추가
     const defaultImageResponse = await fetch("/images/profile_icon.png");
@@ -56,14 +62,16 @@ export const registerAPI = async (payload: RegisterPayload) => {
 
 // 이메일 중복 확인
 export const checkEmailDuplicate = async (email: string) => {
-  const response = await axiosInstance.post(`/auth/check-email`, { email });
+  const response = await axiosInstance.get(`/users/duplicate-email`, {
+    params: { email },
+  });
   return response;
 };
 
 // 닉네임 중복 확인
 export const checkNicknameDuplicate = async (nickname: string) => {
-  const response = await axiosInstance.post(`/auth/check-nickname`, {
-    nickname,
+  const response = await axiosInstance.get(`/users/duplicate-nickname`, {
+    params: { nickname },
   });
   return response;
 };
@@ -77,15 +85,12 @@ export const sendVerificationCode = async (email: string) => {
 };
 
 // 인증 코드 확인
-export const verifyCode = async (
-  email: string,
-  verificationCode: string,
-): Promise<{ success: boolean }> => {
+export const verifyCode = async (email: string, verificationCode: string) => {
   const response = await axiosInstance.post(
     `/auth/validate-verification-code`,
     { email, verificationCode },
   );
-  return { success: response.status === 200 };
+  return response;
 };
 
 //임시 비밀번호 발급
