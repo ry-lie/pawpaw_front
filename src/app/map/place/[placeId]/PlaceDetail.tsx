@@ -19,7 +19,7 @@ interface ReviewProps {
   nickname: string;
   title: string
   content: string;
-  isLikeCliked: boolean;
+  isLikeClicked: boolean;
   imageUrl: string;
 }
 
@@ -58,7 +58,7 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
             <h2 className="text-lg font-bold">{placeDetails.name}</h2>
             <div className="flex items-center gap-1">
               <RiThumbUpFill className="text-primary w-4 h-4" aria-label="추천" />
-              <span className="text-lg font-semibold text-primary">{likeCount}</span>
+              <span className="text-[14px] xs:text-[16px] font-semibold text-primary">{likeCount}</span>
             </div>
           </div>
 
@@ -82,10 +82,7 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
                 placeDetails?.reviewList.map((review: ReviewProps) => (
                   <Link
                     key={review.id}
-                    href={{
-                      pathname: PATHS.REVIEW_DETAIL(placeId, review.id),
-                      query: { nickname: review.nickname },
-                    }}
+                    href={PATHS.REVIEW_DETAIL(placeId, review.id)}
                     onClick={() => closeModal()}
                   >
                     <Review key={review.id} review={review} />

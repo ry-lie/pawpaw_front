@@ -29,38 +29,35 @@ export default function Home() {
     const fetchData = async () => {
       try {
         const popularResponse = await getPopularBoardList(6);
-        console.log("인기글 원본 응답:", popularResponse);
         const latestResponse = await getLatestBoardList(6);
-        console.log("최신글 원본 응답:", latestResponse);
 
-  
+
+
         setPopularPosts(
           Array.isArray(popularResponse.data.body.data)
-          ? popularResponse.data.body.data.map((item: any) => ({
-                category: item.korName,
-                title: item.title,
-                imageUrl: item.url,
-              }))
+            ? popularResponse.data.body.data.map((item: any) => ({
+              category: item.korName,
+              title: item.title,
+              imageUrl: item.url,
+            }))
             : []
         );
-  
+
         setLatestPosts(
           Array.isArray(latestResponse.data.body.data)
             ? latestResponse.data.body.data.map((item: any) => ({
-                category: item.category, // korName 사용
-                title: item.title,
-                imageUrl: item.url,
-              }))
+              category: item.category, // korName 사용
+              title: item.title,
+              imageUrl: item.url,
+            }))
             : []
         );
-  
-        console.log("인기글 매핑 데이터:", popularPosts);
-        console.log("최신글 매핑 데이터:", latestPosts);
+
       } catch (error) {
         console.error("데이터를 가져오는 중 오류 발생:", error);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -71,7 +68,7 @@ export default function Home() {
       <main className="mt-12 flex flex-col items-center gap-8">
 
         <Carousel carouselData={carouselData} />
-        
+
         {/* 컨테이너 - 인기글 섹션, 최신글 섹션 */}
         <div className="w-full max-w-mobile mx-auto px-6">
           {/* 인기글 섹션 */}
@@ -88,13 +85,13 @@ export default function Home() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 place-items-center">
               {popularPosts.map((post, index) => (
-                  <PostCard
-                    key={index}
-                    category={post.category}
-                    title={post.title}
-                    imageUrl={post.imageUrl}
-                  />
-                ))}
+                <PostCard
+                  key={index}
+                  category={post.category}
+                  title={post.title}
+                  imageUrl={post.imageUrl}
+                />
+              ))}
             </div>
           </section>
 
