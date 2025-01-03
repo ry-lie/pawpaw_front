@@ -3,14 +3,22 @@ import Input from "@/components/Input";
 import Image from "next/image";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import Confirm_icon from "@/assets/icons/confirm_icon.png";
-import axios from "axios";
+import { updateUser } from "@/lib/api/user";
+import { errorToast, successToast } from "@/utils/Toast";
+import { useUserStore } from "@/stores/userStore";
+import { useState } from "react";
 
 export default function FindPasswordModal() {
+  
   type FindPasswordInput = {
     password: string;
     newPassword: string;
     confirmPassword: string;
   };
+
+  
+  const [isVerified, setIsVerified] = useState(false);
+  const userId = useUserStore((state)=>state.id)
 
   const {
     control,
@@ -20,22 +28,6 @@ export default function FindPasswordModal() {
   } = useForm<FindPasswordInput>({
     mode: "onChange",
   });
-
-  const onSubmit: SubmitHandler<FindPasswordInput> = async (data) => {
-    const { password, newPassword, confirmPassword } = data;
-    const payload = { password, newPassword, confirmPassword };
-    // try {
-    //   const res = await axios.post(`/api/password/reset`, payload, {
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     },
-    //   });
-    //   console.log("res", res.data)
-    // } catch (e) {
-    //   console.error("Error:", e)
-    // }
-    console.log("data", payload);
-  };
 
   const password = useWatch({
     control,
@@ -59,6 +51,42 @@ export default function FindPasswordModal() {
     !confirmPassword ||
     Object.keys(errors).length > 0;
 
+
+
+  const handleVerifyPassword = async()=>{
+    try {
+      const response = await updateUser(userId,{password});
+      if(response.success){
+        successToast("비밀번호가 성공적으로 변경되었습니다.");
+        setIsVerified(true);
+      } else {
+        errorToast("현재 비밀번호가 일치하지 않습니다.");
+        setIsVerified(false);
+      }
+    } catch (e) {
+      console.error("Error:", e)
+      errorToast("비밀번호 변경 중 오류가 발생했습니다.");
+      setIsVerified(false)
+    }
+  };
+
+   const onSubmit: SubmitHandler<FindPasswordInput> = async (data) => {
+   const {newPassword} = data;
+   try{
+    if(!isVerified){
+      errorToast("비밀번호 인증이 필요합니다.");
+      return;
+    }
+    await updateUser(userId, {password : newPassword});
+    successToast("비밀번호가 성공적으로 변경되었습니다.")
+
+   }catch(e){
+    console.error("Error:" ,e)
+    errorToast("비밀번호 변경 중 오류가 발생했습니다.");
+   }
+  }
+
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <div>
@@ -79,9 +107,10 @@ export default function FindPasswordModal() {
             errorMessage={errors.password?.message}
           >
             <Button
-              btnType="submit"
+              btnType="button"
               containerStyles="w-12 h-8 mr-10 flex justify-center items-center !text-primary border-solid border-primary border bg-transparent hover:bg-primary hover:!text-white"
               disabled={!password}
+              onClick={handleVerifyPassword}
             >
               인증
             </Button>
@@ -101,6 +130,7 @@ export default function FindPasswordModal() {
               },
             })}
             errorMessage={errors.newPassword?.message}
+            disabled={!isVerified}
           />
 
           <Input
@@ -114,6 +144,7 @@ export default function FindPasswordModal() {
                 value === newPassword || "비밀번호가 일치하지 않습니다.",
             })}
             errorMessage={errors.confirmPassword?.message}
+            disabled={!isVerified}
           >
             {isPasswordMatch && (
               <Image
