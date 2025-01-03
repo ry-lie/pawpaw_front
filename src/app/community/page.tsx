@@ -9,17 +9,9 @@ import BoardHeartIcon from "@/assets/icons/boardHeart_icon.png";
 import EmptyPicture from "@/assets/icons/emptyPicture.png";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { getBoardList } from "@/lib/api/board";
+import { Post } from "@/types/post";
 
 // 게시글 데이터 타입 정의
-type Post = {
-  id: number;
-  category: string;
-  title: string;
-  content: string;
-  isLikeClicked: boolean;
-  imageList: { isPrimary: boolean; url: string }[];
-};
-
 export default function CommunityPage() {
   const [selectedCategory, setSelectedCategory] = useState("전체"); // 카테고리
   const [searchQuery, setSearchQuery] = useState(""); // 검색어
@@ -43,6 +35,8 @@ export default function CommunityPage() {
   // 게시글 데이터 가져오기 함수
   const fetchPosts = async (isLoadMore = false) => {
     if (isLoading) return;
+
+    
 
     setIsLoading(true);
     try {
@@ -128,13 +122,15 @@ export default function CommunityPage() {
                 {/* 이미지 */}
                 <Image
                   src={
-                    post.imageList.length > 0
-                      ? post.imageList.find((img) => img.isPrimary)?.url || post.imageList[0].url
-                      : EmptyPicture
+                    post.imageList?.length > 0 && post.imageList.some((img) => img.url)
+                      ? post.imageList.find((img) => img.isPrimary && img.url)?.url ||
+                        post.imageList.find((img) => img.url)?.url ||
+                        EmptyPicture.src // 유효한 URL이 없으면 기본 이미지
+                      : EmptyPicture.src // Static Import된 기본 이미지
                   }
                   alt="게시글 이미지"
-                  width={100} // 고정 너비
-                  height={100} // 고정 높이
+                  width={100}
+                  height={100}
                   className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3"
                 />
                 {/* 제목, 내용 */}

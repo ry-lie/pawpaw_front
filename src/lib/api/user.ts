@@ -60,3 +60,18 @@ export const getUser = async (id: number) => {
   const response = await axiosInstance.get(`/user/${id}`);
   return response.data;
 };
+
+// 내가 쓴 글 조회 (myposts, myreviews)
+export const getMyPosts = async (
+  id: number,
+  cursor: number | null = null,
+  take: number = 7,
+) => {
+  const response = await axiosInstance.get(`/users/${id}/boards`, {
+    params: {
+      cursor,
+      take,
+    },
+  });
+  return response.data;
+};
