@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { PATHS } from "@/constants/path";
 import Image from "next/image";
-import PlusButton from "@/components/PlusButton";
 import Footer from "@/components/Footer";
 import BoardHeartIcon from "@/assets/icons/boardHeart_icon.png"
 import EmptyPicture from "@/assets/icons/emptyPicture.png";
@@ -70,14 +69,18 @@ export default function MyPostsPage() {
             <div className="flex">
               {/* 1. 이미지 */}
               <Image
-                src={
-                  post.imageList.length > 0
-                    ? post.imageList.find((img) => img.isPrimary)?.url || post.imageList[0].url
-                    : EmptyPicture
-                }
-                alt="게시글 이미지"
-                className="w-20 h-20 object-cover rounded-md mr-3 justify-center"
-              />
+                  src={
+                    post.imageList?.length > 0 && post.imageList.some((img) => img.url)
+                      ? post.imageList.find((img) => img.isPrimary && img.url)?.url ||
+                        post.imageList.find((img) => img.url)?.url ||
+                        EmptyPicture.src // 유효한 URL이 없으면 기본 이미지
+                      : EmptyPicture.src // Static Import된 기본 이미지
+                  }
+                  alt="게시글 이미지"
+                  width={100}
+                  height={100}
+                  className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3"
+                />
               {/* 2. 제목, 내용 */}
               <div className="w-full flex flex-col justify-center">
                 <div className="flex justify-between items-center mb-2">
@@ -109,9 +112,6 @@ export default function MyPostsPage() {
           </div>
         ))}
       </div>
-
-      {/* 플러스 버튼 */}
-      <PlusButton href={PATHS.COMMUNITY_WRITE} />
 
       {/* Footer 카테고리 독바 */}
       <Footer />
