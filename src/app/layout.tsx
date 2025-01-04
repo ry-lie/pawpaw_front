@@ -8,6 +8,7 @@ import "./globals.css";
 import Loading from "./loading";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import ErrorHandler from "./ErrorHandler";
 
 export const metadata: Metadata = {
   title:
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body>
         <QueryProvider>
           <Nav />
+          <ErrorHandler />
           <Suspense fallback={<Loading />}>
             <div className="flex flex-col w-full min-h-screen sm:max-w-mobile mx-auto bg-background border border-stroke_gray-600">
               {children}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Image from "next/image";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -24,18 +24,13 @@ interface JoinInputs {
 export default function JoinForm() {
   const {
     register,
-    control,
     handleSubmit,
     getValues,
     formState: { errors, isSubmitting, isValid },
     setError
   } = useForm<JoinInputs>({ mode: "onChange" });
   const router = useRouter();
-  const emailCodeValue = useWatch({
-    control,
-    name: "emailCode",
-  });
-
+  const [isEmailSending, setIsEmailSending] = useState(false); // 이메일 요청 로딩 상태
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null); // 업로드된 이미지 파일 상태
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null); // 미리보기 URL
 
@@ -143,7 +138,7 @@ export default function JoinForm() {
         <div className="flex gap-2">
           <Button
             btnType="button"
-            onClick={() => {
+            onClick={async () => {
               const email = getValues("email") || "";
               const emailPattern = /\S+@\S+\.\S+/;
 
@@ -163,14 +158,19 @@ export default function JoinForm() {
                 return;
               }
 
-              handleEmailVerification(); // 유효한 경우 이메일 인증 요청
+              try {
+                setIsEmailSending(true);
+                await handleEmailVerification();
+              } finally {
+                setIsEmailSending(false);
+              }
             }}
-            isLoading={isSubmitting}
-            disabled={!isVerificationEnabled}
-            containerStyles={`w-[50px] h-[30px] font-normal text-xs !bg-alarm_orange !text-primary ${isVerificationEnabled ? "!bg-alarm_orange !text-primary" : "bg-gray-300 text-gray-500"
+            isLoading={isEmailSending}
+            disabled={!isVerificationEnabled || isEmailSending}
+            containerStyles={`w-[50px] h-[30px] font-normal text-xs ${isEmailSending ? "bg-gray-300 text-gray-500" : "!bg-alarm_orange !text-primary"
               }`}
           >
-            요청
+            {isEmailSending ? "로딩중" : "요청"}
           </Button>
           <Button
             btnType="button"

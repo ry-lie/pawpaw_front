@@ -4,23 +4,25 @@ import { PATHS } from "@/constants/path";
 import { useUserStore } from "@/stores/userStore";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAlarmStore } from "@/stores/alarmStore";
 import Alrem_off from "@/assets/icons/alrem_off.png";
 import Alrem_on from "@/assets/icons/alrem_on.png";
 import Image from "next/image";
 import MiniLogo from "@/assets/images/logo/miniLogo.png";
 import ChatEventAlram from "./ChatEventAlarm";
-import axiosInstance from "@/lib/axios";
-import { loginAPI, logoutAPI } from "@/lib/api/auth";
+import { logoutAPI } from "@/lib/api/auth";
+import { errorToast } from "@/utils/Toast";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
 export default function Nav() {
   const router = useRouter();
   const alarms = useAlarmStore((state) => state.alarms);
-  const { isLoggedIn, logout } = useUserStore(); // Zustand에서 상태 가져오기
-  const [isLoading, setIsLoading] = useState(false);
+  const { isLoggedIn } = useUserStore(); // Zustand에서 상태 가져오기
+  useEffect(() => {
+    useUserStore.getState().initialize();
+  }, []);
 
   // 로그아웃
   const handleLogout = async () => {
@@ -30,8 +32,7 @@ export default function Nav() {
         useUserStore.getState().logout();
         router.push(PATHS.LOGIN);
       } catch (error) {
-        console.error("로그아웃 실패:", error);
-        alert("로그아웃에 실패했습니다. 다시 시도해주세요.");
+        errorToast("로그아웃에 실패했습니다.");
       }
     }
   };
@@ -65,7 +66,6 @@ export default function Nav() {
               <button
                 onClick={handleLogout}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
-                disabled={isLoading}
               >
                 로그아웃
               </button>
@@ -76,18 +76,12 @@ export default function Nav() {
               <Link
                 href={PATHS.LOGIN}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
-                onClick={(e) => {
-                  if (isLoading) e.preventDefault();
-                }}
               >
                 로그인
               </Link>
               <Link
                 href={PATHS.JOIN}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
-                onClick={(e) => {
-                  if (isLoading) e.preventDefault();
-                }}
               >
                 회원가입
               </Link>

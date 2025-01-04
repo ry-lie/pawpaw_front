@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PATHS } from "./constants/path";
+
 export const PUBLIC_PATH = [
   PATHS.LOGIN,
   PATHS.JOIN,
@@ -26,9 +27,10 @@ export function middleware(request: NextRequest) {
   }
 
   // 인증되지 않은 사용자가 보호된 경로에 접근하려는 경우
-
   if (!hasToken && isProtectedPath) {
-    return NextResponse.redirect(new URL(PATHS.LOGIN, request.url));
+    const loginUrl = new URL(PATHS.LOGIN, request.url);
+    loginUrl.searchParams.set("error", "login_required"); // 상태 전달
+    return NextResponse.redirect(loginUrl);
   }
 
   return NextResponse.next();
