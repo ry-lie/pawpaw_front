@@ -23,7 +23,7 @@ export default function ReviewCreateClient({ placeId }: ReviewCreateClientProps)
       router.push(PATHS.REVIEW_DETAIL(placeId, reviewId))
       successToast("리뷰 등록을 성공했습니다.")
     } catch (error) {
-      errorToast("다시 시도해주세요.")
+      errorToast("리뷰 등록에 실패했습니다.")
     }
   };
 

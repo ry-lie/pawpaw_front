@@ -8,6 +8,7 @@ import LifeIcon from "@/assets/icons/life_icon.png";
 import ProtectIcon from "@/assets/icons/protect_icon.png";
 
 export interface PostCardProps {
+  id: number;
   category: '일상' | '펫자랑' | '임시보호' | '고민상담';
   title: string;
   imageUrl?: string | StaticImageData;
