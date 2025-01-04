@@ -33,29 +33,35 @@ export const getBoardList = async (
 };
 
 // 4. 게시글 생성
-export interface postProps {
-  imageList: { isPrimary: boolean; url: string }[]; // 이미지 객체 배열
-  category: string;
-  title: string;
-  content: string;
+// 게시글 작성 Payload 인터페이스
+export interface CreatePostPayload {
+  imageList: File[]; // 이미지 배열 (최대 4장)
+  category: string;  // 카테고리 (예: "LIFE")
+  title: string;     // 게시글 제목 (최대 30자)
+  content: string;   // 게시글 내용 (최대 1,000Byte)
 }
-export const addPost = async (data: postProps) => {
+
+// 게시글 작성 API 함수
+export const createPostAPI = async (payload: CreatePostPayload) => {
   const formData = new FormData();
-  // 필드 추가
-  // imageList 처리
-  data.imageList.forEach((image) => {
-    formData.append("imageList", image.url); // url만 추가
+
+  // 이미지 파일 추가
+  payload.imageList.forEach((image, index) => {
+    formData.append(`imageList`, image);
   });
-  formData.append("category", data.category);
-  formData.append("title", data.title);
-  formData.append("content", data.content);
+  // 기타 필수 값 추가
+  formData.append("category", payload.category);
+  formData.append("title", payload.title);
+  formData.append("content", payload.content);
+
   // API 요청
-  const response = await axios.post(`/boards`, formData, {
+  const response = await axiosInstance.post(`/boards`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
-  return response;
+
+  return response.data; // API 응답 반환
 };
 
 // 5. 게시글 상세 조회

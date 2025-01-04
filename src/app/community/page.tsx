@@ -9,17 +9,10 @@ import BoardHeartIcon from "@/assets/icons/boardHeart_icon.png";
 import EmptyPicture from "@/assets/icons/emptyPicture.png";
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { getBoardList } from "@/lib/api/board";
+import { Post } from "@/types/post";
+import Link from "next/link";
 
 // 게시글 데이터 타입 정의
-type Post = {
-  id: number;
-  category: string;
-  title: string;
-  content: string;
-  isLikeClicked: boolean;
-  imageList: { isPrimary: boolean; url: string }[];
-};
-
 export default function CommunityPage() {
   const [selectedCategory, setSelectedCategory] = useState("전체"); // 카테고리
   const [searchQuery, setSearchQuery] = useState(""); // 검색어
@@ -43,6 +36,8 @@ export default function CommunityPage() {
   // 게시글 데이터 가져오기 함수
   const fetchPosts = async (isLoadMore = false) => {
     if (isLoading) return;
+
+
 
     setIsLoading(true);
     try {
@@ -109,11 +104,10 @@ export default function CommunityPage() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`w-full px-0.5 xs:px-4 py-1 rounded-xl text-xs xs:text-base ${
-                selectedCategory === category
+              className={`w-full px-0.5 xs:px-4 py-1 rounded-xl text-xs xs:text-base ${selectedCategory === category
                   ? "bg-primary font-medium text-white"
                   : "bg-white text-gray-700 border-solid border border-stroke_gray"
-              }`}
+                }`}
             >
               {category}
             </button>
@@ -123,49 +117,54 @@ export default function CommunityPage() {
         {/* 게시글 컨테이너 */}
         <div className="space-y-2">
           {filteredPosts.map((post) => (
-            <div key={post.id} className="p-2 xs:p-3 border rounded-md bg-white">
-              <div className="flex">
-                {/* 이미지 */}
-                <Image
-                  src={
-                    post.imageList.length > 0
-                      ? post.imageList.find((img) => img.isPrimary)?.url || post.imageList[0].url
-                      : EmptyPicture
-                  }
-                  alt="게시글 이미지"
-                  width={100} // 고정 너비
-                  height={100} // 고정 높이
-                  className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3"
-                />
-                {/* 제목, 내용 */}
-                <div className="w-full flex flex-col justify-center">
-                  <h3 className="font-bold">
-                    {post.title.length > titleMaxLength
-                      ? `${post.title.slice(0, titleMaxLength)}...`
-                      : post.title}
-                  </h3>
-                  <p>
-                    {post.content.length > contentMaxLength
-                      ? `${post.content.slice(0, contentMaxLength)}...`
-                      : post.content}
-                  </p>
-                </div>
-                {/* 카테고리 & 좋아요 */}
-                <div className="w-[30%] flex flex-col items-end justify-between">
-                  <span className="text-xs bg-gray-200 px-1 py-0.5 rounded-md">
-                    {post.category}
-                  </span>
-                  {post.isLikeClicked && (
-                    <Image
-                      src={BoardHeartIcon}
-                      alt="좋아요 아이콘"
-                      className="w-5 h-6"
-                    />
-                  )}
+            <Link href={PATHS.COMMUNITY_DETAIL(post.id)}>
+              <div key={post.id} className="p-2 xs:p-3 border rounded-md bg-white">
+                <div className="flex">
+                  {/* 이미지 */}
+                  <Image
+                    src={
+                      post.imageList?.length > 0 && post.imageList.some((img) => img.url)
+                        ? post.imageList.find((img) => img.isPrimary && img.url)?.url ||
+                        post.imageList.find((img) => img.url)?.url ||
+                        EmptyPicture.src // 유효한 URL이 없으면 기본 이미지
+                        : EmptyPicture.src // Static Import된 기본 이미지
+                    }
+                    alt="게시글 이미지"
+                    width={100}
+                    height={100}
+                    className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3"
+                  />
+                  {/* 제목, 내용 */}
+                  <div className="w-full flex flex-col justify-center">
+                    <h3 className="font-bold">
+                      {post.title.length > titleMaxLength
+                        ? `${post.title.slice(0, titleMaxLength)}...`
+                        : post.title}
+                    </h3>
+                    <p>
+                      {post.content.length > contentMaxLength
+                        ? `${post.content.slice(0, contentMaxLength)}...`
+                        : post.content}
+                    </p>
+                  </div>
+                  {/* 카테고리 & 좋아요 */}
+                  <div className="w-[30%] flex flex-col items-end justify-between">
+                    <span className="text-xs bg-gray-200 px-1 py-0.5 rounded-md">
+                      {post.category}
+                    </span>
+                    {post.isLikeClicked && (
+                      <Image
+                        src={BoardHeartIcon}
+                        alt="좋아요 아이콘"
+                        className="w-5 h-6"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
+
         </div>
 
         {/* 더 보기 버튼 */}

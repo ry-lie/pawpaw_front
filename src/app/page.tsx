@@ -14,6 +14,8 @@ import Carousel from "@/components/Main/Carousel";
 import Carousel1 from "@/assets/images/carousel/carousel1.png";
 import Carousel2 from "@/assets/images/carousel/carousel2.png";
 import Carousel3 from "@/assets/images/carousel/carousel3.png";
+import Link from "next/link";
+import { PATHS } from "../constants/path";
 
 const carouselData = [
   { id: 1, imgUrl: Carousel1, text: "반려동물과\n함께하는 일상" },
@@ -31,11 +33,10 @@ export default function Home() {
         const popularResponse = await getPopularBoardList(6);
         const latestResponse = await getLatestBoardList(6);
 
-
-
         setPopularPosts(
           Array.isArray(popularResponse.data.body.data)
             ? popularResponse.data.body.data.map((item: any) => ({
+              id: item.id,
               category: item.korName,
               title: item.title,
               imageUrl: item.url,
@@ -46,6 +47,7 @@ export default function Home() {
         setLatestPosts(
           Array.isArray(latestResponse.data.body.data)
             ? latestResponse.data.body.data.map((item: any) => ({
+              id: item.id,
               category: item.category, // korName 사용
               title: item.title,
               imageUrl: item.url,
@@ -60,6 +62,7 @@ export default function Home() {
 
     fetchData();
   }, []);
+
 
   return (
     <div className="min-h-screen">
@@ -84,13 +87,16 @@ export default function Home() {
               인기글
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 place-items-center">
-              {popularPosts.map((post, index) => (
-                <PostCard
-                  key={index}
-                  category={post.category}
-                  title={post.title}
-                  imageUrl={post.imageUrl}
-                />
+              {popularPosts.map((post) => (
+                <Link href={PATHS.COMMUNITY_DETAIL(post.id)} key={post.id}>
+                  <PostCard
+                    id={post.id}
+                    key={post.id}
+                    category={post.category}
+                    title={post.title}
+                    imageUrl={post.imageUrl}
+                  />
+                </Link>
               ))}
             </div>
           </section>
@@ -108,13 +114,17 @@ export default function Home() {
               최신글
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 place-items-center">
-              {latestPosts.map((post, index) => (
-                <PostCard
-                  key={index}
-                  category={post.category}
-                  title={post.title}
-                  imageUrl={post.imageUrl}
-                />
+              {latestPosts.map((post) => (
+                <Link href={PATHS.COMMUNITY_DETAIL(post.id)} key={post.id}>
+                  <PostCard
+                    id={post.id}
+                    key={post.id}
+                    category={post.category}
+                    title={post.title}
+                    imageUrl={post.imageUrl}
+                  />
+                </Link>
+
               ))}
             </div>
           </section>

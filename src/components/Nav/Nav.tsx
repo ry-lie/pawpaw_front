@@ -5,9 +5,6 @@ import { useUserStore } from "@/stores/userStore";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useAlarmStore } from "@/stores/alarmStore";
-import Alrem_off from "@/assets/icons/alrem_off.png";
-import Alrem_on from "@/assets/icons/alrem_on.png";
 import Image from "next/image";
 import MiniLogo from "@/assets/images/logo/miniLogo.png";
 import ChatEventAlram from "./ChatEventAlarm";
@@ -18,7 +15,6 @@ const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
 export default function Nav() {
   const router = useRouter();
-  const alarms = useAlarmStore((state) => state.alarms);
   const { isLoggedIn } = useUserStore(); // Zustand에서 상태 가져오기
   useEffect(() => {
     useUserStore.getState().initialize();
@@ -41,8 +37,6 @@ export default function Nav() {
   if (NONE_NAV_PAGE_LIST.includes(pathname)) {
     return null;
   }
-
-  const alarmsIcon = alarms.length > 0 ? Alrem_on : Alrem_off;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background border-l border-r border-stroke_gray-600 pl-2 pr-6 py-4 max-w-mobile w-full mx-auto h-12">
