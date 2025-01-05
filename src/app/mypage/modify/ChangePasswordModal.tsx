@@ -3,29 +3,29 @@ import Input from "@/components/Input";
 import Image from "next/image";
 import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import Confirm_icon from "@/assets/icons/confirm_icon.png";
-import { updateUser } from "@/lib/api/user";
 import { errorToast, successToast } from "@/utils/Toast";
 import { useUserStore } from "@/stores/userStore";
 import { useState } from "react";
+import { loginAPI } from "@/lib/api/auth";
+import { updateUser } from "@/lib/api/user";
 
-export default function FindPasswordModal() {
-  
-  type FindPasswordInput = {
-    password: string;
-    newPassword: string;
-    confirmPassword: string;
-  };
+interface ChangePasswordInput {
+  password: string;
+  newPassword: string;
+  confirmPassword: string;
+}
 
-  
+export default function ChangePasswordModal() {
   const [isVerified, setIsVerified] = useState(false);
-  const userId = useUserStore((state)=>state.id)
+  const userEmail = useUserStore((state) => state.nickname); // nickname을 email로 사용
+  const userId = useUserStore((state) => state.id);
 
   const {
     control,
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FindPasswordInput>({
+  } = useForm<ChangePasswordInput>({
     mode: "onChange",
   });
 
@@ -51,41 +51,37 @@ export default function FindPasswordModal() {
     !confirmPassword ||
     Object.keys(errors).length > 0;
 
-
-
-  const handleVerifyPassword = async()=>{
-    try {
-      const response = await updateUser(userId,{password});
-      if(response.success){
-        successToast("비밀번호가 성공적으로 변경되었습니다.");
-        setIsVerified(true);
-      } else {
-        errorToast("현재 비밀번호가 일치하지 않습니다.");
-        setIsVerified(false);
-      }
-    } catch (e) {
-      console.error("Error:", e)
-      errorToast("비밀번호 변경 중 오류가 발생했습니다.");
-      setIsVerified(false)
-    }
-  };
-
-   const onSubmit: SubmitHandler<FindPasswordInput> = async (data) => {
-   const {newPassword} = data;
-   try{
-    if(!isVerified){
-      errorToast("비밀번호 인증이 필요합니다.");
+  //비밀번호 인증
+  const handleVerifyPassword = async () => {
+    if (!userEmail) {
+      errorToast("유효하지 않은 사용자입니다. 다시 로그인해주세요.");
       return;
     }
-    await updateUser(userId, {password : newPassword});
-    successToast("비밀번호가 성공적으로 변경되었습니다.")
-
-   }catch(e){
-    console.error("Error:" ,e)
-    errorToast("비밀번호 변경 중 오류가 발생했습니다.");
-   }
-  }
-
+    try {
+      const response = await loginAPI({ email: userEmail, password });
+      if (response.status === 200) {
+        successToast("비밀번호가 성공적으로 변경되었습니다.");
+        setIsVerified(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+  //비밀번호 변경
+  const onSubmit: SubmitHandler<ChangePasswordInput> = async (data) => {
+    const { newPassword } = data;
+    try {
+      if (!isVerified) {
+        errorToast("비밀번호 인증이 필요합니다.");
+        return;
+      }
+      await updateUser(userId, { password, newPassword });
+      successToast("비밀번호가 성공적으로 변경되었습니다.");
+    } catch (e) {
+      console.error("Error:", e);
+      errorToast("비밀번호 변경 중 오류가 발생했습니다.");
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -95,11 +91,12 @@ export default function FindPasswordModal() {
             label="비밀번호"
             id="password"
             type="password"
-            className="h-10 w-72"
+            className="h-10 w-64 mr-5"
             {...register("password", {
               required: "비밀번호를 입력해주세요",
               pattern: {
-                value: /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
                 message:
                   "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
               },
@@ -108,7 +105,7 @@ export default function FindPasswordModal() {
           >
             <Button
               btnType="button"
-              containerStyles="w-12 h-8 mr-10 flex justify-center items-center !text-primary border-solid border-primary border bg-transparent hover:bg-primary hover:!text-white"
+              containerStyles="w-12 h-8 flex justify-center items-center !text-primary border-solid border-primary border bg-transparent hover:bg-primary hover:!text-white"
               disabled={!password}
               onClick={handleVerifyPassword}
             >
@@ -120,11 +117,12 @@ export default function FindPasswordModal() {
             label="새 비밀번호"
             id="newPassword"
             type="password"
-            className="h-10 w-72"
+            className="h-10 w-56"
             {...register("newPassword", {
-              required: "비밀번호를 입력해주세요",
+              required: "새 비밀번호를 입력해주세요",
               pattern: {
-                value: /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
                 message:
                   "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
               },
@@ -132,12 +130,11 @@ export default function FindPasswordModal() {
             errorMessage={errors.newPassword?.message}
             disabled={!isVerified}
           />
-
           <Input
             label="비밀번호 확인"
             id="confirmPassword"
             type="password"
-            className="h-10 w-72"
+            className="h-10 w-56"
             {...register("confirmPassword", {
               required: "비밀번호를 입력해주세요",
               validate: (value: string) =>

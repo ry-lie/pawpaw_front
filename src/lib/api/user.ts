@@ -1,16 +1,17 @@
 import axiosInstance from "@/lib/axios";
 
 interface UserInfo {
-  id: number;
   nickname: string;
   canWalkingMate: boolean;
   image?: string;
   password?: string;
+  newPassword?: string;
 }
 
 interface userInfoRes {
-  success: boolean;
-  data: UserInfo;
+  canWalkingMate: boolean;
+  nickname: string;
+  id: number;
 }
 
 // 마이페이지 (사용자와 반려동물의 정보를 조회)
@@ -19,14 +20,12 @@ export const getMyPage = async (id: number) => {
   return response.data.body.data;
 };
 
-//현재 비밀번호 확인 + 산책메이트 on/off + 사용자 닉네임 보내기
+//현재 비밀번호 수정 + 산책메이트 on/off + 사용자 닉네임 수정
 export const updateUser = async (
   id: number,
   data: Partial<UserInfo>,
 ): Promise<userInfoRes> => {
   const formData = new FormData();
-
-  //필요한 것만 가지고 나오기
 
   //닉네임
   if (data.nickname) {
@@ -48,6 +47,10 @@ export const updateUser = async (
     formData.append("password", data.password);
   }
 
+  //새로운비밀번호
+  if (data.newPassword) {
+    formData.append("newPassword", data.newPassword);
+  }
   const response = await axiosInstance.put(`/user/${id}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
