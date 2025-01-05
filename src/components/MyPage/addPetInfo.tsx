@@ -11,24 +11,27 @@ import { handleImamgeUploading } from "@/utils/ImageUpload";
 
 export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSave: (updatedPet: any) => void; onDelete: () => void;}) {
   const [newPet, setNewPet] = useState({ ...pet });
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNewPet({ ...newPet, [name]: value });
-  };
-
-  const [profileImage, setProfileImage] = useState<string | null>(
-    pet.profileImage || null
-  );
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 프로필 이미지 변경
-  const handleProfileImageChange = handleImamgeUploading((file) => {
-    const imageUrl = URL.createObjectURL(file); // 브라우저에서 미리보기 URL 생성
-    setProfileImage(imageUrl);
-    setNewPet({ ...newPet, profileImage: imageUrl }); // 프로필 이미지 상태 업데이트
-  });
-
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const imageUrl = URL.createObjectURL(file);
+      setNewPet((prev: typeof newPet) => ({
+        ...prev,
+        image: file,
+        profileImage: imageUrl,
+      }));
+    }
+  };
+  
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setNewPet((prev: typeof newPet) => ({ ...prev, [name]: value }));
+  };
 
   return (
     <section className="relative w-full max-w-mobile h-auto bg-white border border-stroke_gray rounded-lg p-10 flex flex-col gap-4 mb-5">
@@ -48,12 +51,12 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
           onClick={() => fileInputRef.current?.click()} // 클릭하면 파일 선택 창 열기
         >
           <Image
-            src={profileImage || PetProfile} // 이미지가 없으면 기본 이미지 표시
+            src={newPet.profileImage || PetProfile}
             alt="pet"
-            className="w-44 h-44 bg-white rounded-full cursor-pointer"
-            width={176} // 44rem = 176px
-            height={176}
-            unoptimized
+            className="w-36 h-36 bg-white rounded-full cursor-pointer"
+            width={144}
+            height={144}
+            onClick={() => fileInputRef.current?.click()}
           />
         </div>
         <input
@@ -65,7 +68,7 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
         />
 
         {/* 2. 이름 & 나이 (왼쪽), 성별 & 크기 섹션(오른쪽) */}
-        <div className="flex justify-around mb-1">
+        <div className="flex justify-between mb-1">
           {/* 이름 & 나이 */}
           <div>
             <div className="mb-3">
@@ -151,7 +154,7 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
 
         {/* 3. 성격 섹션 */}
         {/* 반응형 추가 */}
-        <div className="flex felx-row ml-1 xs:ml-9">
+        <div className="flex felx-row">
           <div className="w-10">
             <span className="text-base font-bold">성격 </span>
           </div>

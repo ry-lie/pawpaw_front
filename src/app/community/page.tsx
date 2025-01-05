@@ -75,8 +75,8 @@ export default function CommunityPage() {
 
   // 글자수 제한
   const isMobile = useMediaQuery("(max-width: 425px)");
-  const titleMaxLength = isMobile ? 15 : 20;
-  const contentMaxLength = isMobile ? 18 : 29;
+  const titleMaxLength = isMobile ? 12 : 20;
+  const contentMaxLength = isMobile ? 12 : 29;
 
   // 검색어에 따른 필터링
   const filteredPosts = posts.filter(

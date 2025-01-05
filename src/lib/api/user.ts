@@ -1,4 +1,5 @@
 import axiosInstance from "@/lib/axios";
+import { Cursor } from "mongoose";
 
 interface UserInfo {
   id: number;
@@ -16,7 +17,7 @@ interface userInfoRes {
 // 마이페이지 (사용자와 반려동물의 정보를 조회)
 export const getMyPage = async (id: number) => {
   const response = await axiosInstance.get(`/users/${id}/my-pages`);
-  return response.data;
+  return response.data.body.data;
 };
 
 //현재 비밀번호 확인 + 산책메이트 on/off + 사용자 닉네임 보내기
@@ -61,13 +62,28 @@ export const getUser = async (id: number) => {
   return response.data;
 };
 
-// 내가 쓴 글 조회 (myposts, myreviews)
+// 내가 쓴 글 조회 (/mypage/myposts)
 export const getMyPosts = async (
   id: number,
   cursor: number | null = null,
   take: number = 7,
 ) => {
   const response = await axiosInstance.get(`/users/${id}/boards`, {
+    params: {
+      cursor,
+      take,
+    },
+  });
+  return response.data;
+};
+
+// 내가 쓴 리뷰 조회 (/mypage/myreviews)
+export const getMyReviews = async (
+  id: number,
+  cursor: number | null=null, 
+  take: number = 7,
+) => {
+  const response = await axiosInstance.get(`/users/${id}/reviews`,{
     params: {
       cursor,
       take,
