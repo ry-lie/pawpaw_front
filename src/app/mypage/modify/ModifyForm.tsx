@@ -61,7 +61,8 @@ export default function ModifyForm() {
     newPassword && confirmPassword && newPassword === confirmPassword;
 
   const DisabledBtn =
-    (!nickname && !newPassword && !password) ||
+    !nickname ||
+    (!newPassword && !password) ||
     (newPassword && !isPasswordMatch) ||
     Object.keys(errors).length > 0;
 
@@ -80,21 +81,17 @@ export default function ModifyForm() {
         newPassword: string;
       }> = {};
 
-      if (data.nickname) updateData.nickname = data.nickname;
+      if (data.nickname !== userNickname) updateData.nickname = data.nickname;
       if (data.password && data.newPassword) {
         updateData.password = data.password;
         updateData.newPassword = data.newPassword;
       }
 
-      console.log("API 요청 데이터:", updateData); // 요청 데이터 디버깅
-
       const response = await updateUser(userId, updateData);
 
-      console.log("API 응답 데이터:", response); // 응답 데이터 디버깅
       successToast("회원정보 수정이 완료되었습니다.");
       router.push(PATHS.LOGIN);
     } catch (error) {
-      console.error("API 호출 실패:", error); // API 오류 디버깅
       errorToast("회원정보 수정 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
@@ -124,60 +121,58 @@ export default function ModifyForm() {
           </Button>
         </Input>
         <div>
-          <div className="p-3">
-            <Input
-              label="비밀번호"
-              id="password"
-              type="password"
-              className="h-10 w-80"
-              {...register("password", {
-                required: "비밀번호를 입력해주세요",
-                pattern: {
-                  value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
-                  message:
-                    "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
-                },
-              })}
-              errorMessage={errors.password?.message}
-            ></Input>
+          <Input
+            label="비밀번호"
+            id="password"
+            type="password"
+            className="h-10 w-80"
+            {...register("password", {
+              required: "비밀번호를 입력해주세요",
+              pattern: {
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
+                message:
+                  "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+              },
+            })}
+            errorMessage={errors.password?.message}
+          ></Input>
 
-            <Input
-              label="새 비밀번호"
-              id="newPassword"
-              type="password"
-              className="h-10 w-80"
-              {...register("newPassword", {
-                required: "새 비밀번호를 입력해주세요",
-                pattern: {
-                  value:
-                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
-                  message:
-                    "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
-                },
-              })}
-              errorMessage={errors.newPassword?.message}
-            />
+          <Input
+            label="새 비밀번호"
+            id="newPassword"
+            type="password"
+            className="h-10 w-80"
+            {...register("newPassword", {
+              required: "새 비밀번호를 입력해주세요",
+              pattern: {
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
+                message:
+                  "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+              },
+            })}
+            errorMessage={errors.newPassword?.message}
+          />
 
-            <Input
-              label="비밀번호 확인"
-              id="confirmPassword"
-              type="password"
-              className="h-10 w-80"
-              {...register("confirmPassword", {
-                required: "비밀번호를 입력해주세요",
-                validate: (value: string) =>
-                  value === newPassword || "비밀번호가 일치하지 않습니다.",
-              })}
-              errorMessage={errors.confirmPassword?.message}
-            >
-              {isPasswordMatch && (
-                <Image src={Confirm_icon} alt="체크표시" className="h-5 w-5" />
-              )}
-            </Input>
-          </div>
+          <Input
+            label="비밀번호 확인"
+            id="confirmPassword"
+            type="password"
+            className="h-10 w-80"
+            {...register("confirmPassword", {
+              required: "비밀번호를 입력해주세요",
+              validate: (value: string) =>
+                value === newPassword || "비밀번호가 일치하지 않습니다.",
+            })}
+            errorMessage={errors.confirmPassword?.message}
+          >
+            {isPasswordMatch && (
+              <Image src={Confirm_icon} alt="체크표시" className="h-5 w-5" />
+            )}
+          </Input>
         </div>
-        <div className="space-x-10 mt-10">
+        <div className="space-x-10 mt-10 flex justify-center pt-5">
           <Button
             btnType="button"
             containerStyles="bg-stroke_gray w-20 h-10"
