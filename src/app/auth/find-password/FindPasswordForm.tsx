@@ -6,10 +6,9 @@ import { useForm } from "react-hook-form";
 import { errorToast, successToast } from "@/utils/Toast";
 import { useState } from "react";
 import { useDuplicateCheck } from "../join/useDuplicateCheck";
-import { temporaryPassword } from "@/lib/api/auth";
+import { sendVerificationCode, temporaryPassword } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/constants/path";
-import { handleEmailVerificationUseFindPassword } from "./useFindPassword";
 
 type FindPasswordInput = {
   email: string;
@@ -42,7 +41,7 @@ export default function FindPasswordForm() {
     }
     try {
       setIsLoading(true);
-      await handleEmailVerificationUseFindPassword(email);
+      await sendVerificationCode(email);
       setIsEmailSent(true);
       successToast("인증코드가 이메일로 발송되었습니다.");
     } catch (e) {
@@ -64,9 +63,8 @@ export default function FindPasswordForm() {
     try {
       setIsLoading(true);
       await handleCodeVerification();
-      successToast("인증이 완료되었습니다.");
     } catch (e) {
-      errorToast("인증에 실패하였습니다.");
+      console.error(e);
     } finally {
       setIsLoading(false);
     }
