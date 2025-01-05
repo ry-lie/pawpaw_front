@@ -1,5 +1,4 @@
 import axiosInstance from "@/lib/axios";
-import { Cursor } from "mongoose";
 
 interface UserInfo {
   id: number;
@@ -80,10 +79,10 @@ export const getMyPosts = async (
 // 내가 쓴 리뷰 조회 (/mypage/myreviews)
 export const getMyReviews = async (
   id: number,
-  cursor: number | null=null, 
+  cursor: number | null = null,
   take: number = 7,
 ) => {
-  const response = await axiosInstance.get(`/users/${id}/reviews`,{
+  const response = await axiosInstance.get(`/users/${id}/reviews`, {
     params: {
       cursor,
       take,
