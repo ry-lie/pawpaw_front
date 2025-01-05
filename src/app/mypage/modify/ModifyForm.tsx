@@ -11,6 +11,8 @@ import { errorToast, successToast } from "@/utils/Toast";
 import { useUserStore } from "@/stores/userStore";
 import { updateUser } from "@/lib/api/user";
 import { useDuplicateCheck } from "@/app/auth/join/useDuplicateCheck";
+import { useRouter } from "next/navigation";
+import { PATHS } from "@/constants/path";
 
 interface FormInput {
   nickname: string;
@@ -20,7 +22,10 @@ interface FormInput {
 }
 
 export default function ModifyForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const userNickname = useUserStore((state) => state.nickname);
+  const userId = useUserStore((state) => state.id);
 
   const {
     register,
@@ -61,38 +66,41 @@ export default function ModifyForm() {
     Object.keys(errors).length > 0;
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
-    const userId = useUserStore((state) => state.id);
-    const { nickname, password, newPassword } = data;
-
     if (!userId) {
-      errorToast("로그인 정보를 찾을수 없습니다. 다시 로그인해주세요");
+      errorToast("로그인 정보를 찾을 수 없습니다. 다시 로그인해주세요");
       return;
     }
+
     try {
       setIsLoading(true);
+
       const updateData: Partial<{
         nickname: string;
         password: string;
         newPassword: string;
       }> = {};
 
-      if (nickname) updateData.nickname = nickname;
-      if (password && newPassword) {
-        updateData.password = password;
-        updateData.newPassword = newPassword;
+      if (data.nickname) updateData.nickname = data.nickname;
+      if (data.password && data.newPassword) {
+        updateData.password = data.password;
+        updateData.newPassword = data.newPassword;
       }
 
+      console.log("API 요청 데이터:", updateData); // 요청 데이터 디버깅
+
       const response = await updateUser(userId, updateData);
-      console.log("사용자 회원정보 수정 완료");
+
+      console.log("API 응답 데이터:", response); // 응답 데이터 디버깅
       successToast("회원정보 수정이 완료되었습니다.");
-    } catch (e) {
-      errorToast("회원정보 수정시 오류가 발생했습니다.");
+      router.push(PATHS.LOGIN);
+    } catch (error) {
+      console.error("API 호출 실패:", error); // API 오류 디버깅
+      errorToast("회원정보 수정 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const userNickname = useUserStore((state) => state.nickname);
   const { handleNicknameCheck } = useDuplicateCheck({ getValues, setError });
 
   return (
@@ -115,78 +123,77 @@ export default function ModifyForm() {
             중복확인
           </Button>
         </Input>
-      </form>
+        <div>
+          <div className="p-3">
+            <Input
+              label="비밀번호"
+              id="password"
+              type="password"
+              className="h-10 w-80"
+              {...register("password", {
+                required: "비밀번호를 입력해주세요",
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
+                  message:
+                    "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+                },
+              })}
+              errorMessage={errors.password?.message}
+            ></Input>
 
-      <div>
-        <div className="p-3">
-          <Input
-            label="비밀번호"
-            id="password"
-            type="password"
-            className="h-10 w-80"
-            {...register("password", {
-              required: "비밀번호를 입력해주세요",
-              pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
-                message:
-                  "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
-              },
-            })}
-            errorMessage={errors.password?.message}
-          ></Input>
+            <Input
+              label="새 비밀번호"
+              id="newPassword"
+              type="password"
+              className="h-10 w-80"
+              {...register("newPassword", {
+                required: "새 비밀번호를 입력해주세요",
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
+                  message:
+                    "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+                },
+              })}
+              errorMessage={errors.newPassword?.message}
+            />
 
-          <Input
-            label="새 비밀번호"
-            id="newPassword"
-            type="password"
-            className="h-10 w-80"
-            {...register("newPassword", {
-              required: "새 비밀번호를 입력해주세요",
-              pattern: {
-                value:
-                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
-                message:
-                  "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
-              },
-            })}
-            errorMessage={errors.newPassword?.message}
-          />
-
-          <Input
-            label="비밀번호 확인"
-            id="confirmPassword"
-            type="password"
-            className="h-10 w-80"
-            {...register("confirmPassword", {
-              required: "비밀번호를 입력해주세요",
-              validate: (value: string) =>
-                value === newPassword || "비밀번호가 일치하지 않습니다.",
-            })}
-            errorMessage={errors.confirmPassword?.message}
-          >
-            {isPasswordMatch && (
-              <Image src={Confirm_icon} alt="체크표시" className="h-5 w-5" />
-            )}
-          </Input>
+            <Input
+              label="비밀번호 확인"
+              id="confirmPassword"
+              type="password"
+              className="h-10 w-80"
+              {...register("confirmPassword", {
+                required: "비밀번호를 입력해주세요",
+                validate: (value: string) =>
+                  value === newPassword || "비밀번호가 일치하지 않습니다.",
+              })}
+              errorMessage={errors.confirmPassword?.message}
+            >
+              {isPasswordMatch && (
+                <Image src={Confirm_icon} alt="체크표시" className="h-5 w-5" />
+              )}
+            </Input>
+          </div>
         </div>
-      </div>
-      <div className="space-x-10 mt-10">
-        <Button
-          btnType="button"
-          containerStyles="bg-stroke_gray w-20 h-10"
-          disabled={isLoading}
-        >
-          <Link href={"/mypage"}>취소</Link>
-        </Button>
-        <Button
-          btnType="submit"
-          disabled={DisabledBtn}
-          containerStyles="w-20 h-10"
-        >
-          확인
-        </Button>
-      </div>
+        <div className="space-x-10 mt-10">
+          <Button
+            btnType="button"
+            containerStyles="bg-stroke_gray w-20 h-10"
+            disabled={isLoading}
+          >
+            <Link href={"/mypage"}>취소</Link>
+          </Button>
+          <Button
+            btnType="submit"
+            disabled={DisabledBtn}
+            containerStyles="w-20 h-10"
+          >
+            확인
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }
