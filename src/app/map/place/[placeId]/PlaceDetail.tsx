@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useModalStore } from "@/stores/modalStore";
 import Review from "./review/Review";
 import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "@/lib/axios";
 import { fetchPlaceDetails } from "@/lib/api/place";
 import Loading from "../../../loading";
 import { PlaceAddressInfo } from "./PlaceAddressInfo";
@@ -39,6 +38,7 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
   const isReviewListEmpty = placeDetails?.reviewList && placeDetails?.reviewList.length > 0;
   return (
     <div className="h-[450px] xs:h-[650px] flex flex-col">
+
       {isFetching ? (
         <div className="flex items-center justify-center h-full w-full">
           <Loading />
@@ -83,7 +83,9 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
                   <Link
                     key={review.id}
                     href={PATHS.REVIEW_DETAIL(placeId, review.id)}
-                    onClick={() => closeModal()}
+                    onClick={(e) => {
+                      closeModal(); // 모달 닫기
+                    }}
                   >
                     <Review key={review.id} review={review} />
                   </Link>

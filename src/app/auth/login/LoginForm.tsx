@@ -1,8 +1,8 @@
 "use client";
 
 import Input from "@/components/Input";
-import React, { useState } from "react";
-import { useForm, SubmitHandler, useFormState } from "react-hook-form";
+import React from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import Button from "@/components/Button";
@@ -13,6 +13,7 @@ import { loginAPI } from "@/lib/api/auth";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "next/navigation";
 import { errorToast, successToast } from "@/utils/Toast";
+import { IoSearchOutline } from "react-icons/io5";
 
 type LoginInputs = {
   email: string;
@@ -94,9 +95,13 @@ export default function LoginForm() {
         로그인
       </Button>
 
-      <div className="flex justify-center gap-7 mt-10 pb-5 border-b border-medium_gray">
-        <Link href={PATHS.JOIN}>회원가입</Link>
-        <Link href={PATHS.FIND_PASSWORD}>비밀번호 찾기</Link>
+      <div className="flex justify-center items-center gap-10 mt-10 pb-5 border-b border-medium_gray">
+        <Link href={PATHS.JOIN} className="text-gray-700 hover:text-gray-900">
+          회원가입
+        </Link>
+        <Link href={PATHS.FIND_PASSWORD} className="text-gray-700 hover:text-gray-900">
+          비밀번호 찾기
+        </Link>
       </div>
 
       <button
@@ -105,6 +110,10 @@ export default function LoginForm() {
       >
         <Image src={KakaoLoginButton} alt="카카오 로그인" className="mt-5" />
       </button>
+      <div className="mt-12 font-xs flex text-strong_gray text-[14px] items-center gap-1 justify-center">
+        <IoSearchOutline />
+        <Link href={PATHS.MAIN} >로그인 없이 둘러보기</Link>
+      </div>
     </form>
   );
 }

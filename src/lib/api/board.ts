@@ -19,10 +19,14 @@ export const getLatestBoardList = async (count: number) => {
 };
 
 // 3. 게시글 목록 조회
-export const getBoardList = async (cursor: number | null, take: number, category: string) => {
+export const getBoardList = async (
+  cursor: number | null,
+  take: number,
+  category: string,
+) => {
   const params = {
     cursor: cursor || null, // 커서 (시작 ID)
-    take: take || 7,       // 한 번에 가져올 데이터 수
+    take: take || 7, // 한 번에 가져올 데이터 수
     category: category === "전체" ? "" : category, // "전체"면 공백 처리
   };
   return await axiosInstance.get(`/boards`, { params });
@@ -61,32 +65,41 @@ export const createPostAPI = async (payload: CreatePostPayload) => {
 };
 
 // 5. 게시글 상세 조회
-export const fetchBoardDetail = async (postId: string) => {
+export const fetchBoardDetail = async (postId: number) => {
   return await axiosInstance.get(`/boards/${postId}`);
 };
 
 // 6. 게시글 수정
 
-
-
-
 // 7. 게시글 삭제
-export const deletePost = async (postId: string) => {
+export const deletePost = async (postId: number) => {
   return await axiosInstance.delete(`/boards/${postId}`);
 };
 
 /* 댓글 */
-// 1. 댓글 수정
-
-
-
+// 1. 댓글 작성
+export const createComment = async (postId: number, content: string) => {
+  return await axiosInstance.post(`/boards/${postId}/comments`, {
+    content,
+  });
+};
 // 2. 댓글 삭제
-export const deleteComment = async (postId: string, commentId: string) => {
+export const deleteComment = async (postId: number, commentId: number) => {
   return await axiosInstance.delete(`/boards/${postId}/comments/${commentId}`);
+};
+// 3. 댓글 수정
+export const updateComment = async (
+  postId: number,
+  commentId: number,
+  content: string,
+) => {
+  return await axiosInstance.put(`/boards/${postId}/comments/${commentId}`, {
+    content,
+  });
 };
 
 /*좋아요*/
-export const toggleLike = async (postId: string, newLikeState: boolean) => {
+export const toggleLike = async (postId: number, newLikeState: boolean) => {
   axiosInstance.post("/api/like", {
     postId,
     isLikeClicked: newLikeState,
