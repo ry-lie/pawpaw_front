@@ -4,6 +4,8 @@ import Image from "next/image";
 import { FaEdit } from "react-icons/fa";
 import { RiDeleteBinLine } from "react-icons/ri";
 import Button from "@/components/Button";
+import Link from "next/link";
+import { PATHS } from "@/constants/path";
 
 interface CommentProps {
   id: number;
@@ -46,20 +48,24 @@ export default function Comment({
     <div className="flex items-center space-x-4 p-4 border-b border-gray-200">
       {/* 프로필 이미지 */}
       <div className="w-[45px] h-[45px] rounded-full overflow-hidden border border-medium_gray">
-        <Image
-          src={profile}
-          alt="프로필 이미지"
-          width={45}
-          height={45}
-          objectFit="cover"
-        />
+        <Link href={PATHS.USER_INFO(id)}>
+          <Image
+            src={profile}
+            alt="프로필 이미지"
+            width={45}
+            height={45}
+            objectFit="cover"
+          />
+        </Link>
       </div>
       {/* 댓글 내용 */}
       <div className="flex-1">
         <div className="flex justify-between">
-          <span className="text-sm xs:text-base font-bold text-gray-800 break-words w-full max-w-[calc(100%-60px)]">
-            {writer}
-          </span>
+          <Link href={PATHS.USER_INFO(id)}>
+            <span className="text-sm xs:text-base font-bold text-gray-800 break-words w-full max-w-[calc(100%-60px)]">
+              {writer}
+            </span>
+          </Link>
           <span className="text-xs xs:text-sm text-gray-500 whitespace-nowrap">
             {createdDate}
           </span>
