@@ -6,12 +6,13 @@ import {
   updateComment,
   fetchBoardDetail,
 } from "@/lib/api/board";
+import { Post } from "@/types/boards";
 import { successToast, errorToast } from "@/utils/toast";
 // 댓글 등록 이벤트
 export const handleAddComment = async (
   postId: number,
   comment: string,
-  setPost: (data: any) => void,
+  setPost: (data: Post) => void,
   setComment: (value: string) => void,
 ) => {
   try {
@@ -29,7 +30,7 @@ export const handleModifyComment = async (
   postId: number,
   commentId: number,
   updatedContent: string,
-  setPost: (data: any) => void,
+  setPost: (data: Post) => void,
 ) => {
   try {
     await updateComment(postId, commentId, updatedContent);
@@ -44,7 +45,7 @@ export const handleModifyComment = async (
 export const handleDeleteComment = async (
   postId: number,
   commentId: number,
-  setPost: (data: any) => void,
+  setPost: (data: Post) => void,
 ) => {
   if (!confirm("댓글을 삭제하시겠습니까?")) return;
 

@@ -32,7 +32,7 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
   });
   //추천 수
   const likeCount = placeDetails?.reviewList
-    ? placeDetails.reviewList.filter((review: any) => review?.isLikeClicked === true).length
+    ? placeDetails.reviewList.filter((review: ReviewProps) => review?.isLikeClicked === true).length
     : 0;
   // 장소 리뷰 존재 여부
   const isReviewListEmpty = placeDetails?.reviewList && placeDetails?.reviewList.length > 0;

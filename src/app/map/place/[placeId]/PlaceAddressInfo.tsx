@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import LocationIcon from "@/assets/icons/place/place_location.png";
 import { useQueryClient } from "@tanstack/react-query";
+import { PlaceDetails } from "@/types/places";
 
 interface PlaceAddressInfoProps {
   placeId: number;
@@ -13,7 +14,7 @@ export function PlaceAddressInfo({
 }: PlaceAddressInfoProps) {
   const [isAddressVisible, setIsAddressVisible] = useState(false);
   const queryClient = useQueryClient();
-  const placeDetails = queryClient.getQueryData<any>(["placeDetails", placeId]);
+  const placeDetails = queryClient.getQueryData<PlaceDetails>(["placeDetails", placeId]);
   const toggleAddressVisibility = () => {
     setIsAddressVisible(!isAddressVisible);
   };
@@ -29,7 +30,7 @@ export function PlaceAddressInfo({
           className="h-5 w-5 flex-shrink-0 object-contain"
         />
         <span className="w-14">도로명: </span>
-        <span>{placeDetails.roadNameAddress}</span>
+        <span>{placeDetails?.roadNameAddress}</span>
         <button
           className="ml-2 text-strong_gray"
           onClick={toggleAddressVisibility}
@@ -43,13 +44,13 @@ export function PlaceAddressInfo({
             <span className="border border-stroke_gray rounded-md mr-2 text-strong_gray">
               지번
             </span>
-            {placeDetails.postalAddress}
+            {placeDetails?.postalAddress}
           </p>
           <p>
             <span className="border border-stroke_gray rounded-md mr-2 text-strong_gray">
               우편번호
             </span>
-            {placeDetails.postalCode}
+            {placeDetails?.postalCode}
           </p>
         </div>
       )}
