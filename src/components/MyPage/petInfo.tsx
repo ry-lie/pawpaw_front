@@ -8,12 +8,18 @@ import ManIcon from "@/assets/icons/man_icon.png"
 import PetProfile from "@/assets/icons/petProfile_icon.png"
 import Image from 'next/image';
 
+export const sizeMap: Record<string, string> = {
+  SMALL: "소형",
+  MEDIUM: "중형",
+  LARGE: "대형",
+};
+
+export const genderMap: Record<string, string> = {
+  MALE: "남자",
+  FEMALE: "여자",
+};
+
 export default function PetInfo({ pet, onEdit, onDelete }: { pet: any; onEdit: (id: number) => void; onDelete: (id: number) => void }) {
-  const sizeMap: Record<string, string> = {
-    SMALL: "소형",
-    MEDIUM: "중형",
-    LARGE: "대형",
-  };
 
   return (
     <section className="relative w-full max-w-mobile h-auto bg-white border border-stroke_gray rounded-lg p-10 flex flex-col gap-4 mb-5">
@@ -65,7 +71,7 @@ export default function PetInfo({ pet, onEdit, onDelete }: { pet: any; onEdit: (
             <div className='mb-2 flex items-center gap-2'>
               <span className='text-base font-bold mr-2'>성별 </span>
               <div className="flex items-center gap-2">
-                {pet.gender === '여자' ? (
+                {genderMap[pet.gender] === '여자' ? (
                   <Image
                     src={WomanIcon}
                     alt="womanIcon"

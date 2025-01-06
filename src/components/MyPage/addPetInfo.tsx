@@ -7,10 +7,16 @@ import ManIcon from "@/assets/icons/man_icon.png";
 import CheckIcon from "@/assets/icons/check_icon.png";
 import TrashIcon from "@/assets/icons/trash_icon.png";
 import PetProfile from "@/assets/icons/petProfile_icon.png";
+import { sizeMap, genderMap } from "./petInfo";
 import { handleImamgeUploading } from "@/utils/ImageUpload";
 
 export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSave: (updatedPet: any) => void; onDelete: () => void;}) {
-  const [newPet, setNewPet] = useState({ ...pet });
+  const [newPet, setNewPet] = useState({
+    ...pet,
+    profileImage: pet.imageUrl || pet.profileImage || null, // 이미지 URL 설정
+    gender: genderMap[pet.gender] || pet.gender || "", // 성별 초기값 매핑
+    size: sizeMap[pet.size] || pet.size || "", // 크기 초기값 매핑
+  });
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // 프로필 이미지 변경
@@ -23,9 +29,16 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
         image: file,
         profileImage: imageUrl,
       }));
+    } else {
+      // 이미지를 새로 등록하지 않을 경우 아무 작업도 하지 않음
+      setNewPet((prev: typeof newPet) => ({
+        ...prev,
+        image: prev.image, // 기존 이미지 유지
+        profileImage: prev.profileImage, // 기존 이미지 미리보기 유지
+      }));
     }
   };
-  
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {

@@ -11,7 +11,7 @@ import PetInfo from "../../components/MyPage/petInfo";
 import AddPetInfo from "../../components/MyPage/addPetInfo";
 // api 연동
 import { getMyPage } from "@/lib/api/user";
-import { addPetInfo, updatePetInfo } from "@/lib/api/pet";
+import { addPetInfo, updatePetInfo, deletePetInfo } from "@/lib/api/pet";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 
@@ -102,12 +102,10 @@ export default function MyPage() {
     };
   };
 
-  // 반려동물 등록 (addPetInfo)
+  // 1. 반려동물 정보 등록 (addPetInfo)
   const handleAdd = async (newPet: any) => {
     try {
-      const mappedPetData = mapToServerData(newPet); // 데이터를 서버 요구사항에 맞게 변환
-      console.log("Calling addPetInfo API with data:", mappedPetData);
-  
+      const mappedPetData = mapToServerData(newPet); // 데이터를 서버 요구사항에 맞게 변환  
       // POST 요청
       const addedPet = await addPetInfo(mappedPetData);
   
@@ -133,16 +131,19 @@ export default function MyPage() {
         )
       );
     } catch (error) {
-      console.error("Error while adding new pet info:", error);
+      console.error("반려동물 정보 등록 중 에러 발생:", error);
       alert("추가에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
+  // 2. 반려동물 정보 수정 (updatePetInfo)
   const handleUpdate = async (id: number, updatedPet: any) => {
     try {
       const mappedPetData = mapToServerData(updatedPet); // 서버 요구사항에 맞게 데이터 매핑
-      console.log("Calling updatePetInfo API for ID:", id);
-  
+      // 기존 이미지를 유지하도록 처리
+      if (!updatedPet.image) {
+        mappedPetData.image = null; // 서버에서 기존 이미지를 유지하도록 설정
+      }
       // PUT 요청
       await updatePetInfo(id, mappedPetData);
       // 수정 후 데이터 다시 조회
@@ -157,14 +158,21 @@ export default function MyPage() {
         )
       );
     } catch (error) {
-      console.error("Error while updating pet info:", error);
+      console.error("반려동물 정보 수정 중 에러 발생:", error);
       alert("수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
-  // 삭제
-  const handleDelete = (id: number) => {
-    setPetContainers((prev) => prev.filter((container) => container.id !== id));
+  // 3. 반려동물 정보 삭제 (deletePetInfo)
+  const handleDelete = async (id: number) => {
+    try {
+      await deletePetInfo(id)
+      setPetContainers((prev) => prev.filter((container) => container.id !== id));
+      alert("반려동물이 성공적으로 삭제되었습니다.");
+    } catch (error) {
+      console.error("반려동물 정보 삭제 중 에러 발생:", error);
+      alert("삭제에 실패했습니다. 다시 시도해주세요.")
+    }
   };
 
   // 수정 모드 활성화
