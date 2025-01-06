@@ -7,6 +7,7 @@ import ArrowBack from "@/assets/icons/arrowBack.png";
 import { handleImageUploading } from "@/utils/imageUpload";
 import { createPostAPI, updatePostAPI, PostPayload, fetchBoardDetail } from "@/lib/api/board";
 import { errorToast, successToast } from "@/utils/toast";
+import { PATHS } from "@/constants/path";
 
 export default function CommunityWritePage({
   mode = "create", // 기본값은 작성 모드
@@ -14,7 +15,7 @@ export default function CommunityWritePage({
 }: {
   mode: "create" | "edit";
   postId?: number; // 수정 모드일 경우 게시글 ID
-}) {  
+}) {
   const router = useRouter();
   const [uploadedImages, setUploadedImages] = useState<
     { url: string; isPrimary: boolean; file: File }[]
@@ -82,7 +83,7 @@ export default function CommunityWritePage({
         // 작성 모드
         const response = await createPostAPI(payload);
         successToast("게시글이 작성되었습니다!");
-        router.push(`/community/${response.data.id}`);
+        router.push(PATHS.COMMUNITY);
       } else if (mode === "edit" && postId) {
         // 수정 모드
         await updatePostAPI(postId, payload);

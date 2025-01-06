@@ -123,8 +123,7 @@ export const updateComment = async (
 
 /*좋아요*/
 export const toggleLike = async (postId: number, newLikeState: boolean) => {
-  axiosInstance.post("/api/like", {
-    postId,
+  axiosInstance.put(`/boards/${postId}/isLikeClicked`, {
     isLikeClicked: newLikeState,
   });
 };

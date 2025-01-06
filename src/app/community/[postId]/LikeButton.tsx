@@ -1,34 +1,42 @@
 "use client";
 
-import { useState } from "react";
 import { GoHeart, GoHeartFill } from "react-icons/go";
 import { toggleLike } from "@/lib/api/board";
-import { useQueryClient } from "@tanstack/react-query";
+import { errorToast } from "@/utils/toast";
+import { useState } from "react";
 
 interface LikeButtonProps {
   postId: number;
   isLiked: boolean;
+  onLikeToggle: (isLiked: boolean) => void;
 }
 
-export default function LikeButton({ postId, isLiked }: LikeButtonProps) {
-  const [liked, setLiked] = useState(isLiked);
-  const queryClient = useQueryClient();
+export default function LikeButton({ postId, isLiked, onLikeToggle }: LikeButtonProps) {
+  const [optimisticLiked, setOptimisticLiked] = useState(isLiked);
+  const [loading, setLoading] = useState(false);
 
   const handleClick = async () => {
+    if (loading) return; // 중복 클릭 방지
+    setLoading(true);
+
+    // 낙관적 업데이트
+    setOptimisticLiked(!optimisticLiked);
+    onLikeToggle(!optimisticLiked);
+
     try {
-      const newLikeState = !liked;
-      setLiked(newLikeState);
-      await toggleLike(postId, liked);
-      queryClient.invalidateQueries({ queryKey: ["post", postId] });
+      await toggleLike(postId, !optimisticLiked);
     } catch (error) {
-      console.error("좋아요 실패:", error);
-      setLiked(liked);
+      // 요청 실패 시 롤백
+      setOptimisticLiked(isLiked);
+      onLikeToggle(isLiked);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <button onClick={handleClick} className="focus:outline-none">
-      {liked ? (
+    <button onClick={handleClick} className="focus:outline-none" disabled={loading}>
+      {optimisticLiked ? (
         <GoHeartFill className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
       ) : (
         <GoHeart className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
