@@ -36,12 +36,7 @@ export default function JoinForm() {
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const MAX_SIZE = 10240; // 10KB
 
-    if (file && file.size > MAX_SIZE) {
-      errorToast("파일 크기가 10KB를 초과합니다.");
-      return;
-    }
     if (file) {
       setProfileImageFile(file);
 
