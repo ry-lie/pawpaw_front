@@ -37,7 +37,7 @@ export function PlaceAdditionalInfo({
         <span className="whitespace-nowrap">운영시간 :</span>
         <span className="ml-2 break-words">{placeDetails.openingHour}</span>
         <button
-          className="ml-2 text-strong_gray"
+          className="mr-3.5 text-strong_gray"
           onClick={toggleScheduleVisibility}
         >
           {isScheduleVisible ? <IoIosArrowUp /> : <IoIosArrowDown />}
@@ -101,9 +101,9 @@ export function PlaceAdditionalInfo({
 
         {/* 정보 텍스트 */}
         <div className="flex flex-col gap-1">
-          <p>입장 가능 동물 크기: {getDisplayValue(placeDetails.allowSize)}</p>
-          <p>설명: {getDisplayValue(placeDetails.description)}</p>
-          <p>제한사항: {getDisplayValue(placeDetails.restrictions)}</p>
+          <p>입장 가능 동물 크기 : {getDisplayValue(placeDetails.allowSize)}</p>
+          <p>설명 : {getDisplayValue(placeDetails.description)}</p>
+          <p>제한사항 : {getDisplayValue(placeDetails.restrictions)}</p>
         </div>
       </div>
 
