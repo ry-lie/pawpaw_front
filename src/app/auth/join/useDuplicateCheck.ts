@@ -42,9 +42,7 @@ export const useDuplicateCheck = ({
       }
     } catch (error) {
       if (isAxiosError(error)) {
-        const errorMessage =
-          error.response?.data?.body?.message ||
-          "이메일 확인 중 문제가 발생했습니다.";
+        const errorMessage = "유효한 이메일 주소를 입력하세요";
         setError("email", {
           type: "manual",
           message: errorMessage,
