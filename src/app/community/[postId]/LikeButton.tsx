@@ -6,7 +6,7 @@ import { toggleLike } from "@/lib/api/board";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface LikeButtonProps {
-  postId: string;
+  postId: number;
   isLiked: boolean;
 }
 

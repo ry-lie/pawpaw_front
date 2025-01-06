@@ -1,8 +1,7 @@
-import axios, { AxiosError, isAxiosError } from "axios";
-import { getSession } from "next-auth/react";
-import { redirect } from "next/navigation";
+import axios, { isAxiosError } from "axios";
+
 import { PATHS } from "../constants/path";
-import { errorToast } from "@/utils/Toast";
+import { errorToast } from "@/utils/toast";
 
 const axiosInstance = axios.create({
   baseURL: "/api",
@@ -23,8 +22,8 @@ axiosInstance.interceptors.response.use(
       }
 
       if (error.status === 401) {
-        errorToast("로그인이 필요합니다.");
-        redirect(PATHS.LOGIN);
+        errorToast("로그인 해주세요.");
+        window.location.href = PATHS.LOGIN;
       }
 
       if (isServerApiError(error)) {

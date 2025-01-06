@@ -1,14 +1,13 @@
 "use client";
 import Button from "@/components/Button";
 import Input from "@/components/Input";
-import { NowDate } from "@/utils/NowTime";
+import { nowDate } from "@/utils/nowTime";
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import Message_notsend from "@/assets/icons/message_notsend.png";
 import Message_send from "@/assets/icons/message_send.png";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import CoustomNav from "./CustomNav";
 
 const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
@@ -101,20 +100,18 @@ export default function ChatRoomPage() {
                 <span className="font-bold text-sm pl-2">{message.sender}</span>
               )}
               <li
-                className={`m-1 p-2 ${
-                  message.sender === sender
+                className={`m-1 p-2 ${message.sender === sender
                     ? "ml-auto bg-primary text-white"
                     : "mr-auto bg-stroke_gray text-black"
-                } rounded-lg`}
+                  } rounded-lg`}
               >
                 <div className="font-bold text-sm">{message.message}</div>
               </li>
               <span
-                className={`text-gray-500 text-xs ${
-                  message.sender === sender ? "ml-auto mr-2" : "mr-auto ml-2"
-                }`}
+                className={`text-gray-500 text-xs ${message.sender === sender ? "ml-auto mr-2" : "mr-auto ml-2"
+                  }`}
               >
-                {NowDate(message.timestamp)}
+                {nowDate(message.timestamp)}
               </span>
             </div>
           ))}
@@ -125,7 +122,7 @@ export default function ChatRoomPage() {
           className="w-full flex gap-2 border-t p-4 bg-white"
         >
           <Input
-          name="메세지"
+            name="메세지"
             type="text"
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}

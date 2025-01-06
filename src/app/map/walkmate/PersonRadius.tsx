@@ -1,16 +1,14 @@
 "use client";
 import Button from "@/components/Button";
-import Input from "@/components/Input";
-import { makeRoom } from "@/lib/api";
+//import { anotherLocation, updateMyLocation } from "@/lib/api/userPlace";
 import { useUserStore } from "@/stores/userStore";
-import { useGeolocation } from "@/utils/useGeolocation";
-import axios from "axios";
-import Link from "next/link";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import { join } from "path";
 import { useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
+
 interface User {
   id: string;
   nickname: string;
@@ -19,7 +17,7 @@ interface User {
 
 export default function PersonRadius() {
   const currentNickname = useUserStore((state) => state.nickname);
-  //    const { location } = useGeolocation();
+  const { location } = useGeolocation();
   const [findUsers, setFindUsers] = useState<User[]>([]);
   const [radius, setRadius] = useState(250);
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -34,23 +32,24 @@ export default function PersonRadius() {
       console.log("소켓 연결 성공");
     });
 
-    //메세지 받기
-    socketConnection.on("receive-message", (data) => {
-      console.log("create-room", data);
-    });
-
     // 컴포넌트 언마운트 시 소켓 연결 종료
     return () => {
       socketConnection.disconnect();
     };
   }, []);
 
-  const allUser: User[] = [
-    { id: "1", nickname: "빠알간두볼", radius: 180 },
-    { id: "2", nickname: "김먹방못해요", radius: 570 },
-    { id: "3", nickname: "노래진두볼", radius: 230 },
-    { id: "4", nickname: "붉어진두볼", radius: 600 },
-  ];
+  //현재위치를 서버에 업데이트 및 사용자 검색
+  const handleLocation = async () => {
+    // await updateMyLocation();
+    // //반경 내 사용자 검색
+    // setIsLoading(true);
+    // try {
+    //   const users = await anotherLocation();
+    //   setFindUsers(users);
+    // } catch (e) {
+    //   console.error("사용자 검색 오류 : ", e);
+    // }
+  };
 
   //채팅 요청
   const handleRequestChat = (user: User) => {
@@ -62,38 +61,11 @@ export default function PersonRadius() {
       console.error("소켓이 연결되지 않았습니다.");
     }
   };
-  //유저 찾기
-  const findUserByRadius = () => {
-    const filterUser = allUser.filter((user) => user.radius <= radius);
-    setFindUsers(filterUser);
-  };
+
   //반경선택
   const handleRadiusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setRadius(Number(e.target.value));
   };
-
-  //유저리스트에서 선택후 방 참가
-  // const handleJoinRoom = (user: User) => {
-  //     if (socket) {
-  //         const roomName = `${currentNickname}-R${user.nickname}`;
-  //         socket.emit("join", roomName, currentNickname)
-  //     }
-  // }
-
-  //     } else {
-  //         console.error("위치정보를 가져올수 없습니다.");
-  //     }
-  // };
-  // //반경 내 유저목록 수신
-  // useEffect(() => {
-  //     socket.on("findUserByRadius", (users: User[]) => {
-  //         setFindUsers(users);
-  //     });
-
-  //     return () => {
-  //         socket.off("findUserByRadius");
-  //     };
-  // }, []);
 
   return (
     <div className="mt-12">
@@ -112,7 +84,7 @@ export default function PersonRadius() {
         <Button
           btnType="submit"
           containerStyles="text-xs h-6 w-9 ml-1"
-          onClick={findUserByRadius}
+          onClick={handleLocation}
           disabled={isLoading}
         >
           찾기
@@ -124,24 +96,30 @@ export default function PersonRadius() {
         <div className="font-bold mb-2 ml-1">
           {currentNickname} 님의 반경 {radius}m
         </div>
-        <ul className="space-y-2">
-          {findUsers.map((user) => (
-            <li key={user.id} className="flex items-center justify-between">
-              {/* 유저 닉네임 */}
-              <div className="xs:text-base text-sm w-full h-10 flex items-center bg-white border border-stroke_gray rounded-md px-2">
-                {user.nickname}
-              </div>
-              {/* 연락하기 버튼 */}
-              <Button
-                containerStyles="!text-sm !xs:text-base w-24 h-10 !text-base font-semibold flex items-center justify-center ml-4"
-                onClick={() => handleRequestChat(user)}
-                disabled={isLoading}
-              >
-                연락하기
-              </Button>
-            </li>
-          ))}
-        </ul>
+        {findUsers.length === 0 ? ( // 유저가 없을 경우
+          <div className="flex flex-col items-center">
+            <p className="text-gray-500">현재 이용 가능한 사용자가 없습니다.</p>
+          </div>
+        ) : (
+          <ul className="space-y-2">
+            {findUsers.map((user) => (
+              <li key={user.id} className="flex items-center justify-between">
+                {/* 유저 닉네임 */}
+                <div className="xs:text-base text-sm w-full h-10 flex items-center bg-white border border-stroke_gray rounded-md px-2">
+                  {user.nickname}
+                </div>
+                {/* 연락하기 버튼 */}
+                <Button
+                  containerStyles="!text-sm !xs:text-base w-24 h-10 !text-base font-semibold flex items-center justify-center ml-4"
+                  onClick={() => handleRequestChat(user)}
+                  disabled={isLoading}
+                >
+                  연락하기
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

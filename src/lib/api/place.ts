@@ -6,18 +6,25 @@ export const fetchNearbyPlaces = async ({
   latitude,
   longitude,
 }: {
-  category: string;
+  category?: string; // Optional 처리
   radius: number;
   latitude: number;
   longitude: number;
 }) => {
+  // 조건부로 params 객체 생성
+  const params: Record<string, any> = {
+    radius,
+    latitude,
+    longitude,
+  };
+
+  // category가 있으면 추가
+  if (category) {
+    params.category = category;
+  }
+
   const response = await axiosInstance.get("/places/nearby-place-list", {
-    params: {
-      category,
-      radius,
-      latitude,
-      longitude,
-    },
+    params,
   });
 
   return response.data;

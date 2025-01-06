@@ -1,6 +1,6 @@
 import { AlarmProps, useAlarmStore } from "@/stores/alarmStore";
 import { useUserStore } from "@/stores/userStore";
-import { errorToast, infoToast, successToast } from "@/utils/Toast";
+import { errorToast, infoToast, successToast } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -33,6 +33,7 @@ const ChatEventAlram = () => {
 
     const handleMessage = (event: MessageEvent) => {
       try {
+        console.log("수신된 이벤트 데이터", event.data);
         const data = JSON.parse(event.data);
         if (data?.body?.sender && data?.body?.message) {
           const sender = data.body.sender;
@@ -110,13 +111,13 @@ const ChatEventAlram = () => {
       setIsLoading(false);
     };
 
-    const handleError = () => {
-      console.error("SSE 연결오류");
-      errorToast("서버와의 연결이 끊어졌습니다. 재연결을 시도합니다.");
-    };
+    // const handleError = (event: Event) => {
+    //   console.error("SSE 연결오류", event);
+    //   errorToast("서버와의 연결이 끊어졌습니다. 재연결을 시도합니다.");
+    // };
 
     eventSource.onmessage = handleMessage;
-    eventSource.onerror = handleError;
+    // eventSource.onerror = handleError;
 
     return () => {
       eventSource.close();
