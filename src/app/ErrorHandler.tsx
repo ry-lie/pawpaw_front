@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { errorToast } from "@/utils/Toast";
+import { errorToast } from "@/utils/toast";
 {/**로그인 안 한 사용자 로그인이 필요한 페이지 접근 시 */ }
 export default function ErrorHandler() {
   const searchParams = useSearchParams();

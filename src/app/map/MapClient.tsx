@@ -7,10 +7,11 @@ import Image from "next/image";
 import FootPrint from "@/assets/icons/footprint.png";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
-import { useGeolocation } from "@/utils/useGeolocation";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import Loading from "../loading";
 import { fetchNearbyPlaces } from "@/lib/api/place";
 import PlaceDetail from "./place/[placeId]/PlaceDetail";
+import { IoIosWarning } from "react-icons/io";
 export interface PlaceProps {
   id: number;
   name: string;
@@ -18,7 +19,6 @@ export interface PlaceProps {
   latitude: number;
   longitude: number;
 }
-
 
 const CATEGORY_MAP: Record<string, string> = {
   동물약국: "ANIMAL_PHARMACY",
@@ -37,11 +37,12 @@ const CATEGORY_MAP: Record<string, string> = {
 };
 {/**지도페이지 상태, 이벤트 처리 담당 컴포넌트 */ }
 export default function MapClient() {
-  const { location } = useGeolocation();
+  const { location, error } = useGeolocation();
   const { openModal } = useModalStore();
   const [places, setPlaces] = useState<PlaceProps[]>([]);
   const [radius, setRadius] = useState(250); // 기본 반경 250m
   const [category, setCategory] = useState(""); // 기본 카테고리
+
   useEffect(() => {
     async function loadPlaces() {
       try {
@@ -67,6 +68,22 @@ export default function MapClient() {
   }, [radius, category, location]);
 
   useEffect(() => { if (!places) return; if (places.length > 0) { loadKakaoMap(); } }, [places]);
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-screen gap-4">
+        <div className="flex items-center text-accent_orange">
+          <IoIosWarning />
+          <p>지도 권한 허용이 필요한 페이지입니다.</p>
+        </div>
+        <div className="text-[12px] flex flex-col items-center">
+          <p>위치서비스가 필요합니다.</p>
+          <p>브라우저 설정에서 위치 서비스를 활성화해주세요.</p>
+        </div>
+
+      </div>
+    );
+  }
   if (!location) {
     return (
       <div className="flex items-center justify-center w-full h-screen">
@@ -147,7 +164,6 @@ export default function MapClient() {
 
     });
   };
-
 
   return (
     <>

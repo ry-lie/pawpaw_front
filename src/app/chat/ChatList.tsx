@@ -6,8 +6,9 @@ import { useEffect, useState } from "react";
 import NewMessage from "@/assets/icons/newMessage_icon.png";
 import Image from "next/image";
 import { io } from "socket.io-client";
-import { roomList } from "@/lib/api";
+
 import { useUserStore } from "@/stores/userStore";
+import { roomList } from "@/lib/api/chat";
 
 interface LastMessageType {
   text: string;

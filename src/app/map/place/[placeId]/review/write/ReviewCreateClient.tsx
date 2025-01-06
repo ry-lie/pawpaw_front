@@ -5,7 +5,7 @@ import ReviewForm from "../ReviewForm";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/constants/path";
 import { createReview } from "@/lib/api/place";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 
 interface ReviewCreateClientProps {
   placeId: number;

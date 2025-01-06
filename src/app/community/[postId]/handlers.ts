@@ -6,7 +6,7 @@ import {
   updateComment,
   fetchBoardDetail,
 } from "@/lib/api/board";
-import { successToast, errorToast } from "@/utils/Toast";
+import { successToast, errorToast } from "@/utils/toast";
 // 댓글 등록 이벤트
 export const handleAddComment = async (
   postId: number,

@@ -1,7 +1,7 @@
 import axios, { isAxiosError } from "axios";
 
 import { PATHS } from "../constants/path";
-import { errorToast } from "@/utils/Toast";
+import { errorToast } from "@/utils/toast";
 
 const axiosInstance = axios.create({
   baseURL: "/api",

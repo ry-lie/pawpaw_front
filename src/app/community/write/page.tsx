@@ -4,9 +4,9 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ArrowBack from "@/assets/icons/arrowBack.png";
-import { handleImamgeUploading } from "@/utils/ImageUpload";
+import { handleImageUploading } from "@/utils/imageUpload";
 import { createPostAPI, CreatePostPayload } from "@/lib/api/board";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 
 export default function CommunityWritePage() {
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function CommunityWritePage() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
-  const handleChangeImage = handleImamgeUploading((file) => {
+  const handleChangeImage = handleImageUploading((file) => {
     if (uploadedImages.length >= 4) {
       errorToast("이미지는 최대 4장까지만 업로드 가능합니다.");
       return;
@@ -56,7 +56,7 @@ export default function CommunityWritePage() {
     }
   };
 
-  {/* 카테고리 매핑 */}
+  {/* 카테고리 매핑 */ }
   const categoryMapping: { [key: string]: string } = {
     "펫 자랑": "PROUD_PETS",
     "고민 상담": "CONSULTATION",
@@ -81,11 +81,10 @@ export default function CommunityWritePage() {
           <div className="flex space-x-2 xs:space-x-4">
             <label
               htmlFor="image-upload"
-              className={`w-16 h-16 xs:w-24 xs:h-24 flex items-center justify-center rounded-lg shadow cursor-pointer ${
-                uploadedImages.length >= 4
-                  ? "bg-gray-200 cursor-not-allowed"
-                  : "bg-gray-200"
-              }`}
+              className={`w-16 h-16 xs:w-24 xs:h-24 flex items-center justify-center rounded-lg shadow cursor-pointer ${uploadedImages.length >= 4
+                ? "bg-gray-200 cursor-not-allowed"
+                : "bg-gray-200"
+                }`}
               style={
                 uploadedImages.length >= 4
                   ? { pointerEvents: "none" }
@@ -136,9 +135,8 @@ export default function CommunityWritePage() {
               <button
                 key={cat}
                 onClick={() => setCategory(categoryMapping[cat])} // 카테고리 설정
-                className={`w-full px-2 py-0.5 xs:px-4 xs:py-1 text-sm xs:text-base border border-solid border-stroke_gray rounded-xl focus:ring-2 focus:ring-primary ${
-                  category === categoryMapping[cat] ? "bg-white text-accent_orange font-semibold" : "bg-background"
-                }`}
+                className={`w-full px-2 py-0.5 xs:px-4 xs:py-1 text-sm xs:text-base border border-solid border-stroke_gray rounded-xl focus:ring-2 focus:ring-primary ${category === categoryMapping[cat] ? "bg-white text-accent_orange font-semibold" : "bg-background"
+                  }`}
               >
                 {cat}
               </button>
@@ -152,11 +150,10 @@ export default function CommunityWritePage() {
           <input
             type="text"
             placeholder="제목을 입력하세요"
-            className={`w-full text-sm xs:text-base px-4 py-2 border rounded-lg ${
-              title.trim().length > 0 && title.trim().length <= 30
-                ? ""
-                : "border-primary"
-            }`}
+            className={`w-full text-sm xs:text-base px-4 py-2 border rounded-lg ${title.trim().length > 0 && title.trim().length <= 30
+              ? ""
+              : "border-primary"
+              }`}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
@@ -174,11 +171,10 @@ export default function CommunityWritePage() {
           <h2 className="text-base xs:text-lg font-bold mb-2">설명</h2>
           <textarea
             placeholder="내용을 입력하세요"
-            className={`w-full text-sm xs:text-base px-4 py-2 border rounded-lg ${
-              content.trim().length > 0 && new Blob([content]).size <= 1000
-                ? ""
-                : "border-accent_orange"
-            }`}
+            className={`w-full text-sm xs:text-base px-4 py-2 border rounded-lg ${content.trim().length > 0 && new Blob([content]).size <= 1000
+              ? ""
+              : "border-accent_orange"
+              }`}
             rows={8}
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -195,11 +191,10 @@ export default function CommunityWritePage() {
         {/* 작성 완료 버튼 */}
         <div className="text-right">
           <button
-            className={`text-sm xs:text-base px-3 py-1 xs:px-5 xs:py-2 font-semibold rounded-lg ${
-              title && content && category
-                ? "bg-primary text-white hover:bg-hover"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
+            className={`text-sm xs:text-base px-3 py-1 xs:px-5 xs:py-2 font-semibold rounded-lg ${title && content && category
+              ? "bg-primary text-white hover:bg-hover"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
             onClick={handleSubmit}
           >
             작성 완료

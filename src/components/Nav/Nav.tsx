@@ -9,7 +9,7 @@ import Image from "next/image";
 import MiniLogo from "@/assets/images/logo/miniLogo.png";
 import ChatEventAlram from "./ChatEventAlarm";
 import { logoutAPI } from "@/lib/api/auth";
-import { errorToast } from "@/utils/Toast";
+import { errorToast } from "@/utils/toast";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 

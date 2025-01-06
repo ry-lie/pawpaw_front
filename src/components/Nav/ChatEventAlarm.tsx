@@ -1,6 +1,6 @@
 import { AlarmProps, useAlarmStore } from "@/stores/alarmStore";
 import { useUserStore } from "@/stores/userStore";
-import { errorToast, infoToast, successToast } from "@/utils/Toast";
+import { errorToast, infoToast, successToast } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";

@@ -7,7 +7,7 @@ import {
   sendVerificationCode,
   verifyCode,
 } from "@/lib/api/auth";
-import { errorToast, successToast, warningToast } from "@/utils/Toast";
+import { errorToast, successToast, warningToast } from "@/utils/toast";
 import { isAxiosError } from "axios";
 
 interface DuplicateCheckProps {
