@@ -51,6 +51,7 @@ export const updateUser = async (
   if (data.newPassword) {
     formData.append("newPassword", data.newPassword);
   }
+  
   const response = await axiosInstance.put(`/users/${id}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -61,7 +62,8 @@ export const updateUser = async (
 
 export const getUser = async (id: number) => {
   const response = await axiosInstance.get(`/users/${id}`);
-  return response.data;
+  const { email } = response.data;
+  return email
 };
 
 // 내가 쓴 글 조회 (/mypage/myposts)
