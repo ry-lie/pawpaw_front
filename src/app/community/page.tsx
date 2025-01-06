@@ -105,8 +105,8 @@ export default function CommunityPage() {
               key={category}
               onClick={() => setSelectedCategory(category)}
               className={`w-full px-0.5 xs:px-4 py-1 rounded-xl text-xs xs:text-base ${selectedCategory === category
-                  ? "bg-primary font-medium text-white"
-                  : "bg-white text-gray-700 border-solid border border-stroke_gray"
+                ? "bg-primary font-medium text-white"
+                : "bg-white text-gray-700 border-solid border border-stroke_gray"
                 }`}
             >
               {category}
@@ -117,8 +117,8 @@ export default function CommunityPage() {
         {/* 게시글 컨테이너 */}
         <div className="space-y-2">
           {filteredPosts.map((post) => (
-            <Link href={PATHS.COMMUNITY_DETAIL(post.id)}>
-              <div key={post.id} className="p-2 xs:p-3 border rounded-md bg-white">
+            <Link href={PATHS.COMMUNITY_DETAIL(post.id)} key={post.id} >
+              <div className="p-2 xs:p-3 border rounded-md bg-white">
                 <div className="flex">
                   {/* 이미지 */}
                   <Image

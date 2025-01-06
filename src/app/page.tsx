@@ -50,7 +50,7 @@ export default function Home() {
               id: item.id,
               category: item.category, // korName 사용
               title: item.title,
-              imageUrl: item.url,
+              imageUrl: item.imageUrl,
             }))
             : []
         );
@@ -91,7 +91,6 @@ export default function Home() {
                 <Link href={PATHS.COMMUNITY_DETAIL(post.id)} key={post.id}>
                   <PostCard
                     id={post.id}
-                    key={post.id}
                     category={post.category}
                     title={post.title}
                     imageUrl={post.imageUrl}
@@ -118,7 +117,6 @@ export default function Home() {
                 <Link href={PATHS.COMMUNITY_DETAIL(post.id)} key={post.id}>
                   <PostCard
                     id={post.id}
-                    key={post.id}
                     category={post.category}
                     title={post.title}
                     imageUrl={post.imageUrl}

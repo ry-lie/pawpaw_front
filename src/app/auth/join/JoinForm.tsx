@@ -219,7 +219,7 @@ export default function JoinForm() {
       <Input
         label="닉네임"
         type="text"
-        className="w-full h-12"
+        className="w-full h-12 mb-3"
         {...register("nickname", {
           required: "닉네임은 필수 입력 항목입니다.",
           maxLength: { value: 30, message: "닉네임은 최대 30글자 이하로 입력해야 합니다." },
@@ -230,7 +230,7 @@ export default function JoinForm() {
           btnType="button"
           onClick={handleNicknameCheck}
           disabled={!getValues("nickname")}
-          containerStyles={`w-[70px] h-[30px] font-normal text-xs ${!getValues("nickname") ? "bg-gray-300 text-gray-500" : "bg-primary text-white"}`}
+          containerStyles={`w-[70px] h-[30px] font-normal text-xs mb-3 ${!getValues("nickname") ? "bg-gray-300 text-gray-500" : "bg-primary text-white"}`}
         >
           중복 확인
         </Button>
@@ -240,7 +240,7 @@ export default function JoinForm() {
         disabled={!isValid || isSubmitting || !isEmailChecked || !isNicknameChecked}
         isLoading={isSubmitting}
         btnType="submit"
-        containerStyles={`w-full h-14 ${isValid && isEmailChecked && isNicknameChecked && !isSubmitting ? "bg-primary text-white" : "bg-gray-300 text-gray-500"}`}
+        containerStyles={`w-full h-12 !text-lg !font-medium ${isValid && isEmailChecked && isNicknameChecked && !isSubmitting ? "bg-primary text-white" : "bg-gray-300 text-gray-500"}`}
       >
         회원가입
       </Button>
