@@ -26,9 +26,9 @@ export function PlaceAddressInfo({
           alt="위치 아이콘"
           width={20}
           height={20}
-          className="h-5 w-5 flex-shrink-0 object-contain"
+          className="h-5 w-5 mb-1 flex-shrink-0 object-contain"
         />
-        <span className="w-14">도로명: </span>
+        <span className="w-14">도로명 : </span>
         <span>{placeDetails.roadNameAddress}</span>
         <button
           className="ml-2 text-strong_gray"
@@ -40,13 +40,13 @@ export function PlaceAddressInfo({
       {isAddressVisible && (
         <div className="ml-4 mt-2 flex flex-col gap-1">
           <p>
-            <span className="border border-stroke_gray rounded-md mr-2 text-strong_gray">
+            <span className="p-0.5 border border-stroke_gray rounded-md mr-2 text-strong_gray">
               지번
             </span>
             {placeDetails.postalAddress}
           </p>
           <p>
-            <span className="border border-stroke_gray rounded-md mr-2 text-strong_gray">
+            <span className="p-0.5 border border-stroke_gray rounded-md mr-2 text-strong_gray">
               우편번호
             </span>
             {placeDetails.postalCode}

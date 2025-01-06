@@ -81,7 +81,7 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
         />
 
         {/* 2. 이름 & 나이 (왼쪽), 성별 & 크기 섹션(오른쪽) */}
-        <div className="flex justify-between mb-1">
+        <div className="flex justify-between mb-1 xs:px-12">
           {/* 이름 & 나이 */}
           <div>
             <div className="mb-3">
@@ -162,7 +162,7 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
 
         {/* 3. 성격 섹션 */}
         {/* 반응형 추가 */}
-        <div className="flex felx-row">
+        <div className="flex felx-row xs:px-12">
           <div className="w-10">
             <span className="text-base font-bold">성격 </span>
           </div>

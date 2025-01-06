@@ -64,15 +64,15 @@ export default function PetInfo({ pet, onEdit, onDelete }: { pet: any; onEdit?: 
         </div>
 
         {/* 2. 이름 & 나이 (왼쪽), 성별 & 크기 섹션(오른쪽) */}
-        <div className="flex justify-between px-6 mb-1">
+        <div className="flex justify-between xs:px-14 px-6 mb-1">
           {/* 이름 & 나이 */}
           <div>
             <div className='mb-2'>
-              <span className='text-base font-bold mr-3'>이름 </span>
+              <span className='text-base font-bold mr-3 xs:mr-4'>이름 </span>
               <span className='text-base'>{pet.name}</span>
             </div>
             <div>
-              <span className='text-base font-bold mr-3'>나이 </span>
+              <span className='text-base font-bold mr-3 xs:mr-4'>나이 </span>
               <span className='text-base'>{pet.age}</span>
             </div>
           </div>
@@ -108,12 +108,12 @@ export default function PetInfo({ pet, onEdit, onDelete }: { pet: any; onEdit?: 
 
         {/* 3. 성격 섹션 */}
         {/* 반응형 추가 */}
-        <div className='flex felx-row px-6'>
-          <div className='w-1/5'>
+        <div className='flex felx-row xs:px-14 px-6'>
+          <div className='w-1/5 xs:w-1/6'>
             <span className='text-base font-bold'>성격 </span>
           </div>
 
-          <div className='w-4/5'>
+          <div className='w-4/5 xs:5/6'>
             <span className="text-base">{pet.description}</span>
           </div>
         </div>

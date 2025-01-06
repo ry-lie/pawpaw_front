@@ -103,7 +103,7 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
             id: index + 1,
             imgUrl: item.url,
           }))}
-          height="h-[500px]"
+          height="h-[400px]"
           containerClassName="bg-white"
           imageClassName="object-contain max-h-full max-w-full border border-x-0 border-stroke_gray"
         />
@@ -163,7 +163,7 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
         </div>
         {/**글 제목, 내용*/}
         <div className="mt-6 pb-4">
-          <div className="flex flex-col justify-between h-[350px] xs:h-[500px]">
+          <div className="flex flex-col justify-between h-[300px] xs:h-[350px] px-3">
             <div>
               <h1 className="text-base xs:text-lg font-bold break-words">  {post?.title || "제목 없음"}</h1>
               <p className="mt-4 text-sm xs:text-base text-gray-700 break-words"> {post?.content || "내용 없음"}</p>
@@ -184,7 +184,7 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
         <h2 className="ml-2 mb-1 text-base xs:text-lg">
           댓글 ({(post?.commentList || []).length})
         </h2>
-        <div className="bg-white border-x mb-4">
+        <div className="bg-white border-x border-t mb-4">
           {(post?.commentList || []).map((comment) => (
             <Comment
               key={comment.id}

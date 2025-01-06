@@ -30,7 +30,7 @@ export const addPetInfo = async (petData: {
 export const updatePetInfo = async (
   petId: number,
   petData: {
-    image?: File;
+    image: File | null;
     name?: string;
     age?: number;
     description?: string;

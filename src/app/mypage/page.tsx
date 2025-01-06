@@ -141,8 +141,12 @@ export default function MyPage() {
     try {
       const mappedPetData = mapToServerData(updatedPet); // 서버 요구사항에 맞게 데이터 매핑
       // 기존 이미지를 유지하도록 처리
+      // 이미지가 변경되지 않았을 경우 기존 이미지 URL 유지
       if (!updatedPet.image) {
-        mappedPetData.image = null; // 서버에서 기존 이미지를 유지하도록 설정
+        const existingPet = petContainers.find((container) => container.id === id)?.pet;
+        if (existingPet?.imageUrl) {
+          mappedPetData.image = existingPet.imageUrl; // 기존 이미지 URL 유지
+        }
       }
       // PUT 요청
       await updatePetInfo(id, mappedPetData);

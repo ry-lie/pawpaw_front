@@ -23,7 +23,7 @@ export default function Modal() {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-4 shadow-lg w-[345px] xs:w-96 relative">
+      <div className="bg-white rounded-lg p-4 shadow-lg w-[345px] xs:w-[400px] relative">
         <button onClick={closeModal} className="absolute top-2 right-2">
           <Image src={ExitButton} alt="닫기" width={20} height={20} />
         </button>
