@@ -94,8 +94,8 @@ export default function ChatRoomPage() {
           ref={chatScroll}
           className="flex-1 flex flex-col overflow-y-auto pt-2 px-2"
         >
-          {chatLog.map((message, index) => (
-            <div key={index} className="flex flex-col items-start mb-2">
+          {chatLog.map((message, userID) => (
+            <div key={userID} className="flex flex-col items-start mb-2">
               {message.sender !== sender && (
                 <span className="font-bold text-sm pl-2">{message.sender}</span>
               )}

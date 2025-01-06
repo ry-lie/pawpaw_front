@@ -4,10 +4,11 @@ import Button from "@/components/Button";
 import { useUserStore } from "@/stores/userStore";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { join } from "path";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { anotherLocation, updateMyLocation } from "@/lib/api/userPlace";
+import { SocketContext } from "../layout";
 
-const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 interface User {
   id: string;
@@ -20,46 +21,83 @@ export default function PersonRadius() {
   const { location } = useGeolocation();
   const [findUsers, setFindUsers] = useState<User[]>([]);
   const [radius, setRadius] = useState(250);
-  const [socket, setSocket] = useState<Socket | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { socket } = useContext(SocketContext);
 
   useEffect(() => {
-    // 소켓 연결
-    const socketConnection = io(socket_url);
-    setSocket(socketConnection);
+    if (socket) {
+      socket.on("create-room-response", (response) => {
+        console.log("create-room-response", response);
+        const roomName = response.data?.roomName;
 
-    socketConnection.on("connect", () => {
-      console.log("소켓 연결 성공");
-    });
+        if (roomName) {
+          console.log(`채팅방이 생성되었습니다. : ${roomName}`);
+          socket.emit("join", { roomName });
+        }
+      });
+      socket.on("join-response", (joinResponse) => {
+        console.log("joinResponse", joinResponse);
 
-    // 컴포넌트 언마운트 시 소켓 연결 종료
+        if (joinResponse.message === "채팅방에 입장되었습니다.") {
+          console.log(`채팅방 입장 완료 : ${joinResponse.data?.roomName}`);
+        }
+      });
+    }
+
     return () => {
-      socketConnection.disconnect();
+      socket?.off("create-room-response");
+      socket?.off("join-response");
     };
-  }, []);
+  }, [socket]);
+
 
   //현재위치를 서버에 업데이트 및 사용자 검색
   const handleLocation = async () => {
-    // await updateMyLocation();
-    // //반경 내 사용자 검색
-    // setIsLoading(true);
-    // try {
-    //   const users = await anotherLocation();
-    //   setFindUsers(users);
-    // } catch (e) {
-    //   console.error("사용자 검색 오류 : ", e);
-    // }
+    if (!location) {
+      console.error("위치정보를 가져올 수 없습니다.");
+      return;
+    }
+    setIsLoading(true);
+  
+    try {
+      await updateMyLocation(location.latitude, location.longitude);
+      console.log("현재 위치 서버에 업데이트 완료");
+  
+      const response = await anotherLocation({
+        latitude: location.latitude,
+        longitude: location.longitude,
+        radius: radius,
+      });
+  
+      // 응답 구조에 따라 배열 추출
+      const users = response.body?.data || [];
+      if (Array.isArray(users)) {
+        setFindUsers(users);
+      } else {
+        console.error("API 응답이 배열이 아닙니다:", response);
+        setFindUsers([]);
+      }
+  
+      console.log("반경 내 사용자 검색 완료", users);
+    } catch (e) {
+      console.error("사용자 검색 오류", e);
+      setFindUsers([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
 
   //채팅 요청
   const handleRequestChat = (user: User) => {
-    if (socket) {
-      const roomName = `${currentNickname}-R${user.nickname}`;
-      socket.emit("create-room", roomName);
-      console.log(`${user.nickname}에게 채팅요청을 보냈습니다.`);
-    } else {
+    if (!socket) {
       console.error("소켓이 연결되지 않았습니다.");
+      return;
     }
+    socket.emit("create-room", { recipientId: user.id, 
+      senderNickname : currentNickname
+    });
+    console.log(`${user.nickname}님에게 채팅요청을 보냈습니다.`)
   };
 
   //반경선택
@@ -102,12 +140,14 @@ export default function PersonRadius() {
           </div>
         ) : (
           <ul className="space-y-2">
-            {findUsers.map((user) => (
+            {findUsers.filter((user)=>user.nickname !== currentNickname)
+            .map((user) => (
               <li key={user.id} className="flex items-center justify-between">
                 {/* 유저 닉네임 */}
                 <div className="xs:text-base text-sm w-full h-10 flex items-center bg-white border border-stroke_gray rounded-md px-2">
                   {user.nickname}
                 </div>
+                
                 {/* 연락하기 버튼 */}
                 <Button
                   containerStyles="!text-sm !xs:text-base w-24 h-10 !text-base font-semibold flex items-center justify-center ml-4"

@@ -42,6 +42,6 @@ export const config = {
     "/auth/:path*",
     "/mypage/:path*",
     "/chat/:path*",
-    "/map/walkmate/:path*",
+    "/chat/walkmate/:path*",
   ],
 };
