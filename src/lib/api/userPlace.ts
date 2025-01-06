@@ -1,4 +1,4 @@
-import { useGeolocation } from "@/utils/useGeolocation";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import axiosInstance from "../axios";
 // import { useState } from "react";
 

@@ -9,7 +9,7 @@ import { PATHS } from "@/constants/path";
 import { loginAPI } from "@/lib/api/auth";
 import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "next/navigation";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 import { IoSearchOutline } from "react-icons/io5";
 import { useLocationUpdater } from "@/hooks/useLocationUpdater";
 import KakaoLogin from "./KakaoLogin";

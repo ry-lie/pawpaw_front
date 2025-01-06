@@ -2,7 +2,7 @@
 
 import { PATHS } from "@/constants/path";
 import { updateReview } from "@/lib/api/place";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import ReviewForm from "../../ReviewForm";

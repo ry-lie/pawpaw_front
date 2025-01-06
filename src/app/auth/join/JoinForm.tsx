@@ -8,7 +8,7 @@ import Button from "@/components/Button";
 import BasicProfile from "@/assets/icons/profile_icon.png";
 import { registerAPI, RegisterPayload } from "@/lib/api/auth";
 import { useDuplicateCheck } from "./useDuplicateCheck";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 import { PATHS } from "@/constants/path";
 import { useRouter } from "next/navigation";
 

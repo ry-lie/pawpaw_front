@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import Confirm_icon from "@/assets/icons/confirm_icon.png";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 import { useUserStore } from "@/stores/userStore";
 import { updateUser } from "@/lib/api/user";
 import { useDuplicateCheck } from "@/app/auth/join/useDuplicateCheck";

@@ -8,9 +8,9 @@ import CheckIcon from "@/assets/icons/check_icon.png";
 import TrashIcon from "@/assets/icons/trash_icon.png";
 import PetProfile from "@/assets/icons/petProfile_icon.png";
 import { sizeMap, genderMap } from "./petInfo";
-import { handleImamgeUploading } from "@/utils/ImageUpload";
+import { handleImageUploading } from "@/utils/imageUpload";
 
-export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSave: (updatedPet: any) => void; onDelete: () => void;}) {
+export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSave: (updatedPet: any) => void; onDelete: () => void; }) {
   const [newPet, setNewPet] = useState({
     ...pet,
     profileImage: pet.imageUrl || pet.profileImage || null, // 이미지 URL 설정
@@ -115,18 +115,16 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
                 {/* 여자 버튼 */}
                 <button
                   onClick={() => setNewPet({ ...newPet, gender: "여자" })}
-                  className={`py-1 px-2 rounded-lg border ${
-                    newPet.gender === "여자" ? "bg-red-100" : "bg-white"
-                  }`}
+                  className={`py-1 px-2 rounded-lg border ${newPet.gender === "여자" ? "bg-red-100" : "bg-white"
+                    }`}
                 >
                   <Image src={WomanIcon} alt="womanIcon" className="w-5 h-5" />
                 </button>
                 {/* 남자 버튼 */}
                 <button
                   onClick={() => setNewPet({ ...newPet, gender: "남자" })}
-                  className={`py-1 px-2 rounded-lg border ${
-                    newPet.gender === "남자" ? "bg-blue-100" : "bg-white"
-                  }`}
+                  className={`py-1 px-2 rounded-lg border ${newPet.gender === "남자" ? "bg-blue-100" : "bg-white"
+                    }`}
                 >
                   <Image src={ManIcon} alt="manIcon" className="w-5 h-5" />
                 </button>
@@ -138,25 +136,22 @@ export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSav
               <div className="flex gap-1">
                 <button
                   onClick={() => setNewPet({ ...newPet, size: "소형" })}
-                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${
-                    newPet.size === "소형" ? "bg-stroke_gray" : "bg-white"
-                  }`}
+                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${newPet.size === "소형" ? "bg-stroke_gray" : "bg-white"
+                    }`}
                 >
                   소
                 </button>
                 <button
                   onClick={() => setNewPet({ ...newPet, size: "중형" })}
-                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${
-                    newPet.size === "중형" ? "bg-stroke_gray" : "bg-white"
-                  }`}
+                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${newPet.size === "중형" ? "bg-stroke_gray" : "bg-white"
+                    }`}
                 >
                   중
                 </button>
                 <button
                   onClick={() => setNewPet({ ...newPet, size: "대형" })}
-                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${
-                    newPet.size === "대형" ? "bg-stroke_gray" : "bg-white"
-                  }`}
+                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${newPet.size === "대형" ? "bg-stroke_gray" : "bg-white"
+                    }`}
                 >
                   대
                 </button>

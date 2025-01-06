@@ -3,7 +3,7 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { useForm } from "react-hook-form";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 import { useState } from "react";
 import { useDuplicateCheck } from "../join/useDuplicateCheck";
 import { sendVerificationCode, temporaryPassword } from "@/lib/api/auth";

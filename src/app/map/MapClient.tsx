@@ -7,7 +7,7 @@ import Image from "next/image";
 import FootPrint from "@/assets/icons/footprint.png";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
-import { useGeolocation } from "@/utils/useGeolocation";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import Loading from "../loading";
 import { fetchNearbyPlaces } from "@/lib/api/place";
 import PlaceDetail from "./place/[placeId]/PlaceDetail";

@@ -1,5 +1,5 @@
 import { updateMyLocation } from "@/lib/api/userPlace";
-import { useGeolocation } from "@/utils/useGeolocation";
+import { useGeolocation } from "@/hooks/useGeolocation";
 
 export const useLocationUpdater = () => {
   const { location } = useGeolocation();
