@@ -16,6 +16,8 @@ import LikeButton from "./LikeButton";
 import Image from "next/image";
 import { useUserStore } from "@/stores/userStore";
 import { FaEdit } from "react-icons/fa";
+import { PATHS } from "@/constants/path";
+import Link from "next/link";
 
 interface CommunityDetailPageProps {
   params: {
@@ -111,24 +113,28 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
       <div className="mt-2 px-4 pb-4 border-b border-stroke_gray">
         <div className="flex items-center space-x-2 border-b border-stroke_gray pb-2">
           {/**유저 프로필 이미지*/}
-          <div className="w-[45px] h-[45px] rounded-full overflow-hidden border border-medium_gray">
-            <Image
-              src={post?.author.imageUrl || "/images/profile_icon.png"}
-              alt="프로필 이미지"
-              width={45}
-              height={45}
-              objectFit="cover"
-            />
-          </div>
+          <Link href={PATHS.USER_INFO(post?.author.id)}>
+            <div className="w-[45px] h-[45px] rounded-full overflow-hidden border border-medium_gray">
+              <Image
+                src={post?.author.imageUrl || "/images/profile_icon.png"}
+                alt="프로필 이미지"
+                width={45}
+                height={45}
+                objectFit="cover"
+              />
+            </div>
+          </Link>
           <div className="flex-1">
             <div className="flex justify-between items-center">
-              <div className="flex gap-2">
-                {/**유저 닉네임*/}
-                <div className="text-md font-bold">  {post?.author?.nickname || "익명"}</div>
-                <button className="text-accent_orange text-sm flex items-center">
-                  채팅
-                </button>
-              </div>
+              <Link href={PATHS.USER_INFO(post?.author.id)}>
+                <div className="flex gap-2">
+                  {/**유저 닉네임*/}
+                  <div className="text-md font-bold">  {post?.author?.nickname || "익명"}</div>
+                  <button className="text-accent_orange text-sm flex items-center">
+                    채팅
+                  </button>
+                </div>
+              </Link>
               {/**본인이면 수정, 삭제버튼 */}
               <div>
                 {post?.author?.id === userId && (
@@ -214,6 +220,6 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
       </div>
 
       <Footer />
-    </div>
+    </div >
   );
 }

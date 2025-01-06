@@ -24,4 +24,6 @@ export const PATHS = {
 
   CHATTING_LIST: "/chat",
   CHATTING_DETAIL: (id: string) => `/chat/${id}`,
+
+  USER_INFO: (userId: number) => `/user/${userId}`,
 } as const;
