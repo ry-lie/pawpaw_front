@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -55,6 +56,11 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("");
+
+  const router = useRouter();
+  const handleEditPost = (postId: number) => {
+    router.push(`/community/edit/${postId}`);
+  };
 
   useEffect(() => {
     const loadPost = async () => {
@@ -128,7 +134,11 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
                 {post?.author?.id === userId && (
                   <div className="flex gap-2 justify-end mb-0.5">
                     {/* 수정 버튼 */}
-                    <button aria-label="수정">
+                    <button 
+                      onClick={() => {    
+                        handleEditPost(postId)}} 
+                      aria-label="수정"
+                    >
                       <FaEdit className="text-gray-400 w-5 h-5" />
                     </button>
                     {/* 삭제 버튼 */}

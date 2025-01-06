@@ -20,6 +20,7 @@ export const PATHS = {
   COMMUNITY: "/community",
   COMMUNITY_DETAIL: (id: number) => `/community/${id}`,
   COMMUNITY_WRITE: "/community/write",
+  COMMUNITY_EDIT: (id: number) => `/community/edit/${id}`,
 
   CHATTING_LIST: "/chat",
   CHATTING_DETAIL: (id: string) => `/chat/${id}`,
