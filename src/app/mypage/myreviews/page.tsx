@@ -1,11 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { PATHS } from "@/constants/path";
-import Image from "next/image";
-import PlusButton from "@/components/PlusButton";
+import React, { useState, useEffect } from "react";
 import Footer from "@/components/Footer";
-import BoardHeartIcon from "@/assets/icons/boardHeart_icon.png"
 import useMediaQuery from "@/hooks/useMediaQuery";
 import { RiThumbUpFill } from "react-icons/ri";
 import { getMyReviews } from "@/lib/api/user";
@@ -21,31 +17,59 @@ export type MyReviews = {
 }
 
 export default function MyReviewsPage() {
+  // 로그인
+  const {initialize, id, isLoggedIn} = useUserStore();
+  useEffect(()=>{
+    initialize(); // 사용자 정보 불러오기
+  }, []);
 
-  // 임시 게시글들
-  const reviews = [
-    {
-      reviewId: 1,
-      placeId: 2,
-      placeName: "두나의 하루",
-      title: "여기 좋아요",
-      content: "선생님 완전 친절쓰",
-      "isLikeClicked": true,
-    },
-    {
-      reviewId: 2,
-      placeId: 2,
-      placeName: "두나의 하루",
-      title: "여기 가지 마시오",
-      content: "선생님 완전 불친절해요,,,,, 비추추추추추추추ㅜㅊ",
-      "isLikeClicked": false,
-    },
-  ];
+  const [reviews, setReviews] = useState<MyReviews[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [cursor, setCursor] = useState<number | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const take = 7;
+
+  const fetchReviews = async (isLoadMore=false) => {
+    if(isLoading || !isLoggedIn || !id) return;
+    setIsLoading(true);
+    setError(null);
+    try{
+      const response = await getMyReviews(id, cursor, take);
+      const fetchedReviews = response.body.data.reviews;
+
+      if(fetchedReviews.length<take){setHasMore(false);}
+      if(isLoadMore) {
+        setReviews((prev)=> [...prev, ...fetchedReviews]);
+      } else {
+        setReviews(fetchedReviews);
+      }
+      if(fetchedReviews.length>0){
+        setCursor(fetchedReviews[fetchedReviews.length-1].id);
+      }
+    } catch (error) {
+      setError("리뷰를 불러오는 중 문제가 발생했습니다.");
+      console.error("내가 쓴 리뷰 데이터를 가져오는 중 오류 발생:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 사용자 ID가 변경될 때 상태 초기화
+  useEffect(() => {
+    console.log("useEffect triggered:", { isLoggedIn, id });
+    if (isLoggedIn && id) {
+      setReviews([]);
+      setCursor(null);
+      setHasMore(true);
+      fetchReviews();
+    }
+  }, [isLoggedIn, id]);
 
   // 글자수 제한
   const isMobile = useMediaQuery("(max-width: 425px)");
   const titleMaxLength = isMobile ? 12 : 20;
-  const contentMaxLength = isMobile ? 12 : 29;
+  const contentMaxLength = isMobile ? 18 : 29;
 
   return (
     <div className="mt-10 p-4 xs:p-6">

@@ -34,7 +34,7 @@ export const getBoardList = async (
 
 // 4. 게시글 생성
 // 게시글 작성 Payload 인터페이스
-export interface CreatePostPayload {
+export interface PostPayload {
   imageList: File[]; // 이미지 배열 (최대 4장)
   category: string;  // 카테고리 (예: "LIFE")
   title: string;     // 게시글 제목 (최대 30자)
@@ -42,7 +42,7 @@ export interface CreatePostPayload {
 }
 
 // 게시글 작성 API 함수
-export const createPostAPI = async (payload: CreatePostPayload) => {
+export const createPostAPI = async (payload: PostPayload) => {
   const formData = new FormData();
 
   // 이미지 파일 추가
@@ -70,6 +70,23 @@ export const fetchBoardDetail = async (postId: number) => {
 };
 
 // 6. 게시글 수정
+export const updatePostAPI = async (postId:number, payload: PostPayload) => {
+  const formData = new FormData();
+
+  payload.imageList.forEach((image, index) => {
+    formData.append("imageList", image);
+  });
+  formData.append("category", payload.category);
+  formData.append("title", payload.title);
+  formData.append("content", payload.content);
+
+  const response = await axiosInstance.put(`/boards/${postId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
 
 // 7. 게시글 삭제
 export const deletePost = async (postId: number) => {
