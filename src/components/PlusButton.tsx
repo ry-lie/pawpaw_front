@@ -15,7 +15,7 @@ export default function PlusButton({ onClick, href }: PlusButtonProps) {
     return (
       <Link href={href}>
         <button
-          className="fixed bottom-14 right-3 p-4"
+          className="fixed bottom-14 xs:right-[430px] right-3 p-4"
         >
           <div className="shadow-md rounded-full">
             <Image

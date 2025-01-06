@@ -45,7 +45,7 @@ export default function ReviewDetail({
   return (
 
     <div className="mt-10 p-5">
-      <div className="flex items-center space-x-4 border-b-2 pb-2">
+      <div className="flex items-center space-x-2 border-b-2 pb-2">
         <Link href={PATHS.USER_INFO(review?.author.id)}>
           <div className="w-[45px] h-[45px] rounded-full overflow-hidden border border-medium_gray">
             <Image
@@ -58,7 +58,7 @@ export default function ReviewDetail({
           </div>
         </Link>
         <div className="flex-1">
-          <div className="flex justify-between ">
+          <div className="flex justify-between">
             <div className="text-md font-bold flex items-center">
               <Link href={PATHS.USER_INFO(review?.author.id)}>
                 <div>{review?.author.nickname}</div>
@@ -66,7 +66,7 @@ export default function ReviewDetail({
             </div>
             <div>
               {review?.author.id === id && (
-                <div className="flex gap-3 justify-end">
+                <div className="flex gap-3 justify-end mb-2">
                   <Link href={PATHS.REVIEW_MODIFY(placeId, reviewId)}>
                     <FaEdit className="text-gray-400 w-5 h-5" />
                   </Link>
@@ -82,11 +82,11 @@ export default function ReviewDetail({
 
 
       </div>
-      <div className="mt-6">
+      <div className="mt-6 px-3">
         <div className="flex">
           <div className="flex items-start">
             {review?.isLikeClicked ? (
-              <RiThumbUpFill className="text-primary w-7 h-7 mr-1" aria-label="추천" />
+              <RiThumbUpFill className="text-primary w-6 h-6 mr-1 mb-1" aria-label="추천" />
             ) : null}
           </div>
           <h1 className="text-lg font-bold flex">{review?.title}</h1>

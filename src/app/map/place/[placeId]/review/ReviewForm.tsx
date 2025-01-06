@@ -69,9 +69,9 @@ export default function ReviewForm({ initialValues, onSubmit }: ReviewFormProps)
           disabled={!isValid || isSubmitting}
           isLoading={isSubmitting}
           btnType="submit"
-          containerStyles="text-[16px] font-medium ml-auto px-2 mt-2"
+          containerStyles="!text-base text-[16px] font-medium ml-auto px-2 py-1 mt-2"
         >
-          {initialValues ? "수정" : "작성"}
+          {initialValues ? "수정 완료" : "작성 완료"}
         </Button>
       </div>
     </form>

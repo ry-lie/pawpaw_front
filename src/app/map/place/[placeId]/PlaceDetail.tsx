@@ -57,7 +57,7 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
           <div className="flex items-center gap-2 mb-4">
             <h2 className="text-lg font-bold">{placeDetails.name}</h2>
             <div className="flex items-center gap-1">
-              <RiThumbUpFill className="text-primary w-4 h-4" aria-label="추천" />
+              <RiThumbUpFill className="text-primary w-4 h-4 mb-0.5" aria-label="추천" />
               <span className="text-[14px] xs:text-[16px] font-semibold text-primary">{likeCount}</span>
             </div>
           </div>
@@ -70,10 +70,10 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
           <hr className="my-4" />
           {/* 리뷰컨테이너*/}
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <h2 className="text-lg font-bold">리뷰</h2>
+            <div className="flex items-center gap-1 mb-2">
+              <h2 className="xs:text-lg text-base font-bold">리뷰</h2>
               <Link href={PATHS.REVIEW_WRITE(placeId)}>
-                <Image src={PlusIcon} alt="리뷰추가" width={20} height={20} onClick={closeModal} />
+                <Image src={PlusIcon} alt="리뷰추가" width={20} height={20} onClick={closeModal} className="w-4 h-4 xs:w-5 xs:h-5 mb-1"/>
               </Link>
             </div>
             {/* 리뷰*/}

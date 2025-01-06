@@ -5,15 +5,16 @@ import BasicProfile from "@/assets/icons/profile_icon.png";
 import Image from "next/image";
 import Input from "@/components/Input";
 import { useUserStore } from "@/stores/userStore";
+import { getUser } from "@/lib/api/user";
 
 
 export default function ChangeImage() {
   const [profileImageFile, setProfileImageFile] = useState<File|null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState<string|null>(null);
+  const [userEmail, setUserEmail] = useState<string|null>(null);
+  const currentUserId = useUserStore((state)=>state.id);
 
   //유저정보 가져오기
-  const currentUser = useUserStore((state)=>state.id);
-  console.log("로그인된 사용자 이메일 : ",  currentUser)
   
   const handleProfileImageChange =  (e:React.ChangeEvent<HTMLInputElement>)=>{
     const file = e.target.files?.[0];
@@ -28,6 +29,20 @@ export default function ChangeImage() {
   };
 
   useEffect(()=>{
+    const fetchUserEmail = async()=>{
+      if(currentUserId){
+        try{
+          const email = await getUser(currentUserId);
+          setUserEmail(email);
+
+        }catch(e){
+          console.error("사용자의 아이디를 가져오지 못했습니다.",e)
+        }
+
+      }
+    }
+    fetchUserEmail();
+
     return() => {
       if(profileImageUrl){
         URL.revokeObjectURL(profileImageUrl)
@@ -55,7 +70,7 @@ export default function ChangeImage() {
 className="hidden"
         onChange={handleProfileImageChange}
       /> 
-      <div className="text-base mt-2">{currentUser}</div>
+      <div className="text-base mt-2">{userEmail}</div>
     </div>
   );
 }

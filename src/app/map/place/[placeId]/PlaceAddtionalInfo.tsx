@@ -38,7 +38,7 @@ export function PlaceAdditionalInfo({
         <span className="whitespace-nowrap">운영시간 :</span>
         <span className="ml-2 break-words">{placeDetails?.openingHour}</span>
         <button
-          className="ml-2 text-strong_gray"
+          className="mr-3.5 text-strong_gray"
           onClick={toggleScheduleVisibility}
         >
           {isScheduleVisible ? <IoIosArrowUp /> : <IoIosArrowDown />}

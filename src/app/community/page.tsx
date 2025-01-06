@@ -37,12 +37,12 @@ export default function CommunityPage() {
   const fetchPosts = async (isLoadMore = false) => {
     if (isLoading) return;
 
-
-
     setIsLoading(true);
     try {
       const categoryKey = categoryMap[selectedCategory] || ""; // 매핑된 카테고리 값 사용
-      const response = await getBoardList(cursor, take, categoryKey);
+      const currentCursor = isLoadMore ? cursor : null; // 카테고리 변경 시 커서를 초기화
+
+      const response = await getBoardList(currentCursor, take, categoryKey);
       const fetchedPosts = response.data.body.data.boardList;
 
       if (fetchedPosts.length < take) {
@@ -52,11 +52,13 @@ export default function CommunityPage() {
       if (isLoadMore) {
         setPosts((prev) => [...prev, ...fetchedPosts]);
       } else {
-        setPosts(fetchedPosts);
+        setPosts(fetchedPosts); // 카테고리 변경 시 이전 데이터를 덮어씌움
       }
 
       if (fetchedPosts.length > 0) {
-        setCursor(fetchedPosts[fetchedPosts.length - 1].id);
+        setCursor(fetchedPosts[fetchedPosts.length - 1].id); // 더보기 클릭 시 커서 업데이트
+      } else {
+        setCursor(null); // 더 이상 게시물이 없을 경우 커서를 null로 설정
       }
     } catch (error) {
       console.error("게시글을 가져오는 중 오류 발생:", error);
@@ -118,7 +120,7 @@ export default function CommunityPage() {
         <div className="space-y-2">
           {filteredPosts.map((post) => (
             <Link href={PATHS.COMMUNITY_DETAIL(post.id)} key={post.id} >
-              <div className="p-2 xs:p-3 border rounded-md bg-white">
+              <div className="mb-2 p-2 xs:p-3 border rounded-md bg-white">
                 <div className="flex">
                   {/* 이미지 */}
                   <Image

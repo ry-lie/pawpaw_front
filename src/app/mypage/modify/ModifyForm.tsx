@@ -102,7 +102,7 @@ export default function ModifyForm() {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-1">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-2">
         닉네임
         <Input
           type="string"
@@ -115,12 +115,12 @@ export default function ModifyForm() {
         >
           <Button
             onClick={handleNicknameCheck}
-            containerStyles="!text-base font-normal border bg-transparent !text-primary border-solid border-primary hover:!text-white"
+            containerStyles="!text-sm font-medium border bg-transparent !text-primary border-solid border-primary hover:!text-white py-0.5 px-1"
           >
             중복확인
           </Button>
         </Input>
-        <div>
+        <div className="space-y-2">
           <Input
             label="비밀번호"
             id="password"
@@ -175,7 +175,7 @@ export default function ModifyForm() {
         <div className="space-x-10 mt-10 flex justify-center pt-5">
           <Button
             btnType="button"
-            containerStyles="bg-stroke_gray w-20 h-10"
+            containerStyles="!text-lg !font-semibold bg-stroke_gray w-16 h-8"
             disabled={isLoading}
           >
             <Link href={"/mypage"}>취소</Link>
@@ -183,7 +183,7 @@ export default function ModifyForm() {
           <Button
             btnType="submit"
             disabled={DisabledBtn}
-            containerStyles="w-20 h-10"
+            containerStyles="!text-lg !font-semibold w-16 h-8"
           >
             확인
           </Button>
