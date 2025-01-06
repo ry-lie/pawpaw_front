@@ -1,14 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ArrowBack from "@/assets/icons/arrowBack.png";
 import { handleImageUploading } from "@/utils/imageUpload";
-import { createPostAPI, CreatePostPayload } from "@/lib/api/board";
+import { createPostAPI, updatePostAPI, PostPayload, fetchBoardDetail } from "@/lib/api/board";
 import { errorToast, successToast } from "@/utils/toast";
 
-export default function CommunityWritePage() {
+export default function CommunityWritePage({
+  mode = "create", // 기본값은 작성 모드
+  postId,
+}: {
+  mode: "create" | "edit";
+  postId?: number; // 수정 모드일 경우 게시글 ID
+}) {  
   const router = useRouter();
   const [uploadedImages, setUploadedImages] = useState<
     { url: string; isPrimary: boolean; file: File }[]
@@ -16,6 +22,31 @@ export default function CommunityWritePage() {
   const [category, setCategory] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+
+  // 게시글 데이터 로드
+  useEffect(() => {
+    if (mode === "edit" && postId) {
+      const loadPostData = async () => {
+        try {
+          const response = await fetchBoardDetail(postId); // 게시글 데이터 불러오기
+          const post = response.data.body.data;
+          // 상태 업데이트
+          setUploadedImages(
+            post.imageList.map((url: string) => ({
+              url,
+              file: null, // 기존 이미지는 URL로 처리
+            }))
+          );
+          setCategory(post.category);
+          setTitle(post.title);
+          setContent(post.content);
+        } catch (error) {
+          errorToast("게시글 데이터를 불러오는 데 실패했습니다.");
+        }
+      };
+      loadPostData();
+    }
+  }, [mode, postId]);
 
   const handleChangeImage = handleImageUploading((file) => {
     if (uploadedImages.length >= 4) {
@@ -28,6 +59,7 @@ export default function CommunityWritePage() {
     ]);
   });
 
+  // 게시글 작성 or 수정
   const handleSubmit = async () => {
     // 유효성 검사
     const isTitleValid = title.trim().length > 0 && title.trim().length <= 30;
@@ -39,18 +71,24 @@ export default function CommunityWritePage() {
       errorToast("입력한 정보를 확인해주세요.");
       return;
     }
-
-    const payload: CreatePostPayload = {
+    const payload: PostPayload = {
       imageList: uploadedImages.map((image) => image.file),
       category,
       title,
       content,
     };
-
     try {
-      const response = await createPostAPI(payload);
-      successToast("게시글이 작성되었습니다!");
-      router.push(`/community/${response.data.id}`); // 작성 완료 후 해당 게시글 페이지로 이동
+      if (mode === "create") {
+        // 작성 모드
+        const response = await createPostAPI(payload);
+        successToast("게시글이 작성되었습니다!");
+        router.push(`/community/${response.data.id}`);
+      } else if (mode === "edit" && postId) {
+        // 수정 모드
+        await updatePostAPI(postId, payload);
+        successToast("게시글이 수정되었습니다!");
+        router.push(`/community/${postId}`);
+      }
     } catch (error) {
       errorToast("게시글 작성에 실패했습니다. 다시 시도해주세요.");
     }
