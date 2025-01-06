@@ -3,7 +3,7 @@ import axiosInstance from "@/lib/axios";
 interface UserInfo {
   nickname: string;
   canWalkingMate: boolean;
-  image?: string;
+  image?: string|File;
   password?: string;
   newPassword?: string;
 }
@@ -12,6 +12,9 @@ interface userInfoRes {
   canWalkingMate: boolean;
   nickname: string;
   id: number;
+  data? : {
+    imageUrl?:string
+  }
 }
 
 // 마이페이지 (사용자와 반려동물의 정보를 조회)
@@ -23,35 +26,36 @@ export const getMyPage = async (id: number) => {
 //현재 비밀번호 수정 + 산책메이트 on/off + 사용자 닉네임 수정
 export const updateUser = async (
   id: number,
+  
   data: Partial<UserInfo>,
 ): Promise<userInfoRes> => {
   const formData = new FormData();
 
-  //닉네임
+  // 닉네임
   if (data.nickname) {
     formData.append("nickname", data.nickname);
   }
 
-  //산책메이트 on/off
+  // 산책 메이트 on/off
   if (data.canWalkingMate) {
     formData.append("canWalkingMate", String(data.canWalkingMate));
   }
 
-  //사진
-  if (data.image) {
+  // 사진
+  if (data.image instanceof File) {
     formData.append("image", data.image);
   }
 
-  //비밀번호
+  // 비밀번호
   if (data.password) {
     formData.append("password", data.password);
   }
 
-  //새로운비밀번호
+  // 새로운 비밀번호
   if (data.newPassword) {
     formData.append("newPassword", data.newPassword);
   }
-  
+
   const response = await axiosInstance.put(`/users/${id}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -61,10 +65,15 @@ export const updateUser = async (
 };
 
 export const getUser = async (id: number) => {
-  const response = await axiosInstance.get(`/users/${id}`);
-  const { email } = response.data;
-  return email
+  try {
+    const response = await axiosInstance.get(`/users/${id}`);
+    return response.data.body?.data; // 정확한 경로로 email 추출
+  } catch (error) {
+    console.error("API 요청 실패:", error);
+    throw error;
+  }
 };
+
 
 // 내가 쓴 글 조회 (/mypage/myposts)
 export const getMyPosts = async (
