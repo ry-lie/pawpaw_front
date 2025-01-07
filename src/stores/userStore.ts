@@ -5,20 +5,22 @@ import { create } from "zustand";
 interface UserState {
   id: number;
   nickname: string;
+  imageUrl: string;
   canWalkingMate: boolean;
   isLoggedIn: boolean;
   login: (user: {
     id: number;
     nickname: string;
+    imageUrl: string;
     canWalkingMate: boolean;
   }) => void; // 로그인
   logout: () => void; // 로그아웃
   initialize: () => void; // 초기화
 }
-
 export const useUserStore = create<UserState>((set) => ({
   id: 0,
   nickname: "",
+  imageUrl: "",
   isLoggedIn: false,
   canWalkingMate: false,
   // 로그인

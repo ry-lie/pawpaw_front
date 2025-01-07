@@ -10,16 +10,9 @@ import {
 import { errorToast, successToast, warningToast } from "@/utils/toast";
 import { isAxiosError } from "axios";
 
-// 폼 필드 타입 정의
-interface FormFields {
-  email: string;
-  nickname: string;
-  emailCode: string;
-}
-
 interface DuplicateCheckProps {
-  getValues: UseFormGetValues<FormFields>;
-  setError: UseFormSetError<FormFields>;
+  getValues: UseFormGetValues<any>;
+  setError: UseFormSetError<any>;
 }
 
 export const useDuplicateCheck = ({

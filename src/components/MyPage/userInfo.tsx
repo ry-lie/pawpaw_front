@@ -5,9 +5,13 @@ import Link from "next/link";
 import { PATHS } from "@/constants/path";
 import Image from "next/image";
 import BasicProfile from "@/assets/icons/profile_icon.png";
+import { toggleWorkingMate } from "@/lib/api/user";
+import { useUserStore } from "@/stores/userStore";
+import { urlToFileWithAxios } from "@/utils/urlToFile";
 
 interface UserInfoProps {
   userInfo: {
+    id: number;
     nickname: string;
     canWalkingMate: boolean;
     imageUrl?: string; // 프로필 이미지 URL
@@ -23,7 +27,26 @@ export default function UserInfo({ userInfo, isMyInfo = true }: UserInfoProps) {
   return isMobile ? <MobileUserInfo userInfo={userInfo} isMyInfo={isMyInfo} /> : <DesktopUserInfo userInfo={userInfo} isMyInfo={isMyInfo} />;
 };
 
+// 워킹메이트 on/off 토글 버튼 클릭
+const handleToggleWorkingMate = async (userId: number, imageUrl: string | undefined, workingMateState: boolean) => {
+
+  let file: File | undefined;
+  if (imageUrl) {
+    try {
+      file = await urlToFileWithAxios(imageUrl, "file.jpg");
+    } catch {
+      file = undefined;
+    }
+  } else {
+    file = undefined;
+  }
+
+  await toggleWorkingMate(userId, file, workingMateState);
+};
+
 const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
+  const userId = useUserStore((state) => state.id);
+
   return (
     <section className="w-full max-w-mobile h-36 bg-white border border-stroke_gray rounded-lg p-4 flex gap-4 items-center mb-3">
       {/* 유저 프로필 이미지 */}
@@ -66,8 +89,7 @@ const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
             className="text-xs bg-primary text-white px-3 py-0.5 rounded-lg font-semibold"
             style={{ width: "fit-content" }}
             onClick={() => {
-              // 버튼 클릭 시 동작할 로직 추가
-              console.log("내 정보 수정 버튼 클릭");
+              handleToggleWorkingMate(userId, userInfo?.imageUrl, !userInfo.canWalkingMate)
             }}
           >
             {userInfo?.canWalkingMate ? "산책메이트 가능" : "산책메이트 불가능"}
@@ -92,6 +114,7 @@ const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
 };
 
 const MobileUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
+  const userId = useUserStore((state) => state.id);
   return (
     <section className="w-full h-auto bg-white border border-stroke_gray rounded-lg px-3 pt-3 py-2 flex flex-col gap-2 items-start mb-3">
       <div className="flex">
@@ -118,8 +141,7 @@ const MobileUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
               className="text-xs bg-primary text-white px-3 py-0.5 rounded-lg font-semibold"
               style={{ width: "fit-content" }}
               onClick={() => {
-                // 버튼 클릭 시 동작할 로직 추가
-                console.log("내 정보 수정 버튼 클릭");
+                handleToggleWorkingMate(userId, userInfo.imageUrl, !userInfo.canWalkingMate)
               }}
             >
               {userInfo?.canWalkingMate ? "산책메이트 가능" : "산책메이트 불가능"}
