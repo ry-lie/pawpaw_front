@@ -17,6 +17,7 @@ import { useUserStore } from "@/stores/userStore";
 import { FaEdit } from "react-icons/fa";
 import { PATHS } from "@/constants/path";
 import Link from "next/link";
+import { Post } from "@/types/boards";
 
 interface CommunityDetailPageProps {
   params: {
@@ -24,32 +25,6 @@ interface CommunityDetailPageProps {
   };
 }
 
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  likeCount: number;
-  isLikeClicked: boolean;
-  author: {
-    id: number;
-    nickname: string;
-    imageUrl?: string;
-  };
-  imageList: { url: string }[];
-  commentList: CommentData[];
-}
-
-interface CommentData {
-  id: number;
-  author: {
-    id: number;
-    nickname: string;
-    imageUrl?: string;
-  }
-  createdAt: string;
-  content: string;
-}
 
 export default function CommunityDetailPage({ params }: CommunityDetailPageProps) {
   const { postId } = params;
@@ -166,6 +141,8 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
                 postId={postId}
                 isLiked={post.isLikeClicked}
                 onLikeToggle={(newIsLiked) => {
+
+                  // 사용자 ID가 있을 경우 기존 로직 실행
                   setPost((prevPost) => {
                     if (!prevPost) return null;
 
@@ -180,6 +157,7 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
                     };
                   });
                 }}
+                disabled={!userId} // userId 없으면 버튼 비활성화
               />
               <div className="text-sm xs:text-lg">{post?.likeCount || 0}</div>
             </div>
@@ -217,6 +195,9 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="댓글을 입력하세요"
+            disabled={!userId}
+            tooltipMessage="로그인을 먼저 하세요." // 툴팁 메시지
+
           />
           <Button
             containerStyles="w-14 !text-sm !font-medium"

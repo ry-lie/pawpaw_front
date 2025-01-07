@@ -1,46 +1,58 @@
 "use client";
 
 import { GoHeart, GoHeartFill } from "react-icons/go";
-import { toggleLike } from "@/lib/api/board";
-import { errorToast } from "@/utils/toast";
 import { useState } from "react";
 
-interface LikeButtonProps {
+export default function LikeButton({
+  postId,
+  isLiked,
+  onLikeToggle,
+  disabled,
+}: {
   postId: number;
   isLiked: boolean;
-  onLikeToggle: (isLiked: boolean) => void;
-}
-
-export default function LikeButton({ postId, isLiked, onLikeToggle }: LikeButtonProps) {
-  const [optimisticLiked, setOptimisticLiked] = useState(isLiked);
-  const [loading, setLoading] = useState(false);
-
-  const handleClick = async () => {
-    if (loading) return; // 중복 클릭 방지
-    setLoading(true);
-
-    // 낙관적 업데이트
-    setOptimisticLiked(!optimisticLiked);
-    onLikeToggle(!optimisticLiked);
-
-    try {
-      await toggleLike(postId, !optimisticLiked);
-    } catch (error) {
-      // 요청 실패 시 롤백
-      setOptimisticLiked(isLiked);
-      onLikeToggle(isLiked);
-    } finally {
-      setLoading(false);
-    }
-  };
+  onLikeToggle: (newIsLiked: boolean) => void;
+  disabled?: boolean; // 버튼 비활성화 옵션
+}) {
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <button onClick={handleClick} className="focus:outline-none" disabled={loading}>
-      {optimisticLiked ? (
-        <GoHeartFill className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
-      ) : (
-        <GoHeart className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
+    <div className="relative inline-block">
+      {/* 버튼 컨테이너 */}
+      <div
+        className="relative"
+        onMouseEnter={() => {
+          if (disabled) setShowTooltip(true);
+        }}
+        onMouseLeave={() => setShowTooltip(false)}
+      >
+        <button
+          onClick={() => {
+            if (!disabled) {
+              onLikeToggle(!isLiked);
+            }
+          }}
+          className={`focus:outline-none ${disabled ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+        >
+          {isLiked ? (
+            <GoHeartFill className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
+          ) : (
+            <GoHeart className="w-8 h-8 xs:w-10 xs:h-10 text-[#F9595F]" />
+          )}
+        </button>
+      </div>
+
+      {/* 툴팁 */}
+      {showTooltip && (
+        <div
+          className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-primary text-white text-xs rounded-md px-2 py-1 shadow-md z-[100]"
+          style={{ whiteSpace: "nowrap" }}
+          role="tooltip"
+        >
+          로그인을 먼저 하세요
+        </div>
       )}
-    </button>
+    </div>
   );
 }
