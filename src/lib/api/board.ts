@@ -30,6 +30,13 @@ export const getBoardList = async (
   take: number,
   category: string | null,
 ) => {
+  // params 타입 정의
+  interface BoardListParams {
+    cursor: number | null;
+    take: number;
+    category?: string; // 선택적 속성
+  }
+
   // 기본 params 객체 생성
   const params: BoardListParams = {
     cursor: cursor || null, // 커서 (시작 ID)
@@ -129,8 +136,7 @@ export const updateComment = async (
 
 /*좋아요*/
 export const toggleLike = async (postId: number, newLikeState: boolean) => {
-  axiosInstance.post("/api/like", {
-    postId,
+  axiosInstance.put(`/boards/${postId}/isLikeClicked`, {
     isLikeClicked: newLikeState,
   });
 };

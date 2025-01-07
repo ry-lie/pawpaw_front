@@ -10,7 +10,7 @@ export const PATHS = {
   MY_REVIEWS: "/mypage/myreviews",
 
   MAP: "/map",
-  WALKMATE: "/map/walkmate",
+  WALKMATE: "/chat/walkmate",
   REVIEW_DETAIL: (placeId: number, reviewId: number) =>
     `/map/place/${placeId}/review/${reviewId}`,
   REVIEW_WRITE: (placeId: number) => `/map/place/${placeId}/review/write`,

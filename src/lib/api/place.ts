@@ -11,8 +11,16 @@ export const fetchNearbyPlaces = async ({
   latitude: number;
   longitude: number;
 }) => {
-  // 조건부로 params 객체 생성
-  const params: Record<string, any> = {
+  // params 타입 정의
+  interface NearbyPlacesParams {
+    radius: number;
+    latitude: number;
+    longitude: number;
+    category?: string;
+  }
+
+  // params 객체 생성
+  const params: NearbyPlacesParams = {
     radius,
     latitude,
     longitude,

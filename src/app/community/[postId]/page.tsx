@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
@@ -18,6 +17,7 @@ import { useUserStore } from "@/stores/userStore";
 import { FaEdit } from "react-icons/fa";
 import { PATHS } from "@/constants/path";
 import Link from "next/link";
+import { Post } from "@/types/boards";
 
 interface CommunityDetailPageProps {
   params: {
@@ -25,32 +25,6 @@ interface CommunityDetailPageProps {
   };
 }
 
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  createdAt: string;
-  likeCount: number;
-  isLikeClicked: boolean;
-  author: {
-    id: number;
-    nickname: string;
-    imageUrl?: string;
-  };
-  imageList: { url: string }[];
-  commentList: CommentData[];
-}
-
-interface CommentData {
-  id: number;
-  author: {
-    id: number;
-    nickname: string;
-    imageUrl?: string;
-  }
-  createdAt: string;
-  content: string;
-}
 
 export default function CommunityDetailPage({ params }: CommunityDetailPageProps) {
   const { postId } = params;
@@ -59,23 +33,18 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
   const [loading, setLoading] = useState(true);
   const [comment, setComment] = useState("");
 
-  const router = useRouter();
-  const handleEditPost = (postId: number) => {
-    router.push(`/community/edit/${postId}`);
+  const loadPost = async () => {
+    try {
+      const response = await fetchBoardDetail(postId);
+      setPost(response?.data?.body?.data);;
+      setLoading(false);
+    } catch (err) {
+      console.error("게시물 로드 실패:", err);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    const loadPost = async () => {
-      try {
-        const response = await fetchBoardDetail(postId);
-        setPost(response?.data?.body?.data);
-        setLoading(false);
-      } catch (err) {
-        console.error("게시물 로드 실패:", err);
-        setLoading(false);
-      }
-    };
-
     loadPost();
   }, [postId]);
 
@@ -140,13 +109,10 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
                 {post?.author?.id === userId && (
                   <div className="flex gap-2 justify-end mb-0.5">
                     {/* 수정 버튼 */}
-                    <button 
-                      onClick={() => {    
-                        handleEditPost(postId)}} 
-                      aria-label="수정"
-                    >
+                    <Link href={PATHS.COMMUNITY_EDIT(postId)}>
                       <FaEdit className="text-gray-400 w-5 h-5" />
-                    </button>
+                    </Link>
+
                     {/* 삭제 버튼 */}
                     <button onClick={() => handleDeletePost(postId)} aria-label="삭제">
                       <RiDeleteBinLine className="text-gray-400 w-5 h-5" />
@@ -169,13 +135,34 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
               <p className="mt-4 text-sm xs:text-base text-gray-700 break-words"> {post?.content || "내용 없음"}</p>
             </div>
             {/**좋아요 버튼*/}
+            {/**좋아요 버튼 및 좋아요 카운터 섹션 */}
             <div className="flex flex-col justify-center items-center mt-10">
-              <LikeButton postId={postId} isLiked={!!post?.isLikeClicked} />
+              <LikeButton
+                postId={postId}
+                isLiked={post.isLikeClicked}
+                onLikeToggle={(newIsLiked) => {
+
+                  // 사용자 ID가 있을 경우 기존 로직 실행
+                  setPost((prevPost) => {
+                    if (!prevPost) return null;
+
+                    const updatedLikeCount = newIsLiked
+                      ? prevPost.likeCount + 1 // 좋아요 증가
+                      : prevPost.likeCount - 1; // 좋아요 감소
+
+                    return {
+                      ...prevPost,
+                      isLikeClicked: newIsLiked,
+                      likeCount: updatedLikeCount,
+                    };
+                  });
+                }}
+                disabled={!userId} // userId 없으면 버튼 비활성화
+              />
               <div className="text-sm xs:text-lg">{post?.likeCount || 0}</div>
             </div>
+
           </div>
-
-
         </div>
       </div>
 
@@ -208,6 +195,9 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="댓글을 입력하세요"
+            disabled={!userId}
+            tooltipMessage="로그인을 먼저 하세요." // 툴팁 메시지
+
           />
           <Button
             containerStyles="w-14 !text-sm !font-medium"
