@@ -3,7 +3,7 @@ import axiosInstance from "@/lib/axios";
 interface UserInfo {
   nickname: string;
   canWalkingMate: boolean;
-  image?: string|File;
+  image?: string | File;
   password?: string;
   newPassword?: string;
 }
@@ -12,13 +12,18 @@ interface userInfoRes {
   canWalkingMate: boolean;
   nickname: string;
   id: number;
-  data? : {
-    imageUrl?:string
-  }
+  data?: {
+    imageUrl?: string;
+  };
 }
 
 // 마이페이지 (사용자와 반려동물의 정보를 조회)
-export const getMyPage = async (id: number) => {
+export const getMyPage = async () => {
+  const response = await axiosInstance.get(`/users/my-pages`);
+  return response.data.body.data;
+};
+// 로그인 시 호출 (사용자와 반려동물의 정보를 조회) 위에꺼랑 통합 예정
+export const getMyInfo = async () => {
   const response = await axiosInstance.get(`/users/my-pages`);
   return response.data.body.data;
 };
@@ -26,7 +31,7 @@ export const getMyPage = async (id: number) => {
 //현재 비밀번호 수정 + 산책메이트 on/off + 사용자 닉네임 수정
 export const updateUser = async (
   id: number,
-  
+
   data: Partial<UserInfo>,
 ): Promise<userInfoRes> => {
   const formData = new FormData();
@@ -74,7 +79,6 @@ export const getUser = async (id: number) => {
   }
 };
 
-
 // 내가 쓴 글 조회 (/mypage/myposts)
 export const getMyPosts = async (
   id: number,
@@ -102,5 +106,28 @@ export const getMyReviews = async (
       take,
     },
   });
+  return response.data;
+};
+
+// 산책 메이트 여부 변경
+export const toggleWorkingMate = async (
+  userId: number,
+  imageUrl: File | undefined,
+  canWalkingMate: boolean,
+) => {
+  const formData = new FormData();
+
+  formData.append("userId", String(userId));
+  formData.append("canWalkingMate", String(canWalkingMate));
+  if (imageUrl) {
+    formData.append("image", imageUrl);
+  }
+
+  const response = await axiosInstance.put(`/users/`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
   return response.data;
 };

@@ -16,8 +16,8 @@ interface FormFields {
   password: string;
   newPassword: string;
   confirmPassword: string;
-  email: string; 
-  emailCode: string; 
+  email: string;
+  emailCode: string;
 }
 
 interface DuplicateCheckProps {

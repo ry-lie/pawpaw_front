@@ -16,9 +16,9 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 
 export default function MyPage() {
-  const [userInfo, setUserInfo] = useState<any>(null);  
+  const [userInfo, setUserInfo] = useState<any>(null);
   const [petContainers, setPetContainers] = useState<{ id: number; pet: any; isEditing: boolean; isNew: boolean }[]
->([]);  
+  >([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -34,7 +34,7 @@ export default function MyPage() {
     if (!isLoggedIn || !userId) return; // 로그인되지 않았거나 ID가 없을 경우 종료
     const fetchData = async () => {
       try {
-        const data = await getMyPage(userId);
+        const data = await getMyPage();
         // 유저 정보 추출
         const userInfo = {
           nickname: data.nickname,
@@ -107,25 +107,25 @@ export default function MyPage() {
       const mappedPetData = mapToServerData(newPet); // 데이터를 서버 요구사항에 맞게 변환  
       // POST 요청
       const addedPet = await addPetInfo(mappedPetData);
-  
+
       // 등록 후 전체 데이터 다시 조회
-      const updatedData = await getMyPage(userId);
+      const updatedData = await getMyPage();
       const newPetData = updatedData.petList.find((pet: any) => pet.id === addedPet.id);
-  
+
       setPetContainers((prev) =>
         prev.map((container) =>
           container.isNew
             ? {
-                ...container,
+              ...container,
+              id: addedPet.id,
+              pet: newPetData || {
+                ...newPet,
                 id: addedPet.id,
-                pet: newPetData || {
-                  ...newPet,
-                  id: addedPet.id,
-                  imageUrl: newPet.profileImage || PetProfile, // 기본 이미지
-                },
-                isEditing: false,
-                isNew: false,
-              }
+                imageUrl: newPet.profileImage || PetProfile, // 기본 이미지
+              },
+              isEditing: false,
+              isNew: false,
+            }
             : container
         )
       );
@@ -150,9 +150,9 @@ export default function MyPage() {
       // PUT 요청
       await updatePetInfo(id, mappedPetData);
       // 수정 후 데이터 다시 조회
-      const updatedData = await getMyPage(userId); // 유저 ID를 이용해 다시 데이터 조회
+      const updatedData = await getMyPage(); // 유저 ID를 이용해 다시 데이터 조회
       const updatedPetList = updatedData.petList.find((pet: any) => pet.id === id); // 해당 반려동물 정보만 추출
-  
+
       setPetContainers((prev) =>
         prev.map((container) =>
           container.id === id
@@ -207,25 +207,25 @@ export default function MyPage() {
         {/* 2. 반동소 컨테이너*/}
         <div className="flex items-center gap-1 justify-start ml-2">
           {/* 이미지 아이콘 */}
-          <Image 
-            src={PetLove} 
-            alt="petLove" 
-            className="h-6 w-6" 
+          <Image
+            src={PetLove}
+            alt="petLove"
+            className="h-6 w-6"
             width={24} // 6rem = 24px
-            height={24} 
-          />          
+            height={24}
+          />
           {/* 텍스트 */}
           <h2 className="text-lg font-bold text-gray-800 mr-0.5">내 반려동물을 소개합니다</h2>
           {/* 반려동물 추가 버튼 */}
           <button onClick={handleAddContainer} className="flex items-center text-xs bg-primary text-white px-2 pt-1 pb-0.5 rounded-xl font-semibold hover:bg-hover">
-          <Image 
-            src={PetAdd} 
-            alt="펫추가" 
-            className="h-2 w-2 mb-0.5 mr-0.5" 
-            width={8} // 2rem = 8px
-            height={8} 
-          />
-          반려동물 추가
+            <Image
+              src={PetAdd}
+              alt="펫추가"
+              className="h-2 w-2 mb-0.5 mr-0.5"
+              width={8} // 2rem = 8px
+              height={8}
+            />
+            반려동물 추가
           </button>
         </div>
         <div className="items-center">
@@ -245,8 +245,8 @@ export default function MyPage() {
               />
             ) : (
               <PetInfo
-              key={id}
-              pet={pet}
+                key={id}
+                pet={pet}
                 onEdit={() => handleEdit(id)}
                 onDelete={() => handleDelete(id)}
               />

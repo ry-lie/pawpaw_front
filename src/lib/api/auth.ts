@@ -14,7 +14,12 @@ export const loginAPI = async ({
   });
   return response;
 };
-
+// kakao 로그인
+export const kakaoLoginAPI = async () => {
+  const response = await axiosInstance.post(`/auth/login/kakao`);
+  alert(response);
+  return response.data.body.data.url;
+};
 // 로그아웃
 export const logoutAPI = async () => {
   const response = await axiosInstance.post(`/auth/logout`);

@@ -30,32 +30,32 @@ const ChatEventAlram = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // 알림 데이터 주기적으로 조회
-  useEffect(() => {
-    if (!isLoggedIn) return;
+  // useEffect(() => {
+  //   if (!isLoggedIn) return;
 
-    const fetchAlarms = async () => {
-      try {
-        const data = await currentAlram();
-        if (data.notificationList) {
-          data.notificationList.forEach((notification: NotificationProps) => {
-            addAlarm({
-              sender: notification.sender.nickname,
-              message: notification.message,
-              status: notification.isRead ? "accepted" : "pending",
-            });
-          });
-        }
-      } catch (error) {
-        console.error("알람 데이터를 가져오는 중 오류 발생:", error);
-        errorToast("알림을 불러오는 데 실패했습니다.");
-      }
-    };
+  //   const fetchAlarms = async () => {
+  //     try {
+  //       const data = await currentAlram();
+  //       if (data.notificationList) {
+  //         data.notificationList.forEach((notification: NotificationProps) => {
+  //           addAlarm({
+  //             sender: notification.sender.nickname,
+  //             message: notification.message,
+  //             status: notification.isRead ? "accepted" : "pending",
+  //           });
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error("알람 데이터를 가져오는 중 오류 발생:", error);
+  //       errorToast("알림을 불러오는 데 실패했습니다.");
+  //     }
+  //   };
 
-    fetchAlarms();
+  //   fetchAlarms();
 
-    const interval = setInterval(fetchAlarms, 5000); // 5초마다 알림 조회
-    return () => clearInterval(interval);
-  }, [isLoggedIn, addAlarm]);
+  //   const interval = setInterval(fetchAlarms, 5000); // 5초마다 알림 조회
+  //   return () => clearInterval(interval);
+  // }, [isLoggedIn, addAlarm]);
 
   const handleMessage = (event: MessageEvent) => {
     try {
