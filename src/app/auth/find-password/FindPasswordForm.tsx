@@ -13,6 +13,7 @@ import { PATHS } from "@/constants/path";
 type FindPasswordInput = {
   email: string;
   emailCode: string;
+  nickname: string;
 };
 
 export default function FindPasswordForm() {
@@ -20,7 +21,7 @@ export default function FindPasswordForm() {
     register,
     handleSubmit,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors },
     setError,
   } = useForm<FindPasswordInput>({ mode: "onChange" });
   const router = useRouter();
@@ -44,8 +45,9 @@ export default function FindPasswordForm() {
       await sendVerificationCode(email);
       setIsEmailSent(true);
       successToast("인증코드가 이메일로 발송되었습니다.");
-    } catch (e) {
-      errorToast("인증코드요청에 실패했습니다. 다시 시도해주세요.");
+    } catch {
+      errorToast("인증코드 요청에 실패했습니다. 다시 시도해주세요.");
+    
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +79,7 @@ export default function FindPasswordForm() {
       await temporaryPassword(email);
       successToast("임시 비밀번호가 이메일로 발송되었습니다.");
       router.push(PATHS.LOGIN);
-    } catch (e) {
+    } catch {
       errorToast("임시 비밀번호 발급에 실패하였습니다. 다시 시도해주세요.");
     } finally {
       setIsLoading(false);

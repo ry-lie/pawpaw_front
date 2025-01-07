@@ -32,9 +32,9 @@ export default function ChatRoomPage() {
     const roomId = [sender, receiver].sort().join("-");
     socket.on("connect", () => {
       console.log("소켓 연결 성공");
-      socket.emit("join", { roomId: "room1", message: sender });
+      socket.emit("join", { roomId, message: sender });
     });
-
+  
     socket.on("join", (data) => {
       if (data.nickname && data.nickname !== sender) {
         setChatLog((prev) => [
@@ -48,16 +48,17 @@ export default function ChatRoomPage() {
         ]);
       }
     });
-
+  
     socket.on("receive-message", (data) => {
       setChatLog((prev) => [...prev, data]);
     });
-
+  
     return () => {
       socket.off("join");
       socket.off("receive-message");
     };
-  }, []);
+  }, [receiver, sender]);
+  
 
   useEffect(() => {
     if (chatScroll.current) {

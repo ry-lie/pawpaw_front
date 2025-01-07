@@ -9,7 +9,6 @@ import Image from "next/image";
 import Confirm_icon from "@/assets/icons/confirm_icon.png";
 import { errorToast, successToast } from "@/utils/toast";
 import { useUserStore } from "@/stores/userStore";
-import { updateUser } from "@/lib/api/user";
 import { useDuplicateCheck } from "@/app/auth/join/useDuplicateCheck";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/constants/path";
@@ -19,6 +18,8 @@ interface FormInput {
   password: string;
   newPassword: string;
   confirmPassword: string;
+  email: string; 
+  emailCode: string; 
 }
 
 export default function ModifyForm() {
@@ -86,19 +87,20 @@ export default function ModifyForm() {
         updateData.password = data.password;
         updateData.newPassword = data.newPassword;
       }
-
-      const response = await updateUser(userId, updateData);
-
       successToast("회원정보 수정이 완료되었습니다.");
       router.push(PATHS.LOGIN);
-    } catch (error) {
+    } catch {
       errorToast("회원정보 수정 중 오류가 발생했습니다.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const { handleNicknameCheck } = useDuplicateCheck({ getValues, setError });
+  const { handleNicknameCheck } = useDuplicateCheck({
+    getValues, // 그대로 전달
+    setError,
+  });
+
 
   return (
     <div className="flex flex-col justify-center items-center">

@@ -10,9 +10,19 @@ import {
 import { errorToast, successToast, warningToast } from "@/utils/toast";
 import { isAxiosError } from "axios";
 
+// 폼 필드 타입 정의
+interface FormFields {
+  nickname: string;
+  password: string;
+  newPassword: string;
+  confirmPassword: string;
+  email: string;
+  emailCode: string;
+}
+
 interface DuplicateCheckProps {
-  getValues: UseFormGetValues<any>;
-  setError: UseFormSetError<any>;
+  getValues: UseFormGetValues<FormFields>;
+  setError: UseFormSetError<FormFields>;
 }
 
 export const useDuplicateCheck = ({
@@ -21,8 +31,7 @@ export const useDuplicateCheck = ({
 }: DuplicateCheckProps) => {
   const [isEmailChecked, setIsEmailChecked] = useState(false);
   const [isNicknameChecked, setIsNicknameChecked] = useState(false);
-  const [isVerificationEnabled, setIsVerificationEnabled] = useState(false); // 중복확인 결과 ok이면 요청 버튼 활성화
-
+  const [isVerificationEnabled, setIsVerificationEnabled] = useState(false);
   /*이메일 중복 확인 */
   const handleEmailCheck = async () => {
     const email = getValues("email") || "";
@@ -104,7 +113,7 @@ export const useDuplicateCheck = ({
       }
       await sendVerificationCode(email);
       successToast("이메일이 발송되었습니다.");
-    } catch (error) {
+    } catch {
       errorToast("다시 시도해주세요.");
     }
   };
@@ -124,7 +133,7 @@ export const useDuplicateCheck = ({
     try {
       await verifyCode(email, emailCode);
       successToast("인증되었습니다.");
-    } catch (error) {
+    } catch {
       setError("emailCode", {
         type: "manual",
         message: "인증코드가 올바르지 않습니다.",
