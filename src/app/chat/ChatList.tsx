@@ -57,7 +57,7 @@ export default function ChatList() {
         console.error("방목록을 가져오는데 실패했습니다.", e);
       }
     };
-    loadRoomList;
+    loadRoomList();
   }, [currentUser]);
 
   //소캣 연결

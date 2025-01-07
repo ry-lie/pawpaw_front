@@ -11,7 +11,7 @@ import { useSearchParams } from "next/navigation";
 import CoustomNav from "./CustomNav";
 
 const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
-const socket = io(`ws://${socket_url}`);
+const socket = io(`${socket_url}`, {withCredentials: true});
 
 type chatMessagetype = {
   message: string;
@@ -22,6 +22,7 @@ type chatMessagetype = {
 
 export default function ChatRoomPage() {
   const searchParams = useSearchParams();
+  const roomName = searchParams.get("roomName") as string;
   const sender = searchParams.get("sender") as string;
   const receiver = searchParams.get("receiver") as string;
   const [chatLog, setChatLog] = useState<chatMessagetype[]>([]);
@@ -29,33 +30,33 @@ export default function ChatRoomPage() {
   const [currentMessage, setCurrentMessage] = useState("");
 
   useEffect(() => {
-    const roomId = [sender, receiver].sort().join("-");
+    //const roomName = [sender, receiver].sort().join("-");
     socket.on("connect", () => {
       console.log("소켓 연결 성공");
-      socket.emit("join", { roomId, message: sender });
     });
   
-    socket.on("join", (data) => {
-      if (data.nickname && data.nickname !== sender) {
-        setChatLog((prev) => [
-          ...prev,
-          {
-            message: `${data.nickname}님이 채팅을 수락했습니다.`,
-            sender: "system",
-            receiver: "",
-            timestamp: new Date().toISOString(),
-          },
-        ]);
-      }
+    socket.emit("join", { roomName, message: sender });
+    socket.on("join-response", (context) => {
+      console.log(context.message);
+      console.log(context.data);
     });
   
-    socket.on("receive-message", (data) => {
-      setChatLog((prev) => [...prev, data]);
+    socket.on("send-message-response", (context) => {
+      console.log(`수신메셎;: ${context.data.message}`)
+      const currentTime = new Date().toISOString();
+      const recieveMessage: chatMessagetype = {
+        message: context.data.message,
+        sender: "1",
+        receiver,
+        timestamp: currentTime,
+      };
+      setChatLog((prev) => [...prev, recieveMessage]);
+      setCurrentMessage("");
     });
   
     return () => {
       socket.off("join");
-      socket.off("receive-message");
+      socket.off("send-message-response");
     };
   }, [receiver, sender]);
   
@@ -69,7 +70,6 @@ export default function ChatRoomPage() {
   const submitMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentMessage.trim()) {
-      const roomId = [sender, receiver].sort().join("-");
       const currentTime = new Date().toISOString();
       const message: chatMessagetype = {
         message: currentMessage,
@@ -78,7 +78,7 @@ export default function ChatRoomPage() {
         timestamp: currentTime,
       };
 
-      socket.emit("send-message", { roomId, message: currentMessage });
+      socket.emit("send-message", { roomName, message: currentMessage, recipientId: 2 });
       setChatLog((prev) => [...prev, message]);
       setCurrentMessage("");
     }
@@ -90,7 +90,7 @@ export default function ChatRoomPage() {
       <div className="absolute ml-28 mt-2">
 
       </div>
-      <div className="flex flex-col h-screen pt-10">
+      <div className="flex flex-col h-[95vh] pt-10">
         <ul
           ref={chatScroll}
           className="flex-1 flex flex-col overflow-y-auto pt-2 px-2"

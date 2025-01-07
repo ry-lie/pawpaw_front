@@ -12,7 +12,7 @@ export const SocketContext = createContext<SocketContextProps>({
 });
 
 export default function ChatLayout({ children }: { children: ReactNode }) {
-    const socket = io("ws://kdt-react-node-1-team01.elicecoding.com:5001/chats", {
+    const socket = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
         withCredentials: true,
         reconnectionAttempts: 3,
     });
