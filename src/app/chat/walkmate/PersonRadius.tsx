@@ -92,9 +92,10 @@ export default function PersonRadius() {
       console.error("소켓이 연결되지 않았습니다.");
       return;
     }
-    socket.emit("create-room", { recipientId: user.id, 
-      senderNickname : currentNickname
+    socket.emit("create-room", { recipientId: user.id,
+      client: user
     });
+    console.log(socket)
     console.log(`${user.nickname}님에게 채팅요청을 보냈습니다.`)
   };
 
