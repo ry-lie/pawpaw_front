@@ -2,10 +2,10 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import axiosInstance from "../axios";
 
 // //위치 정보 가져오기
-const getLocation = () => {
-  const { location } = useGeolocation();
+export const useGetLocation = () => {
+  const location = useGeolocation();
   if (!location) {
-    throw new Error("위치정보를 가져올수 없습니다.");
+    throw new Error("위치 정보를 가져올 수 없습니다.");
   }
   return location;
 };

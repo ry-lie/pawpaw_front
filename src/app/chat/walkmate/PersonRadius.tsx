@@ -3,9 +3,7 @@ import Button from "@/components/Button";
 //import { anotherLocation, updateMyLocation } from "@/lib/api/userPlace";
 import { useUserStore } from "@/stores/userStore";
 import { useGeolocation } from "@/hooks/useGeolocation";
-import { join } from "path";
 import { useContext, useEffect, useState } from "react";
-import { io, Socket } from "socket.io-client";
 import { anotherLocation, updateMyLocation } from "@/lib/api/userPlace";
 import { SocketContext } from "../layout";
 

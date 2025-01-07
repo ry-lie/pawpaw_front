@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import BasicProfile from "@/assets/icons/profile_icon.png";
 import Image from "next/image";
 import Input from "@/components/Input";
@@ -9,7 +9,6 @@ import { getUser } from "@/lib/api/user";
 
 
 export default function ChangeImage() {
-  const [profileImageFile, setProfileImageFile] = useState<File|null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState<string|null>(null);
   const [userEmail, setUserEmail] = useState<string|null>(null);
   const currentUserId = useUserStore((state)=>state.id);
@@ -19,8 +18,6 @@ export default function ChangeImage() {
   const handleProfileImageChange =  (e:React.ChangeEvent<HTMLInputElement>)=>{
     const file = e.target.files?.[0];
     if (file){
-      setProfileImageFile(file);
-
       if(profileImageUrl){
         URL.revokeObjectURL(profileImageUrl);
       }
@@ -34,13 +31,11 @@ export default function ChangeImage() {
         try{
           const email = await getUser(currentUserId);
           setUserEmail(email);
-
         }catch(e){
           console.error("사용자의 아이디를 가져오지 못했습니다.",e)
         }
-
       }
-    }
+    };
     fetchUserEmail();
 
     return() => {
@@ -48,7 +43,7 @@ export default function ChangeImage() {
         URL.revokeObjectURL(profileImageUrl)
       }
     };
-  },[profileImageUrl]);
+  },[currentUserId ,profileImageUrl]);
 
 
   return (
