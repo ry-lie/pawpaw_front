@@ -8,9 +8,27 @@ import CheckIcon from "@/assets/icons/check_icon.png";
 import TrashIcon from "@/assets/icons/trash_icon.png";
 import PetProfile from "@/assets/icons/petProfile_icon.png";
 import { sizeMap, genderMap } from "./petInfo";
-import { handleImageUploading } from "@/utils/imageUpload";
 
-export default function AddPetInfo({ pet, onSave, onDelete, }: { pet: any; onSave: (updatedPet: any) => void; onDelete: () => void; }) {
+type Pet = {
+  id?: number; // ID (optional)
+  name: string; // 이름
+  age: number; // 나이
+  gender: string; // 성별 (여자, 남자)
+  size: string; // 크기 (소형, 중형, 대형)
+  description: string; // 성격 설명
+  image?: File; // 업로드된 이미지 파일 (optional)
+  imageUrl?: string;
+  profileImage?: string | null; // 이미지 URL 또는 null
+};
+
+type AddPetInfoProps = {
+  pet: Pet; // 초기 pet 데이터
+  onSave: (updatedPet: Pet) => void; // 저장 콜백
+  onDelete: () => void; // 삭제 콜백
+};
+
+
+export default function AddPetInfo({ pet, onSave, onDelete }: AddPetInfoProps) {
   const [newPet, setNewPet] = useState({
     ...pet,
     profileImage: pet.imageUrl || pet.profileImage || null, // 이미지 URL 설정

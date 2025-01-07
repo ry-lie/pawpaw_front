@@ -19,6 +19,12 @@ export const getLatestBoardList = async (count: number) => {
 };
 
 // 3. 게시글 목록 조회
+type BoardListParams = {
+  cursor: number | null; // Cursor for pagination
+  take: number; // Number of items to fetch
+  category?: string; // Optional category
+};
+
 export const getBoardList = async (
   cursor: number | null,
   take: number,
@@ -33,8 +39,8 @@ export const getBoardList = async (
 
   // 기본 params 객체 생성
   const params: BoardListParams = {
-    cursor, // 커서 (시작 ID)
-    take, // 한 번에 가져올 데이터 수
+    cursor: cursor || null, // 커서 (시작 ID)
+    take: take || 7, // 한 번에 가져올 데이터 수
   };
 
   // category가 "전체"가 아닌 경우에만 추가

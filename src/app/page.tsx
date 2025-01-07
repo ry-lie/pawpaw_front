@@ -7,8 +7,6 @@ import Image from "next/image";
 import React, { useEffect, useState } from 'react';
 import { getPopularBoardList, getLatestBoardList } from '@/lib/api/board';
 import PostCard, { PostCardProps } from '@/components/Main/PostCard';
-//import HotDog1 from "@/assets/images/postCard/hot1.png";
-//import HotDog2 from "@/assets/images/postCard/hot2.png";
 
 import Carousel from "@/components/Main/Carousel";
 import Carousel1 from "@/assets/images/carousel/carousel1.png";
@@ -16,6 +14,15 @@ import Carousel2 from "@/assets/images/carousel/carousel2.png";
 import Carousel3 from "@/assets/images/carousel/carousel3.png";
 import Link from "next/link";
 import { PATHS } from "../constants/path";
+
+export interface BoardItem {
+  id: number;
+  korName?: string;
+  category?: "일상" | "펫자랑" | "임시보호" | "고민상담";
+  title: string;
+  url?: string;
+  imageUrl?: string;
+}
 
 const carouselData = [
   { id: 1, imgUrl: Carousel1, text: "반려동물과\n함께하는 일상" },
@@ -35,7 +42,7 @@ export default function Home() {
 
         setPopularPosts(
           Array.isArray(popularResponse.data.body.data)
-            ? popularResponse.data.body.data.map((item: any) => ({
+            ? popularResponse.data.body.data.map((item: BoardItem) => ({
               id: item.id,
               category: item.korName,
               title: item.title,
@@ -46,7 +53,7 @@ export default function Home() {
 
         setLatestPosts(
           Array.isArray(latestResponse.data.body.data)
-            ? latestResponse.data.body.data.map((item: any) => ({
+            ? latestResponse.data.body.data.map((item: BoardItem) => ({
               id: item.id,
               category: item.category, // korName 사용
               title: item.title,

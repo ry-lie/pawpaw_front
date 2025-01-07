@@ -19,7 +19,26 @@ export const genderMap: Record<string, string> = {
   FEMALE: "여자",
 };
 
-export default function PetInfo({ pet, onEdit, onDelete }: { pet: any; onEdit?: (id: number) => void; onDelete?: (id: number) => void }) {
+// Pet 타입 정의
+interface Pet {
+  id: number;
+  name: string;
+  age: number;
+  gender: "MALE" | "FEMALE";
+  size: "SMALL" | "MEDIUM" | "LARGE";
+  description: string;
+  imageUrl?: string; // 선택적 속성
+}
+
+// Props 타입 정의
+interface PetInfoProps {
+  pet: Pet;
+  onEdit?: (id: number) => void;
+  onDelete?: (id: number) => void;
+}
+
+
+export default function PetInfo({ pet, onEdit, onDelete }: PetInfoProps) {
 
   return (
     <section className="relative w-full max-w-mobile h-auto bg-white border border-stroke_gray rounded-lg p-10 flex flex-col gap-4 mb-5">
