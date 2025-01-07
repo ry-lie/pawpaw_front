@@ -19,7 +19,7 @@ interface userInfoRes {
 
 // 마이페이지 (사용자와 반려동물의 정보를 조회)
 export const getMyPage = async (id: number) => {
-  const response = await axiosInstance.get(`/users/${id}/my-pages`);
+  const response = await axiosInstance.get(`/users/my-pages`);
   return response.data.body.data;
 };
 
@@ -81,7 +81,7 @@ export const getMyPosts = async (
   cursor: number | null = null,
   take: number = 7,
 ) => {
-  const response = await axiosInstance.get(`/users/${id}/boards`, {
+  const response = await axiosInstance.get(`/users/boards`, {
     params: {
       cursor,
       take,
@@ -96,7 +96,7 @@ export const getMyReviews = async (
   cursor: number | null = null,
   take: number = 7,
 ) => {
-  const response = await axiosInstance.get(`/users/${id}/reviews`, {
+  const response = await axiosInstance.get(`/users/reviews`, {
     params: {
       cursor,
       take,
