@@ -16,10 +16,9 @@ import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 
 export default function MyPage() {
-  const [userInfo, setUserInfo] = useState<any>(null);
-  const [petContainers, setPetContainers] = useState<
-    { id: number; pet: any; isEditing: boolean; isNew: boolean }[]
-  >([]);
+  const [userInfo, setUserInfo] = useState<any>(null);  
+  const [petContainers, setPetContainers] = useState<{ id: number; pet: any; isEditing: boolean; isNew: boolean }[]
+>([]);  
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -246,8 +245,8 @@ export default function MyPage() {
               />
             ) : (
               <PetInfo
-                key={id}
-                pet={pet}
+              key={id}
+              pet={pet}
                 onEdit={() => handleEdit(id)}
                 onDelete={() => handleDelete(id)}
               />

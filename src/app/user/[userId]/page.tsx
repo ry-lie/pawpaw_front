@@ -2,9 +2,7 @@
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import PetLove from "@/assets/icons/petlove_icon.png"
-
 import React, { useState, useEffect } from "react";
-
 // api 연동
 import { getMyPage } from "@/lib/api/user";
 import PetInfo from "@/components/MyPage/petInfo";
