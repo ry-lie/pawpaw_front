@@ -25,7 +25,7 @@ const ChatEventAlram = () => {
   const addAlarm = useAlarmStore((state) => state.addAlarm);
   const updateAlarmStatus = useAlarmStore((state) => state.updateAlarmStatus);
   const removeAlarm = useAlarmStore((state) => state.removeAlarm);
-  const { isLoggedIn, nickname } = useUserStore();
+  const { isLoggedIn } = useUserStore();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -96,7 +96,7 @@ const ChatEventAlram = () => {
             closeOnClick: false,
             draggable: false,
             hideProgressBar: true,
-          },
+          }
         );
       }
     } catch (e) {
@@ -174,12 +174,13 @@ const ChatEventAlram = () => {
           closeOnClick: false,
           draggable: false,
           hideProgressBar: true,
-        },
+        }
       );
     }
   };
 
   const alarmsIcon = alarms.length > 0 ? Alrem_on : Alrem_off;
+  console.log(handleMessage);
 
   // 알람 버튼 클릭 처리
   const handleButtonClick = () => {
