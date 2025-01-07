@@ -46,19 +46,23 @@ export default function ReviewDetail({
 
     <div className="mt-10 p-5">
       <div className="flex items-center space-x-2 border-b-2 pb-2">
-        <div className="w-[45px] h-[45px] rounded-full overflow-hidden border border-medium_gray">
-          <Image
-            src={profileImageUrl}
-            alt="프로필 이미지"
-            width={45}
-            height={45}
-            objectFit="cover"
-          />
-        </div>
+        <Link href={PATHS.USER_INFO(review?.author.id)}>
+          <div className="w-[45px] h-[45px] rounded-full overflow-hidden border border-medium_gray">
+            <Image
+              src={profileImageUrl}
+              alt="프로필 이미지"
+              width={45}
+              height={45}
+              objectFit="cover"
+            />
+          </div>
+        </Link>
         <div className="flex-1">
           <div className="flex justify-between">
             <div className="text-md font-bold flex items-center">
-              <div>{review?.author.nickname}</div>
+              <Link href={PATHS.USER_INFO(review?.author.id)}>
+                <div>{review?.author.nickname}</div>
+              </Link>
             </div>
             <div>
               {review?.author.id === id && (

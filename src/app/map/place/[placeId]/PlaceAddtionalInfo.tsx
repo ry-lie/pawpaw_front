@@ -7,6 +7,7 @@ import PriceIcon from "@/assets/icons/place/place_price.png";
 import InfoIcon from "@/assets/icons/place/place_info.png";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useQueryClient } from "@tanstack/react-query";
+import { PlaceDetails } from "@/types/places";
 
 interface AdditionalInfoProps {
   placeId: number;
@@ -17,7 +18,7 @@ export function PlaceAdditionalInfo({
 }: AdditionalInfoProps) {
   const [isScheduleVisible, setIsScheduleVisible] = useState(false);
   const queryClient = useQueryClient();
-  const placeDetails = queryClient.getQueryData<any>(["placeDetails", placeId]);
+  const placeDetails = queryClient.getQueryData<PlaceDetails>(["placeDetails", placeId]);
   const toggleScheduleVisibility = () => {
     setIsScheduleVisible(!isScheduleVisible);
   };
@@ -35,7 +36,7 @@ export function PlaceAdditionalInfo({
           className="flex-shrink-0 object-contain"
         />
         <span className="whitespace-nowrap">운영시간 :</span>
-        <span className="ml-2 break-words">{placeDetails.openingHour}</span>
+        <span className="ml-2 break-words">{placeDetails?.openingHour}</span>
         <button
           className="mr-3.5 text-strong_gray"
           onClick={toggleScheduleVisibility}
@@ -48,7 +49,7 @@ export function PlaceAdditionalInfo({
       {isScheduleVisible && (
         <p className="flex ml-6">
           <span className="w-16">휴무일 :</span>
-          <span>{getDisplayValue(placeDetails.closingDays)}</span>
+          <span>{getDisplayValue(placeDetails?.closingDays)}</span>
         </p>
       )}
 
@@ -60,7 +61,7 @@ export function PlaceAdditionalInfo({
           width={16}
           className=""
         />
-        {getDisplayValue(placeDetails.contact)}
+        {getDisplayValue(placeDetails?.contact)}
       </p>
 
       {/* 주차 여부 */}
@@ -71,7 +72,7 @@ export function PlaceAdditionalInfo({
           width={18}
           className="flex-shrink-0 object-contain"
         />
-        <span>  {placeDetails.hasParkingArea !== null && placeDetails.hasParkingArea !== undefined
+        <span>  {placeDetails?.hasParkingArea !== null && placeDetails?.hasParkingArea !== undefined
           ? placeDetails.hasParkingArea
             ? "주차 가능"
             : "주차 불가"
@@ -86,7 +87,7 @@ export function PlaceAdditionalInfo({
           width={18}
           className="flex-shrink-0 object-contain"
         />
-        {getDisplayValue(placeDetails.additionalFees)}
+        {getDisplayValue(placeDetails?.additionalFees)}
       </p>
 
       {/* 추가 정보 */}
@@ -101,9 +102,9 @@ export function PlaceAdditionalInfo({
 
         {/* 정보 텍스트 */}
         <div className="flex flex-col gap-1">
-          <p>입장 가능 동물 크기 : {getDisplayValue(placeDetails.allowSize)}</p>
-          <p>설명 : {getDisplayValue(placeDetails.description)}</p>
-          <p>제한사항 : {getDisplayValue(placeDetails.restrictions)}</p>
+          <p>입장 가능 동물 크기: {getDisplayValue(placeDetails?.allowSize)}</p>
+          <p>설명: {getDisplayValue(placeDetails?.description)}</p>
+          <p>제한사항: {getDisplayValue(placeDetails?.restrictions)}</p>
         </div>
       </div>
 

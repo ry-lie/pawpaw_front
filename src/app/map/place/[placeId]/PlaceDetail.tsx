@@ -12,6 +12,10 @@ import Loading from "../../../loading";
 import { PlaceAddressInfo } from "./PlaceAddressInfo";
 import { PlaceAdditionalInfo } from "./PlaceAddtionalInfo";
 import { RiThumbUpFill } from "react-icons/ri";
+import { useUserStore } from "@/stores/userStore";
+
+import { errorToast } from "@/utils/toast";
+import { useRouter } from "next/navigation";
 
 interface ReviewProps {
   id: number;
@@ -24,6 +28,9 @@ interface ReviewProps {
 
 {/**장소 상세 모달 */ }
 export default function PlaceDetail({ placeId }: { placeId: number }) {
+  const userId = useUserStore((state) => state.id); // 사용자 ID 가져오기
+  const router = useRouter();
+
   const { closeModal } = useModalStore();
   const { data: placeDetails, error, isFetching } = useQuery({
     queryKey: ["placeDetails", placeId], // 쿼리 키
@@ -32,10 +39,22 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
   });
   //추천 수
   const likeCount = placeDetails?.reviewList
-    ? placeDetails.reviewList.filter((review: any) => review?.isLikeClicked === true).length
+    ? placeDetails.reviewList.filter((review: ReviewProps) => review?.isLikeClicked === true).length
     : 0;
   // 장소 리뷰 존재 여부
   const isReviewListEmpty = placeDetails?.reviewList && placeDetails?.reviewList.length > 0;
+  // 리뷰 등록
+  const handleClickAddReview = (e: React.MouseEvent) => {
+    if (!userId) {
+      e.preventDefault(); // 링크 기본 동작 막기
+      errorToast("로그인이 필요합니다."); // 에러 메시지 표시
+      router.push(PATHS.MAP);
+      return;
+    }
+
+    closeModal(); // 모달 닫기
+    router.push(PATHS.REVIEW_WRITE(placeId)); // 페이지 이동
+  };
   return (
     <div className="h-[450px] xs:h-[650px] flex flex-col">
 
@@ -72,9 +91,10 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
           <div>
             <div className="flex items-center gap-1 mb-2">
               <h2 className="xs:text-lg text-base font-bold">리뷰</h2>
-              <Link href={PATHS.REVIEW_WRITE(placeId)}>
-                <Image src={PlusIcon} alt="리뷰추가" width={20} height={20} onClick={closeModal} className="w-4 h-4 xs:w-5 xs:h-5 mb-1"/>
-              </Link>
+              {/* 리뷰추가버튼*/}
+              <button onClick={handleClickAddReview} className="w-4 h-4 xs:w-5 xs:h-5 mb-1">
+                <Image src={PlusIcon} alt="리뷰추가" width={20} height={20} onClick={closeModal} className="w-4 h-4 xs:w-5 xs:h-5 mb-1" />
+              </button>
             </div>
             {/* 리뷰*/}
             <div className="flex flex-col gap-2">
