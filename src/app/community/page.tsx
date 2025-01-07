@@ -1,16 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { PATHS } from "@/constants/path";
 import Image from "next/image";
+import Link from "next/link";
+import { PATHS } from "@/constants/path";
+import React, { useState, useEffect } from "react";
+import { getBoardList } from "@/lib/api/board";
+import { Post } from "@/types/post";
 import PlusButton from "@/components/PlusButton";
 import Footer from "@/components/Footer";
 import BoardHeartIcon from "@/assets/icons/boardHeart_icon.png";
 import EmptyPicture from "@/assets/icons/emptyPicture.png";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import { getBoardList } from "@/lib/api/board";
-import { Post } from "@/types/post";
-import Link from "next/link";
+
 
 // 게시글 데이터 타입 정의
 export default function CommunityPage() {
@@ -20,6 +21,7 @@ export default function CommunityPage() {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [cursor, setCursor] = useState<number | null>(null); // 커서
   const [hasMore, setHasMore] = useState(true); // 더 로드할 데이터 유무
+  const [showHeader, setShowHeader] = useState(true); // 검색창 & 카테고리 표시 상태
   const take = 7; // 한번에 가져올 게시글 수
 
   const categories = ["전체", "펫 자랑", "고민 상담", "임시 보호", "일상"]; // 카테고리 목록
@@ -86,11 +88,40 @@ export default function CommunityPage() {
       post.title.includes(searchQuery) || post.content.includes(searchQuery)
   );
 
+  // // 스크롤 방향 감지
+  useEffect(() => {
+    let lastScrollY = window.scrollY; // 마지막 스크롤 위치 추적
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        // 스크롤 다운 & 일정 거리 이상
+        setShowHeader(false);
+      } else {
+        // 스크롤 업
+        setShowHeader(true);
+      }
+
+      lastScrollY = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <div className="relative min-h-screen">
-      <main className="mt-10 p-4 xs:p-6">
-        {/* 검색창 */}
-        <div className="mb-2 xs:mb-4">
+      {/* 검색창 & 카테고리 필터 버튼 */}
+      <div
+        className={`fixed top-12 items-center sm:w-[598px] w-[calc(100%-2px)] bg-background px-4 xs:px-6 overflow-hidden transition-transform duration-300 ${showHeader ? "translate-y-0" : "-translate-y-full"
+            }`}
+      >
+      {/* 검색창 */}
+        <div className="mb-2 xs:mb-2">
           <input
             type="text"
             placeholder="검색어를 입력하세요..."
@@ -101,7 +132,7 @@ export default function CommunityPage() {
         </div>
 
         {/* 카테고리 필터 버튼 */}
-        <div className="mb-2 xs:mb-4 flex gap-0.5 xs:gap-2 justify-around">
+        <div className="mb-2 xs:mb-2 flex gap-0.5 xs:gap-2 justify-around">
           {categories.map((category) => (
             <button
               key={category}
@@ -115,7 +146,9 @@ export default function CommunityPage() {
             </button>
           ))}
         </div>
+      </div>
 
+      <main className="mt-[108px] xs:mt-[120px] p-4 xs:p-6">
         {/* 게시글 컨테이너 */}
         <div className="space-y-2">
           {filteredPosts.map((post) => (
