@@ -99,9 +99,6 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
                 <div className="flex gap-2">
                   {/**유저 닉네임*/}
                   <div className="text-md font-bold">  {post?.author?.nickname || "익명"}</div>
-                  <button className="text-accent_orange text-sm flex items-center">
-                    채팅
-                  </button>
                 </div>
               </Link>
               {/**본인이면 수정, 삭제버튼 */}
