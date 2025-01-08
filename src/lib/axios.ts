@@ -1,6 +1,5 @@
 import axios, { isAxiosError } from "axios";
 
-import { PATHS } from "../constants/path";
 import { errorToast } from "@/utils/toast";
 
 const axiosInstance = axios.create({
@@ -22,8 +21,8 @@ axiosInstance.interceptors.response.use(
       }
 
       if (error.status === 401) {
-        errorToast("로그인 해주세요.");
-        window.location.href = PATHS.LOGIN;
+        //errorToast("로그인 해주세요.");
+        // window.location.href = PATHS.LOGIN;
       }
 
       if (isServerApiError(error)) {

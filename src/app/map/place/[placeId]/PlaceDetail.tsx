@@ -103,7 +103,7 @@ export default function PlaceDetail({ placeId }: { placeId: number }) {
                   <Link
                     key={review.id}
                     href={PATHS.REVIEW_DETAIL(placeId, review.id)}
-                    onClick={(e) => {
+                    onClick={() => {
                       closeModal(); // 모달 닫기
                     }}
                   >

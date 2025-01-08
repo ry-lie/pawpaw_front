@@ -1,19 +1,15 @@
 "use client";
 
 import Input from "@/components/Input";
-import React, { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Link from "next/link";
 import Button from "@/components/Button";
 import { PATHS } from "@/constants/path";
 import { loginAPI } from "@/lib/api/auth";
-import { useUserStore } from "@/stores/userStore";
 import { useRouter } from "next/navigation";
 import { errorToast, successToast } from "@/utils/toast";
 import { IoSearchOutline } from "react-icons/io5";
-import { useLocationUpdater } from "@/hooks/useLocationUpdater";
 import KakaoLogin from "./KakaoLogin";
-import { getMyInfo } from "@/lib/api/user";
 
 type LoginInputs = {
   email: string;
@@ -28,9 +24,9 @@ export default function LoginForm() {
   } = useForm<LoginInputs>({
     mode: "onChange",
   });
-  const userStore = useUserStore();
+
   const router = useRouter();
-  const { getLocation, updateLocation } = useLocationUpdater(); //현재 위치 가져와서 업데이트하기
+
 
   {/**일반 로그인 */ }
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
@@ -40,58 +36,14 @@ export default function LoginForm() {
     try {
       const response = await loginAPI(payload);
       if (response.status === 200) {
-        //const { id, nickname, canWalkingMate } = response.data.body.data.user;
-        // userStore.login({ id, nickname, canWalkingMate });
-        const myInfo = await getMyInfo();
-        const { id, nickname, canWalkingMate, imageUrl } = myInfo;
-        userStore.login({
-          id,
-          nickname,
-          imageUrl,
-          canWalkingMate,
-        });
         router.push(PATHS.MAIN);
         successToast("로그인 성공했습니다.");
-        // canWalkingMate가 true인 경우 현재 위치 업데이트
-        if (canWalkingMate) {
-          try {
-            const location = getLocation(); // 위치 가져오기
-            await updateLocation(); // 서버에 위치 업데이트
-            console.log("위치 정보 업데이트 완료:", location);
-          } catch (error) {
-            console.error("위치 업데이트 중 오류가 발생했습니다.", error);
-          }
-        }
       }
-    } catch (error) {
+    } catch {
       errorToast("아이디 또는 비밀번호가 올바르지 않습니다.");
     }
   };
 
-  {/**카카오 로그인 */ }
-  // const handleKakaoLogin = async () => {
-  //   try {
-  //     await signIn("kakao", { callbackUrl: PATHS.MAIN });
-  //   } catch (error) {
-  //     console.error("Kakao login failed", error);
-  //   }
-  // };
-
-  // const handleKakaoLogin = () => {
-  //   if (window.kakao) {
-  //     window.kakao.Auth.authorize({
-  //       redirectUri: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI,
-  //     });
-  //   } else {
-  //     console.error("Kakao SDK가 초기화되지 않았습니다.");
-  //   };
-
-  // useEffect(() => {
-  //   // 카카오 SDK 초기화
-  //   if (!window.kakao.isInitialized()) {
-  //     window.kakao.init(process.env.NEXT_PUBLIC_KAKAO_CLIENT_ID);
-  //   }
-  // }, []);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input
