@@ -141,7 +141,6 @@ export default function UserProfileForm() {
         formData.append("password", data.password);
         formData.append("newPassword", data.newPassword);
       // }
-console.log(formData,"vhshdh")  
     const response =await updateUser(formData);
     console.log(response);
 
