@@ -95,8 +95,9 @@ export default function PersonRadius() {
     }
     socket.emit("create-room", {
       recipientId: user.id,
-      senderNickname: currentNickname
+      client: user
     });
+    console.log(socket)
     console.log(`${user.nickname}님에게 채팅요청을 보냈습니다.`)
   };
 
