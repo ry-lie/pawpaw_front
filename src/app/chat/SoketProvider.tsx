@@ -12,7 +12,7 @@ export const SocketContext = createContext<SocketContextProps>({
 });
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
-  const socket = io("ws://kdt-react-node-1-team01.elicecoding.com:5001/chats", {
+  const socket = io("ws://localhost:5001/chats", {
     withCredentials: true,
     reconnectionAttempts: 3,
   });

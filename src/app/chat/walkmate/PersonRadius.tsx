@@ -1,5 +1,6 @@
 "use client";
 import Button from "@/components/Button";
+//import { anotherLocation, updateMyLocation } from "@/lib/api/userPlace";
 import { useUserStore } from "@/stores/userStore";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useContext, useEffect, useState } from "react";
@@ -96,6 +97,7 @@ export default function PersonRadius() {
     }
   };
 
+
   //채팅 요청
   const handleRequestChat =async (user: User) => {
     if (!socket) {
@@ -103,10 +105,17 @@ export default function PersonRadius() {
       return;
     }
 
+    
+
     socket.emit("create-room", { recipientId: user.id, client: user });
     console.log(socket);
     successToast(`${user.nickname}님에게 채팅요청을 보냈습니다.`);
+
+    const roomName = roomName1
+    console.log("aouhjkvjhgkjvchjkhgjfgmhfjtkwebtetwbjghj",roomName)
   };
+  
+  
 
   //반경선택
   const handleRadiusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
