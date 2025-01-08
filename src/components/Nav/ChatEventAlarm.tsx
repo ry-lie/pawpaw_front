@@ -61,7 +61,7 @@ const ChatEventAlram = () => {
                   roomName: notification.roomName,
                   type: notification.type,
                 }),
-                status: "pending" as "pending", // 타입 단언
+                status: "pending" as const, // 타입 단언
               };
 
               console.log("추가될 알람 데이터:", alarmData);
@@ -97,7 +97,7 @@ const ChatEventAlram = () => {
               <div>
                 <Button
                   onClick={() =>
-                    handleApprove(parsedMessage.id, alarm.sender, toastId)
+                    handleApprove(parsedMessage.id, alarm.sender, toastId, parsedMessage.roomName)
                   }
                   containerStyles="!text-base !bg-white !text-blue-500 !font-normal hover:!underline hover:!underline-offset-4 mr-1"
                 >
@@ -127,13 +127,13 @@ const ChatEventAlram = () => {
   };
 
   // 채팅 요청 수락
-  const handleApprove = async (id: number, sender: string, toastId: React.ReactText) => {
+  const handleApprove = async (id:number, sender : string, toastId:React.ReactText, roomName:string) => {
     try {
       await readedAlram(id);
       toast.dismiss(toastId);
       successToast(`${sender}님의 초대를 수락했습니다.`);
       removeAlarm(sender);
-      router.push(`/chat?roomId=${id}`);
+      router.push(`/chat?roomId=${id}&roomName=${roomName}`);
     } catch (error) {
       console.error("채팅 요청 수락 중 오류:", error);
       errorToast("초대를 수락할 수 없습니다.");

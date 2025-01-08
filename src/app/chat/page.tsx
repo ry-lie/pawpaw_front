@@ -1,5 +1,4 @@
 import Footer from "@/components/Footer";
-import ChatList from "./ChatList";
 import ChatRoomPage from "./[id]/page"
 
 export const metadata = {
