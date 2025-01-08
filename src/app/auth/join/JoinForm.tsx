@@ -77,7 +77,7 @@ export default function JoinForm() {
       await registerAPI(payload);
       router.push(PATHS.LOGIN);
       successToast("회원가입 성공하셨습니다.")
-    } catch (error) {
+    } catch {
       errorToast("회원가입을 다시 시도해주세요.")
     }
   };

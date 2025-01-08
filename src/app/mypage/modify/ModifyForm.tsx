@@ -13,7 +13,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useDuplicateCheck } from "@/app/auth/join/useDuplicateCheck";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/constants/path";
-import { getMyPage, updateUser } from "@/lib/api/user"; // updateProfile 가져오기
+import { getMyPage, updateUser } from "@/lib/api/user"; 
 
 interface Pet {
   id: string;
@@ -130,22 +130,20 @@ export default function UserProfileForm() {
       // 폼데이터 생성
       const formData = new FormData();
       // 닉네임이 변경되었을 경우만
-      if (data.nickname !== userNickname) {
         formData.append("nickname", data.nickname);
-      }
+      // }
       // 이미지를 선택한 경우만
       if (profileImageFile) {
-        formData.append("profileImage", profileImageFile);
+        formData.append("image", profileImageFile);
       }
 
       // 만약 비밀번호 관련 로직을 서버에 보내고 싶다면(옵션):
-      if (data.password && data.newPassword) {
         formData.append("password", data.password);
         formData.append("newPassword", data.newPassword);
-      }
-
-      // 실제 서버 요청
-      await updateUser(formData);
+      // }
+console.log(formData,"vhshdh")  
+    const response =await updateUser(formData);
+    console.log(response);
 
       successToast("회원정보 수정이 완료되었습니다.");
       router.push(PATHS.LOGIN);

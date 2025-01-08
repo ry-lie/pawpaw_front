@@ -4,7 +4,6 @@ import { GoHeart, GoHeartFill } from "react-icons/go";
 import { useState } from "react";
 
 export default function LikeButton({
-  postId,
   isLiked,
   onLikeToggle,
   disabled,

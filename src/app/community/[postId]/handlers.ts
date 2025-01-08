@@ -8,6 +8,7 @@ import {
 } from "@/lib/api/board";
 import { Post } from "@/types/boards";
 import { successToast, errorToast } from "@/utils/toast";
+
 // 댓글 등록 이벤트
 export const handleAddComment = async (
   postId: number,
@@ -21,7 +22,7 @@ export const handleAddComment = async (
     setComment(""); // 댓글 입력 초기화
     const response = await fetchBoardDetail(postId);
     setPost(response?.data?.body?.data);
-  } catch (error) {
+  } catch {
     errorToast("댓글 등록에 실패했습니다.");
   }
 };
@@ -37,7 +38,7 @@ export const handleModifyComment = async (
     successToast("댓글이 수정되었습니다.");
     const updatedPost = await fetchBoardDetail(postId);
     setPost(updatedPost.data.body.data);
-  } catch (error) {
+  } catch {
     errorToast("댓글 수정에 실패했습니다.");
   }
 };
@@ -54,19 +55,18 @@ export const handleDeleteComment = async (
     successToast("댓글이 삭제되었습니다.");
     const updatedPost = await fetchBoardDetail(postId);
     setPost(updatedPost.data.body.data);
-  } catch (error) {
+  } catch {
     errorToast("댓글 삭제에 실패했습니다.");
   }
 };
 // 글 삭제 이벤트
 export const handleDeletePost = async (postId: number) => {
   if (!confirm("글을 삭제하시겠습니까?")) return;
-
   try {
     await deletePost(postId);
-    window.location.href = PATHS.MAP;
+    window.location.href = PATHS.COMMUNITY;
     successToast("글이 삭제되었습니다.");
-  } catch (error) {
+  } catch {
     errorToast("글 삭제에 실패했습니다.");
   }
 };

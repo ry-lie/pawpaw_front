@@ -42,17 +42,17 @@ const ChatEventAlram = () => {
         console.log("currentAlram 호출 시작");
         const data = await currentAlram();
         console.log("currentAlram 호출 성공:", data);
-    
+
         // 반환된 데이터 구조 확인 후 수정
         const notificationList = data.body?.data?.notificationList || [];
         console.log("알림 목록 확인:", notificationList);
-    
+
         if (notificationList.length > 0) {
           successToast("새로운 알림이 있습니다!");
-    
+
           notificationList.forEach((notification: NotificationProps) => {
             console.log("알림 데이터 처리 중:", notification);
-    
+
             if (!notification.isRead) {
               const alarmData = {
                 sender: notification.sender.nickname,
@@ -63,7 +63,7 @@ const ChatEventAlram = () => {
                 }),
                 status: "pending" as const, // 타입 단언
               };
-    
+
               console.log("추가될 알람 데이터:", alarmData);
               addAlarm(alarmData); // 알람 추가
             }
@@ -77,7 +77,7 @@ const ChatEventAlram = () => {
         errorToast("알림을 불러오는 데 실패했습니다.");
       }
     };
-    
+
 
     loginAlram();
   }, [isLoggedIn, addAlarm]);
@@ -141,7 +141,7 @@ const ChatEventAlram = () => {
   };
 
   // 채팅 요청 거절
-  const handleReject = async (id:number, sender : string, toastId:React.ReactText) => {
+  const handleReject = async (id: number, sender: string, toastId: React.ReactText) => {
     try {
       await readedAlram(id);
       toast.dismiss(toastId);
