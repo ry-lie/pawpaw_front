@@ -16,7 +16,7 @@ type Pet = {
   gender: string; // 성별 (여자, 남자)
   size: string; // 크기 (소형, 중형, 대형)
   description: string; // 성격 설명
-  image?: File; // 업로드된 이미지 파일 (optional)
+  image?: File | string; // 업로드된 이미지 파일 (optional)
   imageUrl?: string;
   profileImage?: string | null; // 이미지 URL 또는 null
 };
@@ -103,23 +103,23 @@ export default function AddPetInfo({ pet, onSave, onDelete }: AddPetInfoProps) {
           {/* 이름 & 나이 */}
           <div>
             <div className="mb-3">
-              <span className="text-base font-bold mr-2">이름 </span>
+              <span className="text-sm font-bold mr-1">이름 </span>
               <input
                 type="text"
                 name="name"
                 value={newPet.name}
                 onChange={handleChange}
-                className="border border-stroke_gray rounded px-1 w-16"
+                className="text-sm border border-stroke_gray rounded px-1 w-20"
               />
             </div>
             <div>
-              <span className="text-base font-bold mr-2">나이 </span>
+              <span className="text-sm font-bold mr-1">나이 </span>
               <input
                 type="number"
                 name="age"
                 value={newPet.age}
                 onChange={handleChange}
-                className="border border-stroke_gray rounded px-1 w-16"
+                className="text-sm border border-stroke_gray rounded px-1 w-10"
               />
             </div>
           </div>
@@ -128,7 +128,7 @@ export default function AddPetInfo({ pet, onSave, onDelete }: AddPetInfoProps) {
           <div>
             {/* 성별 */}
             <div className="mb-2 flex items-center gap-2">
-              <span className="text-base font-bold mr-2">성별 </span>
+              <span className="text-sm font-bold">성별 </span>
               <div className="flex gap-1">
                 {/* 여자 버튼 */}
                 <button
@@ -136,7 +136,7 @@ export default function AddPetInfo({ pet, onSave, onDelete }: AddPetInfoProps) {
                   className={`py-1 px-2 rounded-lg border ${newPet.gender === "여자" ? "bg-red-100" : "bg-white"
                     }`}
                 >
-                  <Image src={WomanIcon} alt="womanIcon" className="w-5 h-5" />
+                  <Image src={WomanIcon} alt="womanIcon" className="w-4 h-4" />
                 </button>
                 {/* 남자 버튼 */}
                 <button
@@ -144,31 +144,31 @@ export default function AddPetInfo({ pet, onSave, onDelete }: AddPetInfoProps) {
                   className={`py-1 px-2 rounded-lg border ${newPet.gender === "남자" ? "bg-blue-100" : "bg-white"
                     }`}
                 >
-                  <Image src={ManIcon} alt="manIcon" className="w-5 h-5" />
+                  <Image src={ManIcon} alt="manIcon" className="w-4 h-4" />
                 </button>
               </div>
             </div>
             {/* 크기 */}
             <div className="mb-2 flex items-center gap-2">
-              <span className="text-base font-bold mr-2">크기</span>
+              <span className="text-sm font-bold">크기</span>
               <div className="flex gap-1">
                 <button
                   onClick={() => setNewPet({ ...newPet, size: "소형" })}
-                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${newPet.size === "소형" ? "bg-stroke_gray" : "bg-white"
+                  className={`py-1 px-2 text-sm font-semibold rounded-lg border ${newPet.size === "소형" ? "bg-stroke_gray" : "bg-white"
                     }`}
                 >
                   소
                 </button>
                 <button
                   onClick={() => setNewPet({ ...newPet, size: "중형" })}
-                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${newPet.size === "중형" ? "bg-stroke_gray" : "bg-white"
+                  className={`py-1 px-2 text-sm font-semibold rounded-lg border ${newPet.size === "중형" ? "bg-stroke_gray" : "bg-white"
                     }`}
                 >
                   중
                 </button>
                 <button
                   onClick={() => setNewPet({ ...newPet, size: "대형" })}
-                  className={`py-1 px-2 text-base font-semibold rounded-lg border ${newPet.size === "대형" ? "bg-stroke_gray" : "bg-white"
+                  className={`py-1 px-2 text-sm font-semibold rounded-lg border ${newPet.size === "대형" ? "bg-stroke_gray" : "bg-white"
                     }`}
                 >
                   대
@@ -181,15 +181,15 @@ export default function AddPetInfo({ pet, onSave, onDelete }: AddPetInfoProps) {
         {/* 3. 성격 섹션 */}
         {/* 반응형 추가 */}
         <div className="flex felx-row xs:px-12">
-          <div className="w-10">
-            <span className="text-base font-bold">성격 </span>
+          <div className="w-auto">
+            <span className="text-sm font-bold mr-2">성격 </span>
           </div>
           <div className="w-auto xs:w-60">
             <textarea
               name="description"
               value={newPet.description}
               onChange={handleChange}
-              className="border border-stroke_gray rounded px-1 w-52 xs:w-64 h-16 resize-none overflow-auto"
+              className="text-sm border border-stroke_gray rounded px-1 w-52 xs:w-64 h-16 resize-none overflow-auto"
               maxLength={55}
             />
           </div>
