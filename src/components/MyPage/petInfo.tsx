@@ -21,7 +21,7 @@ export const genderMap: Record<string, string> = {
 
 // Pet 타입 정의
 interface Pet {
-  id: number;
+  id: number | undefined;
   name: string;
   age: number;
   gender: "MALE" | "FEMALE";
@@ -33,8 +33,8 @@ interface Pet {
 // Props 타입 정의
 interface PetInfoProps {
   pet: Pet;
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
+  onEdit?: (id?: number) => void;
+  onDelete?: (id?: number) => void;
 }
 
 
