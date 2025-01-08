@@ -180,7 +180,7 @@ const ChatEventAlram = () => {
   };
 
   const alarmsIcon = alarms.length > 0 ? Alrem_on : Alrem_off;
-  console.log(handleMessage);
+  // console.log(handleMessage);
 
   // 알람 버튼 클릭 처리
   const handleButtonClick = () => {

@@ -4,7 +4,7 @@ import Image from "next/image";
 import PetLove from "@/assets/icons/petlove_icon.png"
 import React, { useState, useEffect } from "react";
 // api 연동
-import { getMyPage } from "@/lib/api/user";
+import { getUser } from "@/lib/api/user";
 import PetInfo from "@/components/MyPage/petInfo";
 import UserInfo from "@/components/MyPage/userInfo";
 
@@ -22,7 +22,7 @@ export default function UserInfoPage({ params }: { params: { userId: number } })
 
     const fetchData = async () => {
       try {
-        const data = await getMyPage(userId);
+        const data = await getUser(userId);
         // 유저 정보 추출
         const userInfo = {
           nickname: data.nickname,

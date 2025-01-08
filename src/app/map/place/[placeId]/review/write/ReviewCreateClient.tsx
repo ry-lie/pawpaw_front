@@ -22,7 +22,7 @@ export default function ReviewCreateClient({ placeId }: ReviewCreateClientProps)
       queryClient.invalidateQueries({ queryKey: ["reviewDetails", reviewId] });
       router.push(PATHS.REVIEW_DETAIL(placeId, reviewId))
       successToast("리뷰 등록을 성공했습니다.")
-    } catch (error) {
+    } catch {
       errorToast("리뷰 등록에 실패했습니다.")
     }
   };

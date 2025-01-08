@@ -1,5 +1,4 @@
 import Link from "next/link";
-import path from "path";
 import { PATHS } from "../constants/path";
 import CommunityIcon from "@/assets/icons/community_icon.png"
 import MapIcon from "@/assets/icons/map_icon.png"

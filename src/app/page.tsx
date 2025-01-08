@@ -14,6 +14,9 @@ import Carousel2 from "@/assets/images/carousel/carousel2.png";
 import Carousel3 from "@/assets/images/carousel/carousel3.png";
 import Link from "next/link";
 import { PATHS } from "../constants/path";
+import { useUserStore } from "@/stores/userStore";
+import { getMyPage } from "@/lib/api/user";
+import { useLocationUpdater } from "@/hooks/useLocationUpdater";
 
 export interface BoardItem {
   id: number;
@@ -31,8 +34,10 @@ const carouselData = [
 ];
 
 export default function Home() {
+  const { updateLocation } = useLocationUpdater(); //현재 위치 가져와서 업데이트하기
   const [popularPosts, setPopularPosts] = useState<PostCardProps[]>([]);
   const [latestPosts, setLatestPosts] = useState<PostCardProps[]>([]);
+  const userStore = useUserStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,6 +75,34 @@ export default function Home() {
     fetchData();
   }, []);
 
+
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const myInfo = await getMyPage(); // 유저 정보 요청
+        const { id, nickname, canWalkingMate, imageUrl } = myInfo;
+
+        userStore.login({
+          id,
+          nickname,
+          imageUrl,
+          canWalkingMate,
+        });
+        if (canWalkingMate) {
+          try {
+            await updateLocation(); // 서버에 위치 업데이트
+          } catch {
+            console.error("위치 업데이트 중 오류가 발생했습니다.");
+          }
+        }
+      } catch {
+
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   return (
     <div className="min-h-screen">

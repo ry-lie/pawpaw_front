@@ -22,11 +22,6 @@ export const getMyPage = async () => {
   const response = await axiosInstance.get(`/users/my-pages`);
   return response.data.body.data;
 };
-// 로그인 시 호출 (사용자와 반려동물의 정보를 조회) 위에꺼랑 통합 예정
-export const getMyInfo = async () => {
-  const response = await axiosInstance.get(`/users/my-pages`);
-  return response.data.body.data;
-};
 
 //현재 비밀번호 수정 + 산책메이트 on/off + 사용자 닉네임 수정
 export const updateUser = async (
