@@ -1,12 +1,6 @@
 import axiosInstance from "@/lib/axios";
 
-interface UserInfo {
-  nickname: string;
-  canWalkingMate: boolean;
-  image?: string | File;
-  password?: string;
-  newPassword?: string;
-}
+
 
 interface userInfoRes {
   canWalkingMate: boolean;

@@ -46,8 +46,7 @@ export default function RootLayout({
               <Modal />
               <ToastContainer
                 position="top-right"
-                autoClose={2000}
-                className="text-sm pt-12 pr-3 mb-1"
+                autoClose={5000}
               />
             </div>
 
