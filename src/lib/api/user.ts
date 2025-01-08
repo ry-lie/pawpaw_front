@@ -25,38 +25,35 @@ export const getMyPage = async () => {
 
 //현재 비밀번호 수정 + 산책메이트 on/off + 사용자 닉네임 수정
 export const updateUser = async (
-  id: number,
-
-  data: Partial<UserInfo>,
+  formData:FormData
 ): Promise<userInfoRes> => {
-  const formData = new FormData();
 
-  // 닉네임
-  if (data.nickname) {
-    formData.append("nickname", data.nickname);
-  }
+  // // 닉네임
+  // if (data.nickname) {
+  //   formData.append("nickname", data.nickname);
+  // }
 
-  // 산책 메이트 on/off
-  if (data.canWalkingMate) {
-    formData.append("canWalkingMate", String(data.canWalkingMate));
-  }
+  // // 산책 메이트 on/off
+  // if (data.canWalkingMate) {
+  //   formData.append("canWalkingMate", String(data.canWalkingMate));
+  // }
 
-  // 사진
-  if (data.image instanceof File) {
-    formData.append("image", data.image);
-  }
+  // // 사진
+  // if (data.image instanceof File) {
+  //   formData.append("image", data.image);
+  // }
 
-  // 비밀번호
-  if (data.password) {
-    formData.append("password", data.password);
-  }
+  // // 비밀번호
+  // if (data.password) {
+  //   formData.append("password", data.password);
+  // }
 
-  // 새로운 비밀번호
-  if (data.newPassword) {
-    formData.append("newPassword", data.newPassword);
-  }
+  // // 새로운 비밀번호
+  // if (data.newPassword) {
+  //   formData.append("newPassword", data.newPassword);
+  // }
 
-  const response = await axiosInstance.put(`/users/${id}`, formData, {
+  const response = await axiosInstance.put(`/users`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },

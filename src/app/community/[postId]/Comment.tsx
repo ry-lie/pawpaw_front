@@ -80,16 +80,16 @@ export default function Comment({
               onChange={(e) => setEditedContent(e.target.value)}
               className="w-full border border-gray-300 p-2 rounded mt-2 resize-none"
             />
-            <div className="flex gap-2 mt-2">
+            <div className="flex gap-2">
               <Button
                 onClick={handleSave}
-                containerStyles={`!text-sm !font-medium px-2 xs:p-2`}
+                containerStyles="!text-base px-2 xs:px-2 xs:py-1"
               >
                 저장
               </Button>
               <Button
                 onClick={handleCancel}
-                containerStyles={`!text-sm !font-medium px-2 bg-white !text-primary !border !border-primary hover:bg-white`}
+                containerStyles="!text-base px-2 xs:px-2 xs:py-1 bg-alarm_orange !text-primary hover:bg-[#FFD292]"
               >
                 취소
               </Button>

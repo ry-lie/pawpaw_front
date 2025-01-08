@@ -6,6 +6,8 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { useContext, useEffect, useState } from "react";
 import { anotherLocation, updateMyLocation } from "@/lib/api/userPlace";
 import { SocketContext } from "../SoketProvider";
+import { successToast } from "@/utils/toast";
+import { useRouter } from "next/navigation";
 
 
 
@@ -16,22 +18,32 @@ interface User {
 }
 
 export default function PersonRadius() {
+  const router = useRouter();
   const currentNickname = useUserStore((state) => state.nickname);
   const { location } = useGeolocation();
   const [findUsers, setFindUsers] = useState<User[]>([]);
   const [radius, setRadius] = useState(250);
   const [isLoading, setIsLoading] = useState(false);
   const { socket } = useContext(SocketContext);
+  const [roomName1, setRoomName1] = useState("")
 
+  console.log("ddd", roomName1)
+
+  
   useEffect(() => {
     if (socket) {
       socket.on("create-room-response", (response) => {
         console.log("create-room-response", response);
         const roomName = response.data?.roomName;
+        const roomId =response.data?.roomId;
+        setRoomName1(roomName);
+        
 
         if (roomName) {
           console.log(`채팅방이 생성되었습니다. : ${roomName}`);
           socket.emit("join", { roomName });
+    router.push(`/chat?roomId=${roomId}&roomName=${roomName}`);
+          
         }
       });
       socket.on("join-response", (joinResponse) => {
@@ -47,7 +59,7 @@ export default function PersonRadius() {
       socket?.off("create-room-response");
       socket?.off("join-response");
     };
-  }, [socket]);
+  }, [socket,roomName1]);
 
 
   //현재위치를 서버에 업데이트 및 사용자 검색
@@ -88,18 +100,23 @@ export default function PersonRadius() {
 
 
   //채팅 요청
-  const handleRequestChat = (user: User) => {
+  const handleRequestChat =async (user: User) => {
     if (!socket) {
       console.error("소켓이 연결되지 않았습니다.");
       return;
     }
-    socket.emit("create-room", {
-      recipientId: user.id,
-      client: user
-    });
-    console.log(socket)
-    console.log(`${user.nickname}님에게 채팅요청을 보냈습니다.`)
+
+    
+
+    socket.emit("create-room", { recipientId: user.id, client: user });
+    console.log(socket);
+    successToast(`${user.nickname}님에게 채팅요청을 보냈습니다.`);
+
+    const roomName = roomName1
+    console.log("aouhjkvjhgkjvchjkhgjfgmhfjtkwebtetwbjghj",roomName)
   };
+  
+  
 
   //반경선택
   const handleRadiusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -8,13 +8,15 @@ import BasicProfile from "@/assets/icons/profile_icon.png";
 import { toggleWorkingMate } from "@/lib/api/user";
 import { useUserStore } from "@/stores/userStore";
 import { urlToFileWithAxios } from "@/utils/urlToFile";
+import { logoutAPI } from "@/lib/api/auth";
+import { useRouter } from "next/navigation";
 import { errorToast, successToast } from "@/utils/toast";
 import { useLocationUpdater } from "@/hooks/useLocationUpdater";
 
 
 interface UserInfoProps {
   userInfo: {
-    id: number;
+    id?: number;
     nickname: string;
     canWalkingMate: boolean;
     imageUrl?: string; // 프로필 이미지 URL
@@ -74,6 +76,21 @@ const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
     }
   };
 
+
+// 로그아웃
+const handleLogout = async () => {
+  const router = useRouter();
+  if (confirm("로그아웃 하시겠습니까?")) {
+    try {
+      await logoutAPI();
+      useUserStore.getState().logout();
+      router.push(PATHS.MAIN);
+    } catch (error) {
+      errorToast("로그아웃에 실패했습니다.");
+    }
+  }
+};
+
   return (
     <section className="w-full max-w-mobile h-36 bg-white border border-stroke_gray rounded-lg p-4 flex gap-4 items-center mb-3">
       {/* 유저 프로필 이미지 */}
@@ -131,7 +148,10 @@ const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
         )}
 
         {isMyInfo && (
-          <button className="text-sm text-red-500 underline ml-auto">
+          <button 
+            onClick={handleLogout}
+            className="text-sm text-red-500 underline ml-auto"
+          >
             로그아웃
           </button>
         )}
@@ -198,12 +218,12 @@ const MobileUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
             <h3 className="text-lg font-bold mr-2">{userInfo?.nickname || "닉네임이 없습니다"}</h3>
             {isMyInfo && (
               <Link href={PATHS.MY_INFO_MODIFY}>
-                <button className="text-xs text-blue-500 underline flex justify-start hover:text-blue-900">내 정보 수정</button>
+                <button className="text-sm text-blue-500 underline flex justify-start hover:text-blue-900">내 정보 수정</button>
               </Link>)}
           </div>
           {isMyInfo ? (
             <button
-              className="text-xs bg-primary text-white px-3 py-0.5 rounded-lg font-semibold"
+              className="text-sm bg-primary text-white px-3 py-0.5 rounded-lg font-semibold"
               style={{ width: "fit-content" }}
               onClick={() => {
                 handleToggleWorkingMate(userId, userInfo.imageUrl, !canWalkingMate)
