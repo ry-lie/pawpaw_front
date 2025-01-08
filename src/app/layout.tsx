@@ -36,10 +36,11 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
       <body>
-        <QueryProvider>
-          <Nav />
-          <ErrorHandler />
-          <Suspense fallback={<Loading />}>
+        <Suspense fallback={<Loading />}>
+          <QueryProvider>
+            <Nav />
+            <ErrorHandler />
+
             <div className="flex flex-col w-full min-h-screen sm:max-w-mobile mx-auto bg-background border border-stroke_gray-600">
               {children}
               <Modal />
@@ -49,8 +50,9 @@ export default function RootLayout({
                 className="text-sm pt-12 pr-3 mb-1"
               />
             </div>
-          </Suspense>
-        </QueryProvider>
+
+          </QueryProvider>
+        </Suspense>
       </body>
     </html>
   );

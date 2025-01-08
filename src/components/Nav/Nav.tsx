@@ -27,7 +27,7 @@ export default function Nav() {
         await logoutAPI();
         useUserStore.getState().logout();
         router.push(PATHS.MAIN);
-      } catch (error) {
+      } catch {
         errorToast("로그아웃에 실패했습니다.");
       }
     }

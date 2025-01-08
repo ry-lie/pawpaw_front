@@ -1,4 +1,3 @@
-import axios from "axios";
 import axiosInstance from "../axios";
 
 /**게시글 */
@@ -19,11 +18,6 @@ export const getLatestBoardList = async (count: number) => {
 };
 
 // 3. 게시글 목록 조회
-type BoardListParams = {
-  cursor: number | null; // Cursor for pagination
-  take: number; // Number of items to fetch
-  category?: string; // Optional category
-};
 
 export const getBoardList = async (
   cursor: number | null,
@@ -65,7 +59,7 @@ export const createPostAPI = async (payload: PostPayload) => {
   const formData = new FormData();
 
   // 이미지 파일 추가
-  payload.imageList.forEach((image, index) => {
+  payload.imageList.forEach((image) => {
     formData.append(`imageList`, image);
   });
   // 기타 필수 값 추가
@@ -92,7 +86,7 @@ export const fetchBoardDetail = async (postId: number) => {
 export const updatePostAPI = async (postId: number, payload: PostPayload) => {
   const formData = new FormData();
 
-  payload.imageList.forEach((image, index) => {
+  payload.imageList.forEach((image) => {
     formData.append("imageList", image);
   });
   formData.append("category", payload.category);

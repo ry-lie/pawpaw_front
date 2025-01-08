@@ -9,6 +9,7 @@ import { PATHS } from "@/constants/path";
 
 interface CommentProps {
   id: number;
+  userId: number;
   writer: string;
   profile: string;
   createdDate: string;
@@ -19,6 +20,7 @@ interface CommentProps {
 
 export default function Comment({
   id,
+  userId,
   writer,
   profile,
   createdDate,
@@ -48,7 +50,7 @@ export default function Comment({
     <div className="flex items-center space-x-4 p-4 border-b border-gray-200">
       {/* 프로필 이미지 */}
       <div className="w-[45px] h-[45px] rounded-full overflow-hidden border border-medium_gray">
-        <Link href={PATHS.USER_INFO(id)}>
+        <Link href={PATHS.USER_INFO(userId)}>
           <Image
             src={profile}
             alt="프로필 이미지"
@@ -61,7 +63,7 @@ export default function Comment({
       {/* 댓글 내용 */}
       <div className="flex-1">
         <div className="flex justify-between">
-          <Link href={PATHS.USER_INFO(id)}>
+          <Link href={PATHS.USER_INFO(userId)}>
             <span className="text-sm xs:text-base font-bold text-gray-800 break-words w-full max-w-[calc(100%-60px)]">
               {writer}
             </span>

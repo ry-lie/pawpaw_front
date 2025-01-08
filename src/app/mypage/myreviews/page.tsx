@@ -18,8 +18,8 @@ export type MyReviews = {
 
 export default function MyReviewsPage() {
   // 로그인
-  const {initialize, id, isLoggedIn} = useUserStore();
-  useEffect(()=>{
+  const { initialize, id, isLoggedIn } = useUserStore();
+  useEffect(() => {
     initialize(); // 사용자 정보 불러오기
   }, []);
 
@@ -30,22 +30,22 @@ export default function MyReviewsPage() {
   const [error, setError] = useState<string | null>(null);
   const take = 7;
 
-  const fetchReviews = async (isLoadMore=false) => {
-    if(isLoading || !isLoggedIn || !id) return;
+  const fetchReviews = async (isLoadMore = false) => {
+    if (isLoading || !isLoggedIn || !id) return;
     setIsLoading(true);
     setError(null);
-    try{
+    try {
       const response = await getMyReviews(id, cursor, take);
       const fetchedReviews = response.body.data.reviews;
 
-      if(fetchedReviews.length<take){setHasMore(false);}
-      if(isLoadMore) {
-        setReviews((prev)=> [...prev, ...fetchedReviews]);
+      if (fetchedReviews.length < take) { setHasMore(false); }
+      if (isLoadMore) {
+        setReviews((prev) => [...prev, ...fetchedReviews]);
       } else {
         setReviews(fetchedReviews);
       }
-      if(fetchedReviews.length>0){
-        setCursor(fetchedReviews[fetchedReviews.length-1].id);
+      if (fetchedReviews.length > 0) {
+        setCursor(fetchedReviews[fetchedReviews.length - 1].id);
       }
     } catch (error) {
       setError("리뷰를 불러오는 중 문제가 발생했습니다.");
@@ -78,12 +78,12 @@ export default function MyReviewsPage() {
       <div className="space-y-2">
         {reviews.map((reviews) => (
           <div key={reviews.reviewId} className="p-2 xs:p-3 border rounded-md bg-white">
-            
+
             {/* 장소이름, 제목, 내용, 좋아요 */}
             <div className="flex">
               {/* 장소이름, 제목, 내용 */}
               <div className="w-full flex flex-col justify-center">
-                <span 
+                <span
                   className="text-xs xs:text-sm bg-gray-200 px-1.5 py-0.5 rounded-md mb-1"
                   style={{ width: "fit-content" }}
                 >

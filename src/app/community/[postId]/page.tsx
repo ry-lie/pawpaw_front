@@ -176,6 +176,7 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
             <Comment
               key={comment.id}
               id={comment.id}
+              userId={comment.author.id}
               writer={comment.author.nickname || "익명"}
               profile={comment.author.imageUrl || "/images/profile_icon.png"}
               createdDate={formatDate(comment.createdAt || "알 수 없음")}
