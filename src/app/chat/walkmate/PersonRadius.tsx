@@ -27,7 +27,6 @@ export default function PersonRadius() {
   const { socket } = useContext(SocketContext);
   const [roomName1, setRoomName1] = useState("")
 
-  console.log("ddd", roomName1)
 
   
   useEffect(() => {

@@ -11,8 +11,10 @@ export const SocketContext = createContext<SocketContextProps>({
   socket: null,
 });
 
+const socket_url=process.env.NEXT_PUBLIC_SOCKET_URL
+
 export default function SocketProvider({ children }: { children: ReactNode }) {
-  const socket = io("ws://kdt-react-node-1-team01.elicecoding.com:5001/chats", {
+  const socket = io(socket_url, {
     withCredentials: true,
     reconnectionAttempts: 3,
   });
