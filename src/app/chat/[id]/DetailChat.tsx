@@ -9,9 +9,12 @@ import Message_send from "@/assets/icons/message_send.png";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import CoustomNav from "./CustomNav";
+import { useUserStore } from "@/stores/userStore";
 
 const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 const socket = io(`${socket_url}`, {withCredentials: true});
+
+
 
 type chatMessagetype = {
   message: string;
@@ -23,8 +26,9 @@ type chatMessagetype = {
 export default function ChatRoomPage() {
   const searchParams = useSearchParams();
   const roomName = searchParams.get("roomName") as string;
-  const sender = searchParams.get("sender") as string;
   const receiver = searchParams.get("receiver") as string;
+  const currentNickname = useUserStore((state) => state.nickname); 
+  const sender = currentNickname; 
   const [chatLog, setChatLog] = useState<chatMessagetype[]>([]);
   const chatScroll = useRef<HTMLUListElement>(null);
   const [currentMessage, setCurrentMessage] = useState("");
@@ -42,12 +46,11 @@ export default function ChatRoomPage() {
     });
   
     socket.on("send-message-response", (context) => {
-      console.log(`수신메셎;: ${context.data.message}`)
       const currentTime = new Date().toISOString();
       const recieveMessage: chatMessagetype = {
         message: context.data.message,
-        sender: "1",
-        receiver,
+        sender: context.data.sender,
+        receiver:currentNickname,
         timestamp: currentTime,
       };
       setChatLog((prev) => [...prev, recieveMessage]);

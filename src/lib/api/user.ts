@@ -30,7 +30,7 @@ export const getMyInfo = async () => {
 
 //현재 비밀번호 수정 + 산책메이트 on/off + 사용자 닉네임 수정
 export const updateUser = async (
-  id: number,
+
 
   data: Partial<UserInfo>,
 ): Promise<userInfoRes> => {
@@ -61,7 +61,7 @@ export const updateUser = async (
     formData.append("newPassword", data.newPassword);
   }
 
-  const response = await axiosInstance.put(`/users/${id}`, formData, {
+  const response = await axiosInstance.put(`/users`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
