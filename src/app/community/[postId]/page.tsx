@@ -9,7 +9,7 @@ import Comment from "./Comment";
 import Loading from "@/app/loading";
 import { formatDate } from "@/utils/formatISODate";
 import { handleAddComment, handleDeleteComment, handleDeletePost, handleModifyComment } from "./handlers";
-import { fetchBoardDetail } from "@/lib/api/board";
+import { fetchBoardDetail, toggleLike } from "@/lib/api/board";
 import { RiDeleteBinLine } from "react-icons/ri";
 import LikeButton from "./LikeButton";
 import Image from "next/image";
@@ -99,9 +99,6 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
                 <div className="flex gap-2">
                   {/**유저 닉네임*/}
                   <div className="text-md font-bold">  {post?.author?.nickname || "익명"}</div>
-                  <button className="text-accent_orange text-sm flex items-center">
-                    채팅
-                  </button>
                 </div>
               </Link>
               {/**본인이면 수정, 삭제버튼 */}
@@ -140,8 +137,8 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
               <LikeButton
                 postId={postId}
                 isLiked={post.isLikeClicked}
-                onLikeToggle={(newIsLiked) => {
-
+                onLikeToggle={async (newIsLiked: boolean) => {
+                  await toggleLike(postId, newIsLiked);
                   // 사용자 ID가 있을 경우 기존 로직 실행
                   setPost((prevPost) => {
                     if (!prevPost) return null;

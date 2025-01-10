@@ -16,10 +16,7 @@ export const getMyPage = async () => {
 };
 
 //현재 비밀번호 수정 + 산책메이트 on/off + 사용자 닉네임 수정
-export const updateUser = async (
-  formData:FormData
-): Promise<userInfoRes> => {
-
+export const updateUser = async (formData: FormData): Promise<userInfoRes> => {
   // // 닉네임
   // if (data.nickname) {
   //   formData.append("nickname", data.nickname);
@@ -93,13 +90,11 @@ export const getMyReviews = async (
 
 // 산책 메이트 여부 변경
 export const toggleWorkingMate = async (
-  userId: number,
   imageUrl: File | undefined,
   canWalkingMate: boolean,
 ) => {
   const formData = new FormData();
 
-  formData.append("userId", String(userId));
   formData.append("canWalkingMate", String(canWalkingMate));
   if (imageUrl) {
     formData.append("image", imageUrl);

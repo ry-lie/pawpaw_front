@@ -12,6 +12,7 @@ import { logoutAPI } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
 import { errorToast, successToast } from "@/utils/toast";
 import { useLocationUpdater } from "@/hooks/useLocationUpdater";
+import { useState } from "react";
 
 
 interface UserInfoProps {
@@ -22,22 +23,25 @@ interface UserInfoProps {
     imageUrl?: string; // 프로필 이미지 URL
   };
   isMyInfo?: boolean; // 다른 사용자 정보 요청일 경우
+  onRefresh?: () => Promise<void>;
 }
 
-export default function UserInfo({ userInfo, isMyInfo = true }: UserInfoProps) {
+export default function UserInfo({ userInfo, isMyInfo = true, onRefresh }: UserInfoProps) {
   const { isMobile, isMounting } = useMobile();
 
   if (isMounting) return null; // 초기 렌더링 상태일 경우 아무것도 보여주지 않음
 
-  return isMobile ? <MobileUserInfo userInfo={userInfo} isMyInfo={isMyInfo} /> : <DesktopUserInfo userInfo={userInfo} isMyInfo={isMyInfo} />;
+  return isMobile ?
+    <MobileUserInfo userInfo={userInfo} isMyInfo={isMyInfo} onRefresh={onRefresh} />
+    :
+    <DesktopUserInfo userInfo={userInfo} isMyInfo={isMyInfo} onRefresh={onRefresh} />;
 };
 
 
 
-const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
+const DesktopUserInfo = ({ userInfo, isMyInfo, onRefresh }: UserInfoProps) => {
 
   const userId = useUserStore((state) => state.id);
-  const canWalkingMate = useUserStore((state) => state.canWalkingMate);
   const { updateLocation } = useLocationUpdater();
   // 워킹메이트 on/off 토글 버튼 클릭
   const handleToggleWorkingMate = async (userId: number, imageUrl: string | undefined, newStatus: boolean) => {
@@ -53,13 +57,10 @@ const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
           file = undefined;
         }
       }
-      // 스토어 업데이트
-      useUserStore.setState((state) => ({
-        ...state,
-        canWalkingMate: newStatus,
-      }));
       // API 호출
-      await toggleWorkingMate(userId, file, newStatus);
+      await toggleWorkingMate(file, newStatus);
+      if (!onRefresh) return null;
+      await onRefresh();
       // 성공 메시지
       successToast("산책메이트 변경 성공했습니다.");
       if (newStatus) {
@@ -77,19 +78,19 @@ const DesktopUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
   };
 
 
-// 로그아웃
-const handleLogout = async () => {
-  const router = useRouter();
-  if (confirm("로그아웃 하시겠습니까?")) {
-    try {
-      await logoutAPI();
-      useUserStore.getState().logout();
-      router.push(PATHS.MAIN);
-    } catch (error) {
-      errorToast("로그아웃에 실패했습니다.");
+  // 로그아웃
+  const handleLogout = async () => {
+    const router = useRouter();
+    if (confirm("로그아웃 하시겠습니까?")) {
+      try {
+        await logoutAPI();
+        useUserStore.getState().logout();
+        router.push(PATHS.MAIN);
+      } catch (error) {
+        errorToast("로그아웃에 실패했습니다.");
+      }
     }
-  }
-};
+  };
 
   return (
     <section className="w-full max-w-mobile h-36 bg-white border border-stroke_gray rounded-lg p-4 flex gap-4 items-center mb-3">
@@ -136,19 +137,19 @@ const handleLogout = async () => {
               handleToggleWorkingMate(userId, userInfo?.imageUrl, !userInfo?.canWalkingMate)
             }}
           >
-            {canWalkingMate ? "산책메이트 가능" : "산책메이트 불가능"}
+            {userInfo?.canWalkingMate ? "산책메이트 ON" : "산책메이트 OFF"}
           </button>
         ) : (
           <span
             className="text-xs bg-primary text-white px-3 py-0.5 rounded-lg font-semibold"
             style={{ width: "fit-content" }}
           >
-            {userInfo?.canWalkingMate ? "산책메이트 가능" : "산책메이트 불가능"}
+            {userInfo?.canWalkingMate ? "산책메이트 ON" : "산책메이트 OFF"}
           </span>
         )}
 
         {isMyInfo && (
-          <button 
+          <button
             onClick={handleLogout}
             className="text-sm text-red-500 underline ml-auto"
           >
@@ -160,9 +161,8 @@ const handleLogout = async () => {
   );
 };
 
-const MobileUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
+const MobileUserInfo = ({ userInfo, isMyInfo, onRefresh }: UserInfoProps) => {
   const userId = useUserStore((state) => state.id);
-  const canWalkingMate = useUserStore((state) => state.canWalkingMate);
   const { updateLocation } = useLocationUpdater();
   // 워킹메이트 on/off 토글 버튼 클릭
   const handleToggleWorkingMate = async (userId: number, imageUrl: string | undefined, newStatus: boolean) => {
@@ -178,13 +178,10 @@ const MobileUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
           file = undefined;
         }
       }
-      // 스토어 업데이트
-      useUserStore.setState((state) => ({
-        ...state,
-        canWalkingMate: newStatus,
-      }));
       // API 호출
-      await toggleWorkingMate(userId, file, newStatus);
+      await toggleWorkingMate(file, newStatus);
+      if (!onRefresh) return null;
+      await onRefresh();
       // 성공 메시지
       successToast("산책메이트 변경 성공했습니다.");
       if (newStatus) {
@@ -226,17 +223,17 @@ const MobileUserInfo = ({ userInfo, isMyInfo }: UserInfoProps) => {
               className="text-sm bg-primary text-white px-3 py-0.5 rounded-lg font-semibold"
               style={{ width: "fit-content" }}
               onClick={() => {
-                handleToggleWorkingMate(userId, userInfo.imageUrl, !canWalkingMate)
+                handleToggleWorkingMate(userId, userInfo.imageUrl, !userInfo?.canWalkingMate)
               }}
             >
-              {canWalkingMate ? "산책메이트 가능" : "산책메이트 불가능"}
+              {userInfo?.canWalkingMate ? "산책메이트 ON" : "산책메이트 OFF"}
             </button>
           ) : (
             <span
               className="text-xs bg-primary text-white px-3 py-0.5 rounded-lg font-semibold"
               style={{ width: "fit-content" }}
             >
-              {userInfo?.canWalkingMate ? "산책메이트 가능" : "산책메이트 불가능"}
+              {userInfo?.canWalkingMate ? "산책메이트 ON" : "산책메이트 OFF"}
             </span>
           )}
 

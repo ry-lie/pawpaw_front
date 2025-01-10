@@ -12,36 +12,16 @@ import AddPetInfo from "../../components/MyPage/addPetInfo";
 // api 연동
 import { getMyPage } from "@/lib/api/user";
 import { addPetInfo, updatePetInfo, deletePetInfo } from "@/lib/api/pet";
-import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 import { successToast, errorToast } from "@/utils/toast";
 
 
-interface UserInfo {
-  id?: number;
-  nickname: string;
-  canWalkingMate: boolean;
-  imageUrl?: string;
-}
-
-interface Pet {
-  id?: number;
-  name: string;
-  age: number;
-  gender: "MALE" | "FEMALE" | string;
-  size: "SMALL" | "MEDIUM" | "LARGE" | string;
-  description: string;
-  image?: File | string;
-  imageUrl?: string;
-  profileImage?: string | null;
-}
-
 export default function MyPage() {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+  const [userInfo, setUserInfo] = useState<any>(null);
   const [petContainers, setPetContainers] = useState<{ id: number; pet: any; isEditing: boolean; isNew: boolean }[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+
 
   // UserStore에서 ID 가져오기
   const { initialize, id: userId, isLoggedIn } = useUserStore();
@@ -49,40 +29,39 @@ export default function MyPage() {
   useEffect(() => {
     initialize();
   }, []);
-
+  const fetchData = async () => {
+    try {
+      const data = await getMyPage();
+      // 유저 정보 추출
+      const userInfo = {
+        nickname: data.nickname,
+        canWalkingMate: data.canWalkingMate,
+        imageUrl: data.imageUrl,
+      };
+      // 펫정보 추출
+      const pets = (data.petList || []).map((pet: any) => ({
+        id: pet.id,
+        pet: {
+          name: pet.name,
+          age: pet.age,
+          description: pet.description,
+          gender: pet.gender,
+          size: pet.size,
+          imageUrl: pet.imageUrl,
+        },
+        isEditing: false,
+      }));
+      setUserInfo(userInfo); // 유저 정보 설정
+      setPetContainers(pets);
+    } catch (error) {
+      console.error("데이터를 불러오는데 실패했습니다:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   // (유저정보, 펫정보) 정보 조회 (getMyPage)
   useEffect(() => {
     if (!isLoggedIn || !userId) return; // 로그인되지 않았거나 ID가 없을 경우 종료
-    const fetchData = async () => {
-      try {
-        const data = await getMyPage();
-        // 유저 정보 추출
-        const userInfo = {
-          nickname: data.nickname,
-          canWalkingMate: data.canWalkingMate,
-          imageUrl: data.imageUrl,
-        };
-        // 펫정보 추출
-        const pets = (data.petList || []).map((pet: Pet) => ({
-          id: pet.id,
-          pet: {
-            name: pet.name,
-            age: pet.age,
-            description: pet.description,
-            gender: pet.gender,
-            size: pet.size,
-            imageUrl: pet.imageUrl,
-          },
-          isEditing: false,
-        }));
-        setUserInfo(userInfo); // 유저 정보 설정
-        setPetContainers(pets);
-      } catch (error) {
-        console.error("데이터를 불러오는데 실패했습니다:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, [isLoggedIn, userId]);
 
@@ -123,7 +102,7 @@ export default function MyPage() {
   };
 
   // 1. 반려동물 정보 등록 (addPetInfo)
-  const handleAdd = async (newPet: Pet) => {
+  const handleAdd = async (newPet: any) => {
     try {
       const mappedPetData = mapToServerData(newPet); // 데이터를 서버 요구사항에 맞게 변환  
       // POST 요청
@@ -131,7 +110,7 @@ export default function MyPage() {
 
       // 등록 후 전체 데이터 다시 조회
       const updatedData = await getMyPage();
-      const newPetData = updatedData.petList.find((pet: Pet) => pet.id === addedPet.id);
+      const newPetData = updatedData.petList.find((pet: any) => pet.id === addedPet.id);
 
       setPetContainers((prev) =>
         prev.map((container) =>
@@ -156,7 +135,7 @@ export default function MyPage() {
   };
 
   // 2. 반려동물 정보 수정 (updatePetInfo)
-  const handleUpdate = async (id: number, updatedPet: Pet) => {
+  const handleUpdate = async (id: number, updatedPet: any) => {
     try {
       const mappedPetData = mapToServerData(updatedPet); // 서버 요구사항에 맞게 데이터 매핑
       // 기존 이미지를 유지하도록 처리
@@ -171,7 +150,7 @@ export default function MyPage() {
       await updatePetInfo(id, mappedPetData);
       // 수정 후 데이터 다시 조회
       const updatedData = await getMyPage(); // 유저 ID를 이용해 다시 데이터 조회
-      const updatedPetList = updatedData.petList.find((pet: Pet) => pet.id === id); // 해당 반려동물 정보만 추출
+      const updatedPetList = updatedData.petList.find((pet: any) => pet.id === id); // 해당 반려동물 정보만 추출
 
       setPetContainers((prev) =>
         prev.map((container) =>
@@ -221,7 +200,7 @@ export default function MyPage() {
         {/* 1. 유저 정보 컨테이너 */}
         <div className="items-center">
           {userInfo ? (
-            <UserInfo userInfo={userInfo} />
+            <UserInfo userInfo={userInfo} onRefresh={fetchData} />
           ) : (
             <p>유저 정보를 불러오는 중입니다...</p>
           )}

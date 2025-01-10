@@ -10,7 +10,7 @@ export default function LikeButton({
 }: {
   postId: number;
   isLiked: boolean;
-  onLikeToggle: (newIsLiked: boolean) => void;
+  onLikeToggle: (newIsLiked: boolean) => Promise<void>;
   disabled?: boolean; // 버튼 비활성화 옵션
 }) {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -55,3 +55,4 @@ export default function LikeButton({
     </div>
   );
 }
+
