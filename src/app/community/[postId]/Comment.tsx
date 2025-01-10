@@ -80,16 +80,16 @@ export default function Comment({
               onChange={(e) => setEditedContent(e.target.value)}
               className="w-full border border-gray-300 p-2 rounded mt-2 resize-none"
             />
-            <div className="flex gap-2">
+            <div className="flex gap-2 justify-end">
               <Button
                 onClick={handleSave}
-                containerStyles="!text-base px-2 xs:px-2 xs:py-1"
+                containerStyles="!font-medium !text-base px-2 xs:px-2 xs:py-1"
               >
                 저장
               </Button>
               <Button
                 onClick={handleCancel}
-                containerStyles="!text-base px-2 xs:px-2 xs:py-1 bg-alarm_orange !text-primary hover:bg-[#FFD292]"
+                containerStyles="!font-medium !text-base px-2 xs:px-2 xs:py-1 !text-primary bg-orange-100 hover:bg-orange-200"
               >
                 취소
               </Button>
@@ -97,7 +97,7 @@ export default function Comment({
           </div>
         ) : (
           <div className="flex justify-between">
-            <p className="text-sm xs:text-base font-medium text-gray-700 mt-0.5 break-words">
+            <p className="text-sm xs:text-base font-medium text-gray-700 mt-0.5 break-words mr-2">
               {content}
             </p>
             {/* 내가 작성한 댓글일 경우 수정/삭제 버튼 */}

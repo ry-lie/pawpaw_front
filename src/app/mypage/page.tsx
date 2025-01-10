@@ -14,6 +14,8 @@ import { getMyPage } from "@/lib/api/user";
 import { addPetInfo, updatePetInfo, deletePetInfo } from "@/lib/api/pet";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
+import { successToast, errorToast } from "@/utils/toast";
+
 
 interface UserInfo {
   id?: number;
@@ -149,8 +151,7 @@ export default function MyPage() {
         )
       );
     } catch (error) {
-      console.error("반려동물 정보 등록 중 에러 발생:", error);
-      alert("추가에 실패했습니다. 다시 시도해주세요.");
+      errorToast("추가에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
@@ -179,21 +180,24 @@ export default function MyPage() {
             : container
         )
       );
+      successToast("반려동물 정보가 수정되었습니다.");
     } catch (error) {
-      console.error("반려동물 정보 수정 중 에러 발생:", error);
-      alert("수정에 실패했습니다. 다시 시도해주세요.");
+      errorToast("수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   // 3. 반려동물 정보 삭제 (deletePetInfo)
   const handleDelete = async (id: number) => {
+    if (!id) {
+      errorToast("삭제할 반려동물을 찾을 수 없습니다.");
+      return;
+    }
     try {
       await deletePetInfo(id)
       setPetContainers((prev) => prev.filter((container) => container.id !== id));
-      alert("반려동물이 성공적으로 삭제되었습니다.");
+      successToast("반려동물이 성공적으로 삭제되었습니다.");
     } catch (error) {
-      console.error("반려동물 정보 삭제 중 에러 발생:", error);
-      alert("삭제에 실패했습니다. 다시 시도해주세요.")
+      errorToast("삭제에 실패했습니다. 다시 시도해주세요.")
     }
   };
 
