@@ -18,38 +18,37 @@ export default function UserInfoPage({ params }: { params: { userId: number } })
   const [loading, setLoading] = useState(true);
 
   // (유저정보, 펫정보) 정보 조회 (getMyPage)
+  const fetchData = async () => {
+    try {
+      const data = await getUser(userId);
+      // 유저 정보 추출
+      const userInfo = {
+        nickname: data.nickname,
+        canWalkingMate: data.canWalkingMate,
+        imageUrl: data.imageUrl,
+      };
+      // 펫정보 추출
+      const pets = (data.petList || []).map((pet: any) => ({
+        id: pet.id,
+        pet: {
+          name: pet.name,
+          age: pet.age,
+          description: pet.description,
+          gender: pet.gender,
+          size: pet.size,
+          imageUrl: pet.imageUrl,
+        },
+        isEditing: false,
+      }));
+      setUserInfo(userInfo); // 유저 정보 설정
+      setPetContainers(pets);
+    } catch (error) {
+      console.error("데이터를 불러오는데 실패했습니다:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-
-    const fetchData = async () => {
-      try {
-        const data = await getUser(userId);
-        // 유저 정보 추출
-        const userInfo = {
-          nickname: data.nickname,
-          canWalkingMate: data.canWalkingMate,
-          imageUrl: data.imageUrl,
-        };
-        // 펫정보 추출
-        const pets = (data.petList || []).map((pet: any) => ({
-          id: pet.id,
-          pet: {
-            name: pet.name,
-            age: pet.age,
-            description: pet.description,
-            gender: pet.gender,
-            size: pet.size,
-            imageUrl: pet.imageUrl,
-          },
-          isEditing: false,
-        }));
-        setUserInfo(userInfo); // 유저 정보 설정
-        setPetContainers(pets);
-      } catch (error) {
-        console.error("데이터를 불러오는데 실패했습니다:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchData();
   }, []);
 
