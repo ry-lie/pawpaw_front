@@ -38,8 +38,8 @@ export default function CommunityPage() {
   // 게시글 데이터 가져오기 함수
   const fetchPosts = async (isLoadMore = false) => {
     if (isLoading) return;
-
     setIsLoading(true);
+
     try {
       const categoryKey = categoryMap[selectedCategory] || ""; // 매핑된 카테고리 값 사용
       const currentCursor = isLoadMore ? cursor : null; // 카테고리 변경 시 커서를 초기화
@@ -165,9 +165,10 @@ export default function CommunityPage() {
                         : EmptyPicture.src // Static Import된 기본 이미지
                     }
                     alt="게시글 이미지"
-                    width={100}
-                    height={100}
-                    className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3"
+                    width={64} // 고정된 크기
+                    height={64} // 고정된 크기
+                    layout="fixed"
+                    className="object-fill rounded-md mr-3"
                   />
                   {/* 제목, 내용 */}
                   <div className="w-full flex flex-col justify-center">
@@ -207,7 +208,7 @@ export default function CommunityPage() {
           <button
             onClick={() => fetchPosts(true)}
             disabled={isLoading}
-            className="w-full mt-4 mb-12 py-2 font-medium bg-primary hover:bg-hover text-white rounded-md"
+            className="w-full mb-14 py-2 font-medium bg-primary hover:bg-hover text-white rounded-md"
           >
             {isLoading ? "불러오는 중..." : "더 보기"}
           </button>

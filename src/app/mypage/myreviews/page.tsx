@@ -35,21 +35,28 @@ export default function MyReviewsPage() {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await getMyReviews(id, cursor, take);
-      const fetchedReviews = response.body.data.reviews;
+      const currentCursor = isLoadMore ? cursor : null;
 
-      if (fetchedReviews.length < take) { setHasMore(false); }
-      if (isLoadMore) {
-        setReviews((prev) => [...prev, ...fetchedReviews]);
-      } else {
-        setReviews(fetchedReviews);
+      const response = await getMyReviews(currentCursor, take);
+      const fetchedPosts = response.body.data.boards;
+    
+      if (fetchedPosts.length < take) {
+        setHasMore(false);
       }
-      if (fetchedReviews.length > 0) {
-        setCursor(fetchedReviews[fetchedReviews.length - 1].id);
+  
+      if (isLoadMore) {
+        setReviews((prev) => [...prev, ...fetchedPosts]);
+      } else {
+        setReviews(fetchedPosts);
+      }
+  
+      if (fetchedPosts.length > 0) {
+        setCursor(fetchedPosts[fetchedPosts.length - 1].reviewId); // 더보기 클릭 시 커서 업데이트
+      } else {
+        setCursor(null); // 더 이상 게시물이 없을 경우 커서를 null로 설정
       }
     } catch (error) {
       setError("리뷰를 불러오는 중 문제가 발생했습니다.");
-      console.error("내가 쓴 리뷰 데이터를 가져오는 중 오류 발생:", error);
     } finally {
       setIsLoading(false);
     }
@@ -76,6 +83,9 @@ export default function MyReviewsPage() {
       <h2 className="font-bold text-xl xs:text-2xl ml-2 mb-2">내가 작성한 리뷰</h2>
       {/* 게시글 컨테이너 */}
       <div className="space-y-2">
+        {reviews.length === 0 && !isLoading && !error && (
+            <p className="text-center mt-6 text-gray-500">작성한 리뷰가 없습니다.</p>
+        )}
         {reviews.map((reviews) => (
           <div key={reviews.reviewId} className="p-2 xs:p-3 border rounded-md bg-white">
 
@@ -108,10 +118,34 @@ export default function MyReviewsPage() {
 
           </div>
         ))}
+
+        {/* 로딩 메시지 */}
+        {isLoading && <p className="text-center mt-4">Loading...</p>}
+
+        {/* 더보기 버튼 */}
+        {hasMore && (
+          <button
+            onClick={() => fetchReviews(true)}
+            disabled={isLoading}
+            className="w-full mt-4 py-2 font-medium bg-primary hover:bg-hover text-white rounded-md"
+            >
+            {isLoading ? "불러오는 중..." : "더 보기"}
+          </button>
+        )}
+
+        {!hasMore && reviews.length > 0 && (
+          <p className="text-center mt-6 text-gray-500">모든 리뷰를 확인했습니다.</p>
+        )}
+
+        {reviews.length === 0 && !isLoading && (
+          <p className="text-center mt-6 text-gray-500">작성한 리뷰가 없습니다.</p>
+        )}
       </div>
 
       {/* Footer 카테고리 독바 */}
+      <div className="mt-12">
       <Footer />
+      </div>
     </div>
   );
 }
