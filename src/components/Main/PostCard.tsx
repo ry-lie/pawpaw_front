@@ -34,32 +34,37 @@ export default function PostCard({ category, title, imageUrl }: PostCardProps) {
 
   return (
     <div className="rounded-lg overflow-hidden shadow hover:shadow-lg transition-shadow">
-      {imageUrl ? (
-        <div className="relative w-40 xs:w-44 h-24 xs:h-28">
+     {imageUrl ? (
+      <div className="relative w-40 xs:w-44 h-24 xs:h-28">
+        {/* 패딩을 위한 Wrapper 추가 */}
+        <div className="w-full h-full">
           <Image
             src={imageUrl}
             alt={title}
             layout="fill"
             objectFit="cover"
-            className="rounded-t-lg"
+            className="rounded-lg p-1"
           />
         </div>
+      </div>
       ) : (
         // 이미지 없을 때, 카테고리 별 포스트카드 기본 디자인
-        <div
-          className={`w-40 xs:w-44 h-24 xs:h-28 flex items-center justify-center ${categoryStyles[category]}`}
-        >
-          <Image
-            src={categoryIcons[category]?.src}
-            alt={`${category} 아이콘`}
-            width={55}
-            height={55}
-            className="object-contain"
-          />
+        <div className="p-1">
+          <div
+            className={`w-40 xs:w-44 h-24 xs:h-28 rounded-lg flex items-center justify-center ${categoryStyles[category]}`}
+          >
+            <Image
+              src={categoryIcons[category]?.src}
+              alt={`${category} 아이콘`}
+              width={55}
+              height={55}
+              className="object-contain"
+            />
+          </div>
         </div>
       )}
       {/* 포스트카드 글씨 영역 */}
-      <div className="p-3 text-start">
+      <div className="p-2 text-start">
         <p className="font-semibold text-sm">
           {title.length > maxLength ? `${title.slice(0, maxLength)}...` : title}
         </p>

@@ -25,7 +25,6 @@ export default function MyPostsPage() {
   useEffect(() => {
     initialize(); // 세션 스토리지에서 사용자 정보 불러오기
   }, []);
-  console.log("User ID:", id, "Logged In:", isLoggedIn);
 
   const [posts, setPosts] = useState<MyPosts[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -39,26 +38,30 @@ export default function MyPostsPage() {
     if (isLoading || !isLoggedIn || !id) return;
     setIsLoading(true);
     setError(null);
-    try {
-      const response = await getMyPosts(id, cursor, take);
-      const fetchedPosts = response.body.data.boards;
 
+    try {
+      const currentCursor = isLoadMore ? cursor : null;
+
+      const response = await getMyPosts(currentCursor, take);
+      const fetchedPosts = response.body.data.boards;
+    
       if (fetchedPosts.length < take) {
         setHasMore(false);
       }
-
+  
       if (isLoadMore) {
         setPosts((prev) => [...prev, ...fetchedPosts]);
       } else {
         setPosts(fetchedPosts);
       }
-
+  
       if (fetchedPosts.length > 0) {
-        setCursor(fetchedPosts[fetchedPosts.length - 1].id);
+        setCursor(fetchedPosts[fetchedPosts.length - 1].boardId); // 더보기 클릭 시 커서 업데이트
+      } else {
+        setCursor(null); // 더 이상 게시물이 없을 경우 커서를 null로 설정
       }
     } catch (error) {
       setError("게시글을 불러오는 중 문제가 발생했습니다.");
-      console.error("내가 쓴 글 데이터를 가져오는 중 오류 발생:", error);
     } finally {
       setIsLoading(false);
     }
@@ -85,6 +88,9 @@ export default function MyPostsPage() {
       <h2 className="font-bold text-xl xs:text-2xl ml-2 mb-2">내가 작성한 글</h2>
       {/* 게시글 컨테이너 */}
       <div className="space-y-2">
+        {posts.length === 0 && !isLoading && !error && (
+          <p className="text-center mt-6 text-gray-500">작성한 게시글이 없습니다.</p>
+        )}
         {posts.map((post) => (
           <div key={post.boardId} className="p-2 xs:p-3 border rounded-md bg-white">
             
@@ -139,16 +145,14 @@ export default function MyPostsPage() {
         {/* 로딩 메시지 */}
         {isLoading && <p className="text-center mt-4">Loading...</p>}
 
-        {/* 에러 메시지 */}
-        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-
         {/* 더보기 버튼 */}
-        {hasMore && !isLoading && (
+        {hasMore && (
           <button
             onClick={() => fetchPosts(true)}
-            className="w-full mt-4 mb-12 py-2 font-medium bg-primary hover:bg-hover text-white rounded-md"
-          >
-            더보기
+            disabled={isLoading}
+            className="w-full mt-4 py-2 font-medium bg-primary hover:bg-hover text-white rounded-md"
+            >
+            {isLoading ? "불러오는 중..." : "더 보기"}
           </button>
         )}
 
@@ -161,7 +165,9 @@ export default function MyPostsPage() {
         )}
       </div>
       {/* Footer 카테고리 독바 */}
+      <div className="mt-12">
       <Footer />
+      </div>
     </div>
   );
 }

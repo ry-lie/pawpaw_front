@@ -1,7 +1,5 @@
 import axiosInstance from "@/lib/axios";
 
-
-
 interface userInfoRes {
   canWalkingMate: boolean;
   nickname: string;
@@ -67,14 +65,13 @@ export const getUser = async (id: number) => {
 
 // 내가 쓴 글 조회 (/mypage/myposts)
 export const getMyPosts = async (
-  id: number,
-  cursor: number | null = null,
-  take: number = 7,
+  cursor: number | null,
+  take: number,
 ) => {
   const response = await axiosInstance.get(`/users/boards`, {
     params: {
-      cursor,
-      take,
+      cursor: cursor || null, // 커서 (시작 ID)
+      take: take || 7, // 한 번에 가져올 데이터 수
     },
   });
   return response.data;
@@ -82,7 +79,6 @@ export const getMyPosts = async (
 
 // 내가 쓴 리뷰 조회 (/mypage/myreviews)
 export const getMyReviews = async (
-  id: number,
   cursor: number | null = null,
   take: number = 7,
 ) => {
