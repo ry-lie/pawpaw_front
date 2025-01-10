@@ -89,7 +89,7 @@ export default function Comment({
               </Button>
               <Button
                 onClick={handleCancel}
-                containerStyles="!font-medium !text-base px-2 xs:px-2 xs:py-1 !text-primary bg-orange-100 hover:bg-orange-200"
+                containerStyles="!font-medium !text-base px-2 xs:px-2 xs:py-1 !text-primary !bg-orange-100 !hover:bg-orange-200"
               >
                 취소
               </Button>
