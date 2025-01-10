@@ -81,14 +81,10 @@ export default function Home() {
     const fetchUserInfo = async () => {
       try {
         const myInfo = await getMyPage(); // 유저 정보 요청
-        const { id, nickname, canWalkingMate, imageUrl } = myInfo;
+        const { canWalkingMate } = myInfo;
 
-        userStore.login({
-          id,
-          nickname,
-          imageUrl,
-          canWalkingMate,
-        });
+        useUserStore.getState().login();
+        useUserStore.getState().initialize();
         if (canWalkingMate) {
           try {
             await updateLocation(); // 서버에 위치 업데이트
