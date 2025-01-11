@@ -14,7 +14,6 @@ import { errorToast, successToast } from "@/utils/toast";
 import { useLocationUpdater } from "@/hooks/useLocationUpdater";
 import { useState } from "react";
 
-
 interface UserInfoProps {
   userInfo: {
     id?: number;
