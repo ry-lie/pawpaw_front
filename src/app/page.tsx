@@ -7,7 +7,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from 'react';
 import { getPopularBoardList, getLatestBoardList } from '@/lib/api/board';
 import PostCard, { PostCardProps } from '@/components/Main/PostCard';
-
+import StructureFotoer from "@/components/Main/StructureFooter";
 import Carousel from "@/components/Main/Carousel";
 import Carousel1 from "@/assets/images/carousel/carousel1.png";
 import Carousel2 from "@/assets/images/carousel/carousel2.png";
@@ -137,7 +137,7 @@ export default function Home() {
           </section>
 
           {/* 최신글 섹션 */}
-          <section className="w-full mb-20">
+          <section className="w-full mb-10">
             <h2 className="text-lg font-bold mb-1 flex items-center">
               <Image
                 src={FireIcon} // public 디렉토리 기준 경로
@@ -163,10 +163,15 @@ export default function Home() {
             </div>
           </section>
         </div>
+
+        {/* Footer: 웹사이트의 구조 */}          
+        <StructureFotoer />
       </main>
 
       {/* Footer 카테고리 독바 */}
+      <div className="mt-12">
       <Footer />
+      </div>
     </div>
   );
 }
