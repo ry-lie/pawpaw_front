@@ -160,127 +160,134 @@ export default function UserProfileForm() {
   });
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col justify-center items-center"
-    >
-      <div className="mb-8">
-        <label htmlFor="profile-image-input" className="cursor-pointer">
-          <Image
-            src={profileImageUrl || BasicProfile}
-            alt="프로필 이미지"
-            width={96}
-            height={96}
-            className="rounded-full w-36 h-36"
-          />
-        </label>
-        <Input
-          name="fileInput"
-          type="file"
-          id="profile-image-input"
-          accept="image/png, image/jpeg"
-          className="hidden"
-          onChange={handleProfileImageChange}
-        />
-        {userEmail && (
-          <div className="text-base mt-2 text-left">
-            {userEmail}
+    <div className="flex flex-col mt-12 mb-12">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-2"
+      >
+        {/* 1. 회원정보 수정 타이틀 */}
+        <div className="flex flex-col items-center mt-3 mb-3">
+          <h1 className="text-2xl font-bold">회원정보 수정</h1>
+        </div>
+
+        {/* 2. 프로필 이미지 섹션 */}
+        <div className="flex flex-col items-center space-y-4">
+          <label htmlFor="profile-image-input" className="cursor-pointer">
+              <Image
+                src={profileImageUrl || BasicProfile}
+                alt="프로필 이미지"
+                width={96}
+                height={96}
+                className="rounded-full w-36 h-36"
+              />
+            </label>
+            <Input
+              name="fileInput"
+              type="file"
+              id="profile-image-input"
+              accept="image/png, image/jpeg"
+              className="hidden"
+              onChange={handleProfileImageChange}
+            />
+            {userEmail && (
+              <div className="text-base mt-2 text-left">
+                {userEmail}
+              </div>
+            )}
+        </div>
+
+        {/* 3. 입력 필드 섹션 */}
+        <div className="flex flex-col">
+          <div className="space-y-3">
+            <Input
+                label="닉네임"
+                type="string"
+                className="w-80 h-10"
+                placeholder={userNickname}
+                {...register("nickname", {
+                  required: "닉네임을 입력해주세요",
+                })}
+                errorMessage={errors.nickname?.message}
+              >
+                <Button
+                  onClick={handleNicknameCheck}
+                  containerStyles="!text-sm !font-medium !bg-alarm_orange hover:!bg-orange-200 !text-primary hover:!text-white p-1"
+                >
+                  중복확인
+                </Button>
+            </Input>
+
+            <Input
+              label="비밀번호"
+              id="password"
+              type="password"
+              className="h-10 w-80"
+              {...register("password", {
+                required: "비밀번호를 입력해주세요",
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
+                  message:
+                    "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+                },
+              })}
+              errorMessage={errors.password?.message}
+            />
+
+            <Input
+              label="새 비밀번호"
+              id="newPassword"
+              type="password"
+              className="h-10 w-80"
+              {...register("newPassword", {
+                required: "새 비밀번호를 입력해주세요",
+                pattern: {
+                  value:
+                    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
+                  message:
+                    "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
+                },
+              })}
+              errorMessage={errors.newPassword?.message}
+            />
+
+            <Input
+              label="비밀번호 확인"
+              id="confirmPassword"
+              type="password"
+              className="h-10 w-80"
+              {...register("confirmPassword", {
+                required: "비밀번호를 입력해주세요",
+                validate: (value: string) =>
+                  value === newPassword || "비밀번호가 일치하지 않습니다.",
+              })}
+              errorMessage={errors.confirmPassword?.message}
+            >
+              {isPasswordMatch && (
+                <Image src={Confirm_icon} alt="체크표시" className="h-5 w-5" />
+              )}
+            </Input>
           </div>
-        )}
-      </div>
+        </div>
 
-      {/* 닉네임 */}
-      <div className="flex flex-col justify-start items-start">
-        닉네임
-        <Input
-          type="string"
-          className="w-80 h-10"
-          placeholder={userNickname}
-          {...register("nickname", {
-            required: "닉네임을 입력해주세요",
-          })}
-          errorMessage={errors.nickname?.message}
-        >
+        {/* 버튼 영역 */}
+        <div className="space-x-10 mt-10 flex justify-center pt-5">
           <Button
-            onClick={handleNicknameCheck}
-            containerStyles="!text-sm font-medium border bg-transparent !text-primary border-solid border-primary hover:!text-white p-1"
+            btnType="button"
+            containerStyles="!text-lg !font-semibold bg-stroke_gray w-16 h-8"
+            disabled={isLoading}
           >
-            중복확인
+            <Link href={"/mypage"}>취소</Link>
           </Button>
-        </Input>
-      </div>
-
-      {/* 비밀번호 입력 */}
-      <div className="flex flex-col justify-start items-start">
-        <Input
-          label="비밀번호"
-          id="password"
-          type="password"
-          className="h-10 w-80"
-          {...register("password", {
-            required: "비밀번호를 입력해주세요",
-            pattern: {
-              value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
-              message:
-                "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
-            },
-          })}
-          errorMessage={errors.password?.message}
-        />
-
-        <Input
-          label="새 비밀번호"
-          id="newPassword"
-          type="password"
-          className="h-10 w-80"
-          {...register("newPassword", {
-            required: "새 비밀번호를 입력해주세요",
-            pattern: {
-              value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>-])[A-Za-z\d!@#$%^&*(),.?":{}|<>-]{8,}$/,
-              message:
-                "비밀번호는 최소 8자리 이상, 특수문자를 포함해야 합니다.",
-            },
-          })}
-          errorMessage={errors.newPassword?.message}
-        />
-
-        <Input
-          label="비밀번호 확인"
-          id="confirmPassword"
-          type="password"
-          className="h-10 w-80"
-          {...register("confirmPassword", {
-            required: "비밀번호를 입력해주세요",
-            validate: (value: string) =>
-              value === newPassword || "비밀번호가 일치하지 않습니다.",
-          })}
-          errorMessage={errors.confirmPassword?.message}
-        >
-          {isPasswordMatch && (
-            <Image src={Confirm_icon} alt="체크표시" className="h-5 w-5" />
-          )}
-        </Input>
-      </div>
-
-      {/* 버튼 영역 */}
-      <div className="space-x-10 mt-10 flex justify-center pt-5">
-        <Button
-          btnType="button"
-          containerStyles="!text-lg !font-semibold bg-stroke_gray w-16 h-8"
-          disabled={isLoading}
-        >
-          <Link href={"/mypage"}>취소</Link>
-        </Button>
-        <Button
-          btnType="submit"
-          disabled={DisabledBtn}
-          containerStyles="!text-lg !font-semibold w-16 h-8"
-        >
-          확인
-        </Button>
-      </div>
-    </form>
+          <Button
+            btnType="submit"
+            disabled={DisabledBtn}
+            containerStyles="!text-lg !font-semibold w-16 h-8"
+          >
+            확인
+          </Button>
+        </div>
+      </form>
+    </div>
   );
 }

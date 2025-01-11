@@ -6,6 +6,8 @@ import useMediaQuery from "@/hooks/useMediaQuery";
 import { RiThumbUpFill } from "react-icons/ri";
 import { getMyReviews } from "@/lib/api/user";
 import { useUserStore } from "@/stores/userStore";
+import Link from "next/link";
+import { PATHS } from "@/constants/path";
 
 export type MyReviews = {
   reviewId: number;
@@ -38,7 +40,7 @@ export default function MyReviewsPage() {
       const currentCursor = isLoadMore ? cursor : null;
 
       const response = await getMyReviews(currentCursor, take);
-      const fetchedPosts = response.body.data.boards;
+      const fetchedPosts = response.body.data.reviews;
     
       if (fetchedPosts.length < take) {
         setHasMore(false);
@@ -86,37 +88,41 @@ export default function MyReviewsPage() {
         {reviews.length === 0 && !isLoading && !error && (
             <p className="text-center mt-6 text-gray-500">작성한 리뷰가 없습니다.</p>
         )}
-        {reviews.map((reviews) => (
-          <div key={reviews.reviewId} className="p-2 xs:p-3 border rounded-md bg-white">
+        {reviews.map((review) => (
+          <Link
+            href={PATHS.REVIEW_DETAIL(review.placeId, review.reviewId)}
+            key={review.reviewId}
+          >
+            <div key={review.reviewId} className="p-2 xs:p-3 mb-2 border rounded-md bg-white">
+              {/* 장소이름, 제목, 내용, 좋아요 */}
+              <div className="flex">
+                {/* 장소이름, 제목, 내용 */}
+                <div className="w-full flex flex-col justify-center">
+                  <span
+                    className="text-xs xs:text-sm bg-gray-200 px-1.5 py-0.5 rounded-md mb-1"
+                    style={{ width: "fit-content" }}
+                  >
+                    {review.placeName}
+                  </span>
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-bold">{review.title.length > titleMaxLength ? `${review.title.slice(0, titleMaxLength)}...` : review.title}</h3>
+                  </div>
 
-            {/* 장소이름, 제목, 내용, 좋아요 */}
-            <div className="flex">
-              {/* 장소이름, 제목, 내용 */}
-              <div className="w-full flex flex-col justify-center">
-                <span
-                  className="text-xs xs:text-sm bg-gray-200 px-1.5 py-0.5 rounded-md mb-1"
-                  style={{ width: "fit-content" }}
-                >
-                  {reviews.placeName}
-                </span>
-                <div className="flex justify-between items-center">
-                  <h3 className="font-bold">{reviews.title.length > titleMaxLength ? `${reviews.title.slice(0, titleMaxLength)}...` : reviews.title}</h3>
+                  <div className="flex justify-between items-center">
+                    <p>{review.content.length > contentMaxLength ? `${review.content.slice(0, contentMaxLength)}...` : review.content}</p>
+                  </div>
                 </div>
 
-                <div className="flex justify-between items-center">
-                  <p>{reviews.content.length > contentMaxLength ? `${reviews.content.slice(0, contentMaxLength)}...` : reviews.content}</p>
+                {/* 좋아요 */}
+                <div className="w-1/5 flex flex-col items-end justify-end">
+                  {review.isLikeClicked && (
+                    <RiThumbUpFill className="w-5 h-5 text-primary" />
+                  )}
                 </div>
               </div>
 
-              {/* 좋아요 */}
-              <div className="w-1/5 flex flex-col items-end justify-end">
-                {reviews.isLikeClicked && (
-                  <RiThumbUpFill className="w-5 h-5 text-primary" />
-                )}
-              </div>
             </div>
-
-          </div>
+          </Link>
         ))}
 
         {/* 로딩 메시지 */}
