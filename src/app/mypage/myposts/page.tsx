@@ -8,6 +8,8 @@ import EmptyPicture from "@/assets/icons/emptyPicture.png";
 import { getMyPosts } from "@/lib/api/user";
 import { useUserStore } from "@/stores/userStore";
 import useMediaQuery from "@/hooks/useMediaQuery";
+import Link from "next/link";
+import { PATHS } from "@/constants/path";
 
 export type MyPosts = {
   boardId: number;
@@ -92,55 +94,56 @@ export default function MyPostsPage() {
           <p className="text-center mt-6 text-gray-500">작성한 게시글이 없습니다.</p>
         )}
         {posts.map((post) => (
-          <div key={post.boardId} className="p-2 xs:p-3 border rounded-md bg-white">
-            
-            {/* 이미지칸, 게시글칸, 카테고리&좋아요 */}
-            <div className="flex">
-              {/* 1. 이미지 */}
-              <Image
-                  src={
-                    post.imageList?.length > 0 && post.imageList.some((img) => img.url)
-                      ? post.imageList.find((img) => img.isPrimary && img.url)?.url ||
-                        post.imageList.find((img) => img.url)?.url ||
-                        EmptyPicture.src // 유효한 URL이 없으면 기본 이미지
-                      : EmptyPicture.src // Static Import된 기본 이미지
-                  }
-                  alt="게시글 이미지"
-                  width={100}
-                  height={100}
-                  className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3"
-                />
-              {/* 2. 제목, 내용 */}
-              <div className="w-full flex flex-col justify-center">
-                <h3 className="font-bold">
-                  {post.title.length > titleMaxLength
-                    ? `${post.title.slice(0, titleMaxLength)}...`
-                    : post.title}
-                </h3>
-                <p>
-                  {post.content.length > contentMaxLength
-                    ? `${post.content.slice(0, contentMaxLength)}...`
-                    : post.content}
-                </p>
-              </div>
-
-              {/* 3. 카테고리 & 좋아요 */}
-              <div className="w-[30%] flex flex-col items-end justify-between">
-                {/* 카테고리 표시 버튼 */}
-                <span className="text-xs xs:text-sm bg-gray-200 px-1.5 py-0.5 rounded-md">
-                  {post.boardCategory}
-                </span>
-                {/* 좋아요 */}
-                {post.isLikeClicked && (
-                  <Image
-                    src={BoardHeartIcon} // 좋아요 아이콘 이미지 경로
-                    alt="좋아요 아이콘"
-                    className="w-6 h-7" // 아이콘 크기 조정
+          <Link href={PATHS.COMMUNITY_DETAIL(post.boardId)} key={post.boardId} >
+            <div key={post.boardId} className="p-2 mb-2 xs:p-3 border rounded-md bg-white">
+              {/* 이미지칸, 게시글칸, 카테고리&좋아요 */}
+              <div className="flex">
+                {/* 1. 이미지 */}
+                <Image
+                    src={
+                      post.imageList?.length > 0 && post.imageList.some((img) => img.url)
+                        ? post.imageList.find((img) => img.isPrimary && img.url)?.url ||
+                          post.imageList.find((img) => img.url)?.url ||
+                          EmptyPicture.src // 유효한 URL이 없으면 기본 이미지
+                        : EmptyPicture.src // Static Import된 기본 이미지
+                    }
+                    alt="게시글 이미지"
+                    width={100}
+                    height={100}
+                    className="w-16 h-16 xs:w-20 xs:h-20 object-cover rounded-md mr-3"
                   />
-                )}
+                {/* 2. 제목, 내용 */}
+                <div className="w-full flex flex-col justify-center">
+                  <h3 className="font-bold">
+                    {post.title.length > titleMaxLength
+                      ? `${post.title.slice(0, titleMaxLength)}...`
+                      : post.title}
+                  </h3>
+                  <p>
+                    {post.content.length > contentMaxLength
+                      ? `${post.content.slice(0, contentMaxLength)}...`
+                      : post.content}
+                  </p>
+                </div>
+
+                {/* 3. 카테고리 & 좋아요 */}
+                <div className="w-[30%] flex flex-col items-end justify-between">
+                  {/* 카테고리 표시 버튼 */}
+                  <span className="text-xs xs:text-sm bg-gray-200 px-1.5 py-0.5 rounded-md">
+                    {post.boardCategory}
+                  </span>
+                  {/* 좋아요 */}
+                  {post.isLikeClicked && (
+                    <Image
+                      src={BoardHeartIcon} // 좋아요 아이콘 이미지 경로
+                      alt="좋아요 아이콘"
+                      className="w-6 h-7" // 아이콘 크기 조정
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </Link>
         ))}
         {/* 로딩 메시지 */}
         {isLoading && <p className="text-center mt-4">Loading...</p>}
