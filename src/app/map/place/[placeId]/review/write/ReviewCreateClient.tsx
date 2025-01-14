@@ -5,7 +5,7 @@ import ReviewForm from "../ReviewForm";
 import { useRouter } from "next/navigation";
 import { PATHS } from "@/constants/path";
 import { createReview } from "@/lib/api/place";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 
 interface ReviewCreateClientProps {
   placeId: number;
@@ -22,8 +22,8 @@ export default function ReviewCreateClient({ placeId }: ReviewCreateClientProps)
       queryClient.invalidateQueries({ queryKey: ["reviewDetails", reviewId] });
       router.push(PATHS.REVIEW_DETAIL(placeId, reviewId))
       successToast("리뷰 등록을 성공했습니다.")
-    } catch (error) {
-      errorToast("다시 시도해주세요.")
+    } catch {
+      errorToast("리뷰 등록에 실패했습니다.")
     }
   };
 

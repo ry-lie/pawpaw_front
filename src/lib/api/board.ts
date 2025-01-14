@@ -1,4 +1,3 @@
-import axios from "axios";
 import axiosInstance from "../axios";
 
 /**게시글 */
@@ -19,70 +18,119 @@ export const getLatestBoardList = async (count: number) => {
 };
 
 // 3. 게시글 목록 조회
-export const getBoardList = async (cursor: number | null, take: number, category: string) => {
-  const params = {
+
+export const getBoardList = async (
+  cursor: number | null,
+  take: number,
+  category: string | null,
+) => {
+  // params 타입 정의
+  interface BoardListParams {
+    cursor: number | null;
+    take: number;
+    category?: string; // 선택적 속성
+  }
+
+  // 기본 params 객체 생성
+  const params: BoardListParams = {
     cursor: cursor || null, // 커서 (시작 ID)
-    take: take || 7,       // 한 번에 가져올 데이터 수
-    category: category === "전체" ? "" : category, // "전체"면 공백 처리
+    take: take || 7, // 한 번에 가져올 데이터 수
   };
+
+  // category가 "전체"가 아닌 경우에만 추가
+  if (category && category !== "전체") {
+    params.category = category;
+  }
+
   return await axiosInstance.get(`/boards`, { params });
 };
 
 // 4. 게시글 생성
-export interface postProps {
-  imageList: { isPrimary: boolean; url: string }[]; // 이미지 객체 배열
-  category: string;
-  title: string;
-  content: string;
+// 게시글 작성 Payload 인터페이스
+export interface PostPayload {
+  imageList: File[]; // 이미지 배열 (최대 4장)
+  category: string; // 카테고리 (예: "LIFE")
+  title: string; // 게시글 제목 (최대 30자)
+  content: string; // 게시글 내용 (최대 1,000Byte)
 }
-export const addPost = async (data: postProps) => {
+
+// 게시글 작성 API 함수
+export const createPostAPI = async (payload: PostPayload) => {
   const formData = new FormData();
-  // 필드 추가
-  // imageList 처리
-  data.imageList.forEach((image) => {
-    formData.append("imageList", image.url); // url만 추가
+
+  // 이미지 파일 추가
+  payload.imageList.forEach((image) => {
+    formData.append(`imageList`, image);
   });
-  formData.append("category", data.category);
-  formData.append("title", data.title);
-  formData.append("content", data.content);
+  // 기타 필수 값 추가
+  formData.append("category", payload.category);
+  formData.append("title", payload.title);
+  formData.append("content", payload.content);
+
   // API 요청
-  const response = await axios.post(`/boards`, formData, {
+  const response = await axiosInstance.post(`/boards`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
-  return response;
+
+  return response.data; // API 응답 반환
 };
 
 // 5. 게시글 상세 조회
-export const fetchBoardDetail = async (postId: string) => {
+export const fetchBoardDetail = async (postId: number) => {
   return await axiosInstance.get(`/boards/${postId}`);
 };
 
 // 6. 게시글 수정
+export const updatePostAPI = async (postId: number, payload: PostPayload) => {
+  const formData = new FormData();
 
+  payload.imageList.forEach((image) => {
+    formData.append("imageList", image);
+  });
+  formData.append("category", payload.category);
+  formData.append("title", payload.title);
+  formData.append("content", payload.content);
 
-
+  const response = await axiosInstance.put(`/boards/${postId}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+};
 
 // 7. 게시글 삭제
-export const deletePost = async (postId: string) => {
+export const deletePost = async (postId: number) => {
   return await axiosInstance.delete(`/boards/${postId}`);
 };
 
 /* 댓글 */
-// 1. 댓글 수정
-
-
-
+// 1. 댓글 작성
+export const createComment = async (postId: number, content: string) => {
+  return await axiosInstance.post(`/boards/${postId}/comments`, {
+    content,
+  });
+};
 // 2. 댓글 삭제
-export const deleteComment = async (postId: string, commentId: string) => {
+export const deleteComment = async (postId: number, commentId: number) => {
   return await axiosInstance.delete(`/boards/${postId}/comments/${commentId}`);
+};
+// 3. 댓글 수정
+export const updateComment = async (
+  postId: number,
+  commentId: number,
+  content: string,
+) => {
+  return await axiosInstance.put(`/boards/${postId}/comments/${commentId}`, {
+    content,
+  });
 };
 
 /*좋아요*/
-export const toggleLike = async (postId: string, newLikeState: boolean) => {
-  axiosInstance.post("/api/like", {
-    postId,
+export const toggleLike = async (postId: number, newLikeState: boolean) => {
+  axiosInstance.put(`/boards/${postId}/isLikeClicked`, {
     isLikeClicked: newLikeState,
   });
 };

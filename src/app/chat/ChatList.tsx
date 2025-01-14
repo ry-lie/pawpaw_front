@@ -6,20 +6,21 @@ import { useEffect, useState } from "react";
 import NewMessage from "@/assets/icons/newMessage_icon.png";
 import Image from "next/image";
 import { io } from "socket.io-client";
-import { roomList } from "@/lib/api";
-import { useUserStore } from "@/stores/userStore";
 
-type LastMessageType = {
+import { useUserStore } from "@/stores/userStore";
+import { roomList } from "@/lib/api/chat";
+
+interface LastMessageType {
   text: string;
   sender: string;
   timestamp: string;
-};
+}
 
-type ConversationType = {
+interface ConversationType {
   id: string;
   participants: string[];
   lastMessage: LastMessageType;
-};
+}
 
 const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 
@@ -56,7 +57,7 @@ export default function ChatList() {
         console.error("방목록을 가져오는데 실패했습니다.", e);
       }
     };
-    loadRoomList;
+    loadRoomList();
   }, [currentUser]);
 
   //소캣 연결

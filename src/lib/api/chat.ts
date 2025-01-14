@@ -1,23 +1,42 @@
-import axiosInstance from "../axios";
+import { io } from "socket.io-client";
+
+interface Room {
+  roomId: string;
+  userList: { id: string }[];
+}
 
 const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 
-//이전 로그 가져오기
-export const readChatLog = async (roomId: string) => {
-  const response = await axiosInstance.get(`${socket_url}`);
-  return response.data;
-};
-//방목록 가져오기
-export const roomList = async () => {
-  const response = await axiosInstance.get(`${socket_url}`);
-  return response.data;
-};
+const socket = io(socket_url, {withCredentials: true});
 
 //방생성하기
-export const makeRoom = async()=>{
-  const response = await axiosInstance.post(`${socket_url}`, {
-    action : "create-room",
-    roomName : "room1"
+export const makeRoom = (roomId: string) => {
+  return new Promise((resolve, reject) => {
+    socket.emit("create-room", roomId);
+    socket.on("receive-message", (data) => {
+      console.log("방이 생성 되었습니다.", data);
+      resolve(data);
+    });
+
+    socket.on("error", (error) => {
+      console.error("소켓 오류 발생", error);
+      reject(error);
+    });
   });
-  return response.data;
-}
+};
+
+//방 목록 가져오기
+export const roomList = async (): Promise<Room[]> => {
+  return new Promise((resolve, reject) => {
+    socket.emit("get-room-list");
+    socket.on("receive-message", (data: Room[]) => {
+      console.log("방 목록을 가져왔습니다.", data);
+      resolve(data);
+    });
+
+    socket.on("error", (error) => {
+      console.error("소켓 오류 발생", error);
+      reject(error);
+    });
+  });
+};

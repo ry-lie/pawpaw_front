@@ -1,4 +1,4 @@
-export const handleImamgeUploading =
+export const handleImageUploading =
   (onConfilm: (file: File) => void) =>
   (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

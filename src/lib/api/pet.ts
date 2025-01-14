@@ -1,8 +1,8 @@
 import axiosInstance from "@/lib/axios";
 
-// 반려동물 정보 등록
+// 1. 반려동물 정보 등록
 export const addPetInfo = async (petData: {
-  image?: File;
+  image: File | null;
   name: string;
   age: number;
   description: string;
@@ -17,7 +17,6 @@ export const addPetInfo = async (petData: {
   formData.append("description", petData.description);
   formData.append("gender", petData.gender);
   formData.append("size", petData.size);
-
   const response = await axiosInstance.post("/pets", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -27,11 +26,11 @@ export const addPetInfo = async (petData: {
 };
 
 
-// 반려동물 정보 수정
+// 2. 반려동물 정보 수정
 export const updatePetInfo = async (
-  petId: string,
+  petId: number,
   petData: {
-    image?: File;
+    image: File | null;
     name?: string;
     age?: number;
     description?: string;
@@ -47,11 +46,15 @@ export const updatePetInfo = async (
   if (petData.description) formData.append("description", petData.description);
   if (petData.gender) formData.append("gender", petData.gender);
   if (petData.size) formData.append("size", petData.size);
-
   const response = await axiosInstance.put(`/pets/${petId}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
   return response.data;
+};
+
+// 3. 반려동물 정보 삭제
+export const deletePetInfo = async (petId: number) => {
+  return await axiosInstance.delete(`/pets/${petId}`);
 };

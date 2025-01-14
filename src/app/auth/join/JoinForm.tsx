@@ -1,14 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Image from "next/image";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import BasicProfile from "@/assets/icons/profile_icon.png";
 import { registerAPI, RegisterPayload } from "@/lib/api/auth";
 import { useDuplicateCheck } from "./useDuplicateCheck";
-import { errorToast, successToast } from "@/utils/Toast";
+import { errorToast, successToast } from "@/utils/toast";
 import { PATHS } from "@/constants/path";
 import { useRouter } from "next/navigation";
 
@@ -24,29 +24,19 @@ interface JoinInputs {
 export default function JoinForm() {
   const {
     register,
-    control,
     handleSubmit,
     getValues,
     formState: { errors, isSubmitting, isValid },
     setError
   } = useForm<JoinInputs>({ mode: "onChange" });
   const router = useRouter();
-  const emailCodeValue = useWatch({
-    control,
-    name: "emailCode",
-  });
-
+  const [isEmailSending, setIsEmailSending] = useState(false); // 이메일 요청 로딩 상태
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null); // 업로드된 이미지 파일 상태
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null); // 미리보기 URL
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    const MAX_SIZE = 10240; // 10KB
 
-    if (file && file.size > MAX_SIZE) {
-      errorToast("파일 크기가 10KB를 초과합니다.");
-      return;
-    }
     if (file) {
       setProfileImageFile(file);
 
@@ -87,7 +77,7 @@ export default function JoinForm() {
       await registerAPI(payload);
       router.push(PATHS.LOGIN);
       successToast("회원가입 성공하셨습니다.")
-    } catch (error) {
+    } catch {
       errorToast("회원가입을 다시 시도해주세요.")
     }
   };
@@ -143,7 +133,7 @@ export default function JoinForm() {
         <div className="flex gap-2">
           <Button
             btnType="button"
-            onClick={() => {
+            onClick={async () => {
               const email = getValues("email") || "";
               const emailPattern = /\S+@\S+\.\S+/;
 
@@ -163,14 +153,19 @@ export default function JoinForm() {
                 return;
               }
 
-              handleEmailVerification(); // 유효한 경우 이메일 인증 요청
+              try {
+                setIsEmailSending(true);
+                await handleEmailVerification();
+              } finally {
+                setIsEmailSending(false);
+              }
             }}
-            isLoading={isSubmitting}
-            disabled={!isVerificationEnabled}
-            containerStyles={`w-[50px] h-[30px] font-normal text-xs !bg-alarm_orange !text-primary ${isVerificationEnabled ? "!bg-alarm_orange !text-primary" : "bg-gray-300 text-gray-500"
+            isLoading={isEmailSending}
+            disabled={!isVerificationEnabled || isEmailSending}
+            containerStyles={`w-[50px] h-[30px] font-normal text-xs ${isEmailSending ? "bg-gray-300 text-gray-500" : "!bg-alarm_orange !text-primary"
               }`}
           >
-            요청
+            {isEmailSending ? "로딩중" : "요청"}
           </Button>
           <Button
             btnType="button"
@@ -224,7 +219,7 @@ export default function JoinForm() {
       <Input
         label="닉네임"
         type="text"
-        className="w-full h-12"
+        className="w-full h-12 mb-3"
         {...register("nickname", {
           required: "닉네임은 필수 입력 항목입니다.",
           maxLength: { value: 30, message: "닉네임은 최대 30글자 이하로 입력해야 합니다." },
@@ -235,7 +230,7 @@ export default function JoinForm() {
           btnType="button"
           onClick={handleNicknameCheck}
           disabled={!getValues("nickname")}
-          containerStyles={`w-[70px] h-[30px] font-normal text-xs ${!getValues("nickname") ? "bg-gray-300 text-gray-500" : "bg-primary text-white"}`}
+          containerStyles={`w-[70px] h-[30px] font-normal text-xs mb-3 ${!getValues("nickname") ? "bg-gray-300 text-gray-500" : "bg-primary text-white"}`}
         >
           중복 확인
         </Button>
@@ -245,7 +240,7 @@ export default function JoinForm() {
         disabled={!isValid || isSubmitting || !isEmailChecked || !isNicknameChecked}
         isLoading={isSubmitting}
         btnType="submit"
-        containerStyles={`w-full h-14 ${isValid && isEmailChecked && isNicknameChecked && !isSubmitting ? "bg-primary text-white" : "bg-gray-300 text-gray-500"}`}
+        containerStyles={`w-full h-12 !text-lg !font-medium ${isValid && isEmailChecked && isNicknameChecked && !isSubmitting ? "bg-primary text-white" : "bg-gray-300 text-gray-500"}`}
       >
         회원가입
       </Button>
