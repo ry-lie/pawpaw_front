@@ -5,10 +5,11 @@ import MapIcon from "@/assets/icons/map_icon.png"
 import WalkingMateIcon from "@/assets/icons/footprint_color.png"
 import MyPageIcon from "@/assets/icons/mypage_icon.png"
 import Image from "next/image";
-
-
+import { useTranslation } from "react-i18next";
 
 export default function Footer() {
+    const { t, i18n } = useTranslation("structureFooter");
+
     return (
         <footer className="fixed bottom-0 left-0 right-0 z-50 bg-white border-l border-r shadow-top-sm border-stroke_gray px-6 py-4 max-w-mobile w-full mx-auto h-14">
             <div className="flex justify-around items-center h-full">
@@ -22,7 +23,7 @@ export default function Footer() {
                             alt="community"
                             className="h-6 w-8 mb-0.5"
                         />
-                        <span className="text-xs font-semibold">커뮤니티</span>
+                        <span className="text-xs font-semibold">{t("community")}</span>
                     </Link>
                 </div>
                 <div className="flex flex-col items-center">
@@ -35,7 +36,7 @@ export default function Footer() {
                             alt="map"
                             className="h-7 w-5 mb-0.5"
                         />
-                        <span className="text-xs font-semibold">지도</span>
+                        <span className="text-xs font-semibold">{t("map")}</span>
                     </Link>
                 </div>
                 <div className="flex flex-col items-center">
@@ -48,7 +49,7 @@ export default function Footer() {
                             alt="walkmate"
                             className="h-6 w-6 mb-1"
                         />
-                        <span className="text-xs font-semibold">산책메이트</span>
+                        <span className="text-xs font-semibold">{t("walkmate")}</span>
                     </Link>
                 </div>
                 <div className="flex flex-col items-center">
@@ -61,7 +62,7 @@ export default function Footer() {
                             alt="mypage"
                             className="h-8 w-8"
                         />
-                        <span className="text-xs font-semibold">마이페이지</span>
+                        <span className="text-xs font-semibold">{t("mypage")}</span>
                     </Link>
                 </div>
             </div>

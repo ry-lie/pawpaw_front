@@ -17,6 +17,7 @@ import { PATHS } from "../constants/path";
 import { useUserStore } from "@/stores/userStore";
 import { getMyPage } from "@/lib/api/user";
 import { useLocationUpdater } from "@/hooks/useLocationUpdater";
+import { useTranslation } from "react-i18next";
 
 export interface BoardItem {
   id: number;
@@ -27,17 +28,18 @@ export interface BoardItem {
   imageUrl?: string;
 }
 
-const carouselData = [
-  { id: 1, imgUrl: Carousel1, text: "반려동물과\n함께하는 일상" },
-  { id: 2, imgUrl: Carousel2, text: "반려동물과\n어디든지 함께해요" },
-  { id: 3, imgUrl: Carousel3, text: "포포에서 만나는\n산책메이트" },
-];
-
 export default function Home() {
   const { updateLocation } = useLocationUpdater(); //현재 위치 가져와서 업데이트하기
   const [popularPosts, setPopularPosts] = useState<PostCardProps[]>([]);
   const [latestPosts, setLatestPosts] = useState<PostCardProps[]>([]);
   const userStore = useUserStore();
+  const { t, i18n } = useTranslation("main");
+
+  const carouselData = [
+    { id: 1, imgUrl: Carousel1, text: t("carouselText1") },
+    { id: 2, imgUrl: Carousel2, text: t("carouselText2") },
+    { id: 3, imgUrl: Carousel3, text: t("carouselText3") },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,7 +122,7 @@ export default function Home() {
                 height={24}
                 className="mx-1 mb-1"
               />
-              인기글
+              {t("popularPosts")}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 place-items-center">
               {popularPosts.map((post) => (
@@ -146,7 +148,7 @@ export default function Home() {
                 height={24}
                 className="mx-1 mb-1"
               />
-              최신글
+              {t("popularPosts")}
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 place-items-center">
               {latestPosts.map((post) => (

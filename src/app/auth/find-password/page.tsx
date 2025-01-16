@@ -9,7 +9,7 @@ export const metadata = {
 export default function FindPasswordPage() {
   return (
     <div className="flex flex-col justify-center min-h-full items-center">
-      <div className="font-bold text-2xl">
+      <div className="font-bold text-2xl mb-5">
         비밀번호 찾기
       </div>
       <div className="flex flex-col">
