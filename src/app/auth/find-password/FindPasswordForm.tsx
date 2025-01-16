@@ -87,7 +87,7 @@ export default function FindPasswordForm() {
   };
 
   return (
-    <div>
+    <div className="space-y-3">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -98,7 +98,7 @@ export default function FindPasswordForm() {
           label="이메일"
           type="email"
           placeholder="abc@abc.com"
-          className="w-80 mt-2"
+          className="w-80"
           {...register("email", {
             required: "이메일은 필수 입력 항목입니다.",
             pattern: {
@@ -110,7 +110,7 @@ export default function FindPasswordForm() {
         >
           <Button
             btnType="submit"
-            containerStyles="mt-2 p-1"
+            containerStyles="mt-2 py-1 px-2 !text-sm !font-medium mb-2"
             disabled={!getValues("email")}
           >
             요청
@@ -129,7 +129,7 @@ export default function FindPasswordForm() {
             label="인증코드"
             type="password"
             placeholder="인증번호를 입력하세요"
-            className="w-80 mt-2"
+            className="w-80"
             {...register("emailCode", {
               required: "인증번호를 입력하세요",
               pattern: {
@@ -142,8 +142,8 @@ export default function FindPasswordForm() {
             <Button
               btnType="submit"
               disabled={!getValues("emailCode")}
-              containerStyles="mt-2 p-1"
-            >
+              containerStyles="mt-2 py-1 px-2 !text-sm !font-medium mb-2"
+              >
               확인
             </Button>
           </Input>
@@ -155,7 +155,7 @@ export default function FindPasswordForm() {
           <Button
             btnType="submit"
             disabled={isLoading}
-            containerStyles="h-10 w-80 mt-10"
+            containerStyles="h-10 w-80 mt-4 !text-xl !font-semibold"
           >
             전송
           </Button>

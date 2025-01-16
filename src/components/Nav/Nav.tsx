@@ -10,6 +10,7 @@ import MiniLogo from "@/assets/images/logo/miniLogo.png";
 import ChatEventAlram from "./ChatEventAlarm";
 import { logoutAPI } from "@/lib/api/auth";
 import { errorToast } from "@/utils/toast";
+import { useTranslation } from "react-i18next";
 
 const NONE_NAV_PAGE_LIST = [PATHS.LOGIN, PATHS.COMMUNITY_WRITE] as string[];
 
@@ -19,6 +20,7 @@ export default function Nav() {
   useEffect(() => {
     useUserStore.getState().initialize();
   }, []);
+  const { t, i18n } = useTranslation("auth");
 
   // 로그아웃
   const handleLogout = async () => {
@@ -61,7 +63,7 @@ export default function Nav() {
                 onClick={handleLogout}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
               >
-                로그아웃
+                {t("logout")}
               </button>
               <ChatEventAlram />
             </>
@@ -71,13 +73,13 @@ export default function Nav() {
                 href={PATHS.LOGIN}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
               >
-                로그인
+                {t("login")}
               </Link>
               <Link
                 href={PATHS.JOIN}
                 className="text-sm text-gray-600 hover:text-gray-800 transition"
               >
-                회원가입
+                {t("signup")}
               </Link>
             </>
           )}
