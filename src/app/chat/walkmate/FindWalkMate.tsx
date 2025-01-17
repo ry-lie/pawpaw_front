@@ -5,12 +5,10 @@ import { useUserStore } from "@/stores/userStore";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useEffect, useState } from "react";
 import { anotherLocation } from "@/lib/api/userPlace";
-import { successToast } from "@/utils/toast";
 import { useRouter } from "next/navigation";
 
 import useSocketStore from "@/stores/socketStore";
-
-
+import { PATHS } from "@/constants/path";
 
 interface User {
   id: number;
@@ -18,42 +16,37 @@ interface User {
   radius: number;
 }
 
-export default function PersonRadius() {
+export default function FindWalkMate() {
   const router = useRouter();
   const currentNickname = useUserStore((state) => state.nickname);
   const { location } = useGeolocation();
   const [findUsers, setFindUsers] = useState<User[]>([]);
   const [radius, setRadius] = useState(250);
   const [isLoading, setIsLoading] = useState(false);
-  const { socket, connect, disconnect } = useSocketStore();
-
+  const { socket, connect } = useSocketStore();
+  const [recipientId, setRecipientId] = useState(0);
 
   useEffect(() => {
-    connect();
 
-    if (!socket) {
-      console.error("socket 객체가 초기화되지 않았습니다.");
-      return;
-    }
-    socket.on('create-room-response', (res) => {
-      const { message, data } = res;
-
-      console.log('message', message);
-      console.log('data', data);
-    });
-
+    // 서버로부터 방 생성 응답 처리
     socket.on("create-room-response", (response) => {
-      console.log("Room created:", response.data.roomName);
+      const { roomName } = response.data;
+
+      if (recipientId) {
+        // 채팅룸으로 이동
+        router.push(PATHS.CHATTING_DETAIL(roomName, recipientId));
+        setRecipientId(0);
+      }
+
     });
 
     return () => {
       if (socket) {
         socket.off("create-room-response");
-        disconnect();
       }
     };
-  }, [socket])
-  // 현재 위치를 서버에 업데이트 및 사용자 검색
+  }, [socket, recipientId, connect]);
+  // 사용자 검색
   const handleLocation = async () => {
     if (!location) {
       console.error("위치정보를 가져올 수 없습니다.");
@@ -76,7 +69,6 @@ export default function PersonRadius() {
         setFindUsers([]);
       }
 
-      console.log("반경 내 사용자 검색 완료", users);
     } catch (e) {
       console.error("사용자 검색 오류", e);
       setFindUsers([]);
@@ -88,6 +80,7 @@ export default function PersonRadius() {
   // 채팅 요청
   const handleRequestChat = async (user: User) => {
     socket.emit("create-room", { recipientId: user.id });
+    setRecipientId(user.id);
   };
 
   // 반경 선택

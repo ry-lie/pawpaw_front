@@ -9,7 +9,9 @@ import Loading from "./loading";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import ErrorHandler from "./ErrorHandler";
+
 import Head from "next/head";
+import SocketProvider from "./SocketProvider";
 
 export const metadata: Metadata = {
   title:
@@ -38,6 +40,7 @@ export default function RootLayout({
       <body>
         <Suspense fallback={<Loading />}>
           <QueryProvider>
+            <SocketProvider />
             <Nav />
             <ErrorHandler />
 

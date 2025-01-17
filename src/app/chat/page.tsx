@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import ChatList from "./ChatList";
 import ChatRoomPage from "./[id]/page"
 
 export const metadata = {
@@ -10,7 +11,7 @@ export default function ChatListPage() {
 
   return (
     <div>
-      <ChatRoomPage />
+      <ChatList />
       <Footer />
     </div>
   );
