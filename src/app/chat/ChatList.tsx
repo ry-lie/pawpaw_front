@@ -1,7 +1,6 @@
 "use client"
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Button from "@/components/Button";
 import NewMessage from "@/assets/icons/newMessage_icon.png";
 import { fetchRoomList } from "@/lib/api/chat";
 import { PATHS } from "@/constants/path";
@@ -32,7 +31,6 @@ export default function ChatList() {
       try {
         setIsLoading(true);
         const roomListData = await fetchRoomList();
-        console.log(roomListData, "====룸리스트====");
 
         // 데이터 매핑
         const mappedRooms: Room[] = roomListData.map((room: any) => ({
@@ -54,14 +52,10 @@ export default function ChatList() {
   }, []);
 
   // 방 입장 이벤트
-  const handleJoinRoom = (roomId: string, recipientId: number, recipientName: string) => {
+  const handleJoinRoom = (roomId: string, recipientId: number) => {
     router.push(PATHS.CHATTING_DETAIL(roomId, recipientId));
   };
-  // 방 나가기 이벤트
-  const deleteChatRoom = (roomId: string) => {
-    const updatedConversation = conversation.filter((room) => room.id !== roomId);
-    setConversation(updatedConversation);
-  };
+
 
   return (
     <div className="p-4 mb-12">
@@ -71,7 +65,7 @@ export default function ChatList() {
           <li
             key={room.id} // 고유 식별자로 설정
             className="flex justify-between items-center border p-2 rounded-lg"
-            onClick={() => handleJoinRoom(room.id, room.partner.id, room.partner.nickname)}>
+            onClick={() => handleJoinRoom(room.id, room.partner.id)}>
 
             <div className="flex items-center" >
               <Image
@@ -82,20 +76,13 @@ export default function ChatList() {
                 height={40}
               />
               <div>
-                <p className="font-bold">{room.partner?.nickname}</p>
+                <p className="font-semibold">{room.partner?.nickname}</p>
                 <p className="text-gray-500 text-sm">{room.lastMessage}</p>
               </div>
             </div>
 
             <div className="flex flex-col justify-center items-center">
-              <Button
-                disabled={isLoading}
-                btnType="submit"
-                onClick={() => deleteChatRoom(room.id)}
-                containerStyles="!text-base !text-black bg-transparent hover:underline hover:bg-transparent"
-              >
-                나가기
-              </Button>
+
               {room.hasNewMessage && (
                 <Image
                   src={NewMessage}
