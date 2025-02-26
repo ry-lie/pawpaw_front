@@ -63,20 +63,22 @@ $ npm start
 <br/>
 <br/>
 
-# 6. Technology Stack (기술 스택)
+# 6. 화면구성
+<br/>
 
-## 6.2 Frotend
+# 7. Technology Stack (기술 스택)
+
+## (1) Frotend
 <img src="https://github.com/user-attachments/assets/640c8e48-2718-4ce2-9cd6-514e6b565de5" alt="frontend-technology" width="100%"/>
 
 <br/>
 
-## 6.3 Backend
+## (2) Backend
 <img src="https://github.com/user-attachments/assets/6d926a04-0cc4-4ed1-8729-9944be8ed2a1" alt="backend-technology" width="100%"/>
-"
 
 <br/>
 
-## 6.4 Cooperation
+## (3) Cooperation
 |  |  |
 |-----------------|-----------------|
 | Git    |  <img src="https://github.com/user-attachments/assets/483abc38-ed4d-487c-b43a-3963b33430e6" alt="git" width="100">    |
