@@ -64,6 +64,19 @@ $ npm start
 <br/>
 
 # 6. 화면구성
+|                         로그인 페이지                         |                      회원가입 페이지                      |                           메인 페이지                            |
+| :-----------------------------------------------------------: | :-------------------------------------------------------: | :--------------------------------------------------------------: |
+|       <img width="200" alt="Image" src="https://github.com/user-attachments/assets/182096f9-aa41-45f8-99ae-3d5e2ff39202" />        |     <img width="200" alt="Image" src="https://github.com/user-attachments/assets/a6a6f2ed-5502-4198-9994-57c02b1c63e5" />     |                   |
+|                        커뮤니티 페이지                         |                       게시글 상세 페이지                       |                         댓글 기능                         |
+|    <img width="200" alt="Image" src="https://github.com/user-attachments/assets/ce3a8b68-a305-40e8-9909-0a60a412579b" />    |    <img width="200" alt="Image" src="https://github.com/user-attachments/assets/f5bf6ab2-4695-45e0-8d70-32e282f4240e" />    | <img width="200" alt="Image" src="https://github.com/user-attachments/assets/ed98b336-dc65-4b98-b8e7-1ec9aa48402c" /> |
+|                        게시글 작성 페이지                         |                      지도 페이지                      |                           장소 상세 모달                           |
+| <img width="200" alt="Image" src="https://github.com/user-attachments/assets/c29d9a62-d17c-4a2d-8a4b-9d6b7d70e243" /> | <img width="200" alt="Image" src="https://github.com/user-attachments/assets/73e28e05-1692-4395-bba8-f5bd7a3e719e" /> |     <img width="200" alt="Image" src="https://github.com/user-attachments/assets/6cc842eb-8e1a-499e-8cb3-064139490e26" />     |
+|                        리뷰 작성 페이지                         |                      리뷰 상세 페이지                      |                           산책메이트 찾기 페이지                           |
+| <img width="200" alt="Image" src="https://github.com/user-attachments/assets/29347940-e944-4f80-93a4-5df9da81e239" /> |  |          |
+|                        채팅 페이지                         |                      마이 페이지                      |                           내가 쓴 리뷰 조회 페이지                           |
+|  | <img width="200" alt="Image" src="https://github.com/user-attachments/assets/dcd8e303-14c9-45eb-82ba-601fafdf483b" /> |     <img width="200" alt="Image" src="https://github.com/user-attachments/assets/364526e3-6e16-463a-a045-b1576b274b85" />     |
+|                        내가 쓴 글 조회 페이지                         |                                            |                                                      |
+|  |  |          |
 <br/>
 
 # 7. Technology Stack (기술 스택)
