@@ -1,6 +1,3 @@
-
-"use client";
-
 import MapWrapper from "./MapWrapper";
 
 export const metadata = {
