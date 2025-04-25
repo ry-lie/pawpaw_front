@@ -23,7 +23,14 @@ export const PATHS = {
   COMMUNITY_EDIT: (id: number) => `/community/edit/${id}`,
 
   CHATTING_LIST: "/chat",
-  CHATTING_DETAIL: (id: string) => `/chat/${id}`,
+  //  CHATTING_DETAIL: (id: string) => `/chat/${id}`,
+  CHATTING_DETAIL: (id: string, recipientId?: number) => {
+    let path = `/chat/${id}`;
+    if (recipientId) {
+      path += `?recipientId=${encodeURIComponent(recipientId)}`;
+    }
+    return path;
+  },
 
   USER_INFO: (userId: number) => `/user/${userId}`,
 } as const;
