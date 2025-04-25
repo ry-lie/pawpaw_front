@@ -1,5 +1,5 @@
 import Footer from "@/components/Footer";
-import FindWalkMate from "./FindWalkMate";
+import FindWalkMateWrapper from "./FindWalkMateWrapper";
 
 export const metadata = {
   title: "산책메이트 - 포포",
@@ -9,7 +9,7 @@ export const metadata = {
 export default function WalkMatePage() {
   return (
     <div>
-      <FindWalkMate />
+      <FindWalkMateWrapper />
       <Footer />
     </div>
   );
