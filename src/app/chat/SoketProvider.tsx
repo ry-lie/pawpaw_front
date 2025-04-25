@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useEffect } from "react";
+import { createContext, ReactNode, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 interface SocketContextProps {
@@ -11,36 +11,40 @@ export const SocketContext = createContext<SocketContextProps>({
   socket: null,
 });
 
-const socket_url=process.env.NEXT_PUBLIC_SOCKET_URL
+const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 export default function SocketProvider({ children }: { children: ReactNode }) {
-  const socket = io(socket_url, {
-    withCredentials: true,
-    reconnectionAttempts: 3,
-  });
+  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    // 소켓 연결 처리
-    socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
+    // ✅ 클라이언트에서만 실행되도록 io 호출!
+    const newSocket = io(socket_url, {
+      withCredentials: true,
+      reconnectionAttempts: 3,
     });
 
-    socket.on("create-room-response", (data) => {
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      console.log("Socket connected:", newSocket.id);
+    });
+
+    newSocket.on("create-room-response", (data) => {
       console.log("create-room-response data:", data);
     });
 
-    socket.on("join-response", (data) => {
+    newSocket.on("join-response", (data) => {
       console.log("join-response data:", data);
     });
 
-    socket.on("send-message-response", (data) => {
+    newSocket.on("send-message-response", (data) => {
       console.log("send-message-response data:", data);
     });
 
     return () => {
-      socket.disconnect();
+      newSocket.disconnect();
     };
-  }, [socket]);
+  }, []);
 
   return (
     <SocketContext.Provider value={{ socket }}>
