@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import FindWalkMateWrapper from "./FindWalkMateWrapper";
 
 export const metadata = {
