@@ -1,4 +1,5 @@
 "use client"
+
 import Image from "next/image";
 import PlusIcon from "@/assets/icons/plus_icon.png";
 
