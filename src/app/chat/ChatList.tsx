@@ -1,130 +1,98 @@
-"use client";
-
-import Button from "@/components/Button";
-import Link from "next/link";
+"use client"
 import { useEffect, useState } from "react";
-import NewMessage from "@/assets/icons/newMessage_icon.png";
 import Image from "next/image";
-import { io } from "socket.io-client";
+import NewMessage from "@/assets/icons/newMessage_icon.png";
+import { fetchRoomList } from "@/lib/api/chat";
+import { PATHS } from "@/constants/path";
+import BasicProfile from "@/assets/icons/profile_icon.png";
+import { useRouter } from "next/navigation";
 
-import { useUserStore } from "@/stores/userStore";
-import { roomList } from "@/lib/api/chat";
-
-interface LastMessageType {
-  text: string;
-  sender: string;
-  timestamp: string;
+interface Sender {
+  id: number;
+  nickname: string;
+  imageUrl: string;
 }
 
-interface ConversationType {
+interface Room {
   id: string;
-  participants: string[];
-  lastMessage: LastMessageType;
+  partner: Sender;
+  lastMessage: string;
+  hasNewMessage: boolean;
 }
-
-const socket_url = process.env.NEXT_PUBLIC_SOCKET_URL;
 
 export default function ChatList() {
-  const [conversation, setConversation] = useState<ConversationType[]>([]);
-  const [newMessage, setNewMessage] = useState<{ [key: string]: Boolean }>({});
-  const socket = io(`${socket_url}`, { withCredentials: true });
-  const [isLoading, setIsLoading] = useState(false);
+  const [conversation, setConversation] = useState<Room[]>([]); // 방 목록 상태
+  const [isLoading, setIsLoading] = useState<boolean>(false); // 로딩 상태
+  const router = useRouter();
 
-  //유저 정보 가져오기
-  const currentUser = useUserStore((state) => state.nickname);
-
-  //방 목록 가져오기
+  // 방 목록 가져오기
   useEffect(() => {
     const loadRoomList = async () => {
       try {
-        const roomListCheck = await roomList();
-        const filterList: ConversationType[] = roomListCheck.map(
-          (room: { roomId: string; userList: { id: string }[] }) => ({
-            id: room.roomId,
-            participants: room.userList.map((user) => user.id),
-            lastMessage: { text: "", sender: "", timestamp: "" },
-          }),
-        );
-        if (currentUser) {
-          const userRooms = filterList.filter((room) =>
-            room.participants.includes(currentUser),
-          );
-          setConversation(userRooms);
-        } else {
-          console.log("현재 사용자가 없습니다.");
-        }
+        setIsLoading(true);
+        const roomListData = await fetchRoomList();
+
+        // 데이터 매핑
+        const mappedRooms: Room[] = roomListData.map((room: any) => ({
+          id: room.name,
+          partner: room.partner,
+          lastMessage: room.lastMessage,
+          hasNewMessage: room.hasNewMessage,
+        }));
+
+        setConversation(mappedRooms);
       } catch (e) {
-        console.error("방목록을 가져오는데 실패했습니다.", e);
+        console.error("방 목록을 가져오는데 실패했습니다.", e);
+      } finally {
+        setIsLoading(false);
       }
     };
+
     loadRoomList();
-  }, [currentUser]);
-
-  //소캣 연결
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("소캣연결성공");
-    });
-
-    //새로운 메세지 수신
-    socket.on(
-      "receive-message",
-      (message: LastMessageType & { roomId: string }) => {
-        setNewMessage((prev) => ({ ...prev, [message.roomId]: true }));
-      },
-    );
   }, []);
 
-  //방나가기 함수
-  const deleteChatRoom = (roomId: string) => {
-    const updateChatRoom = conversation.filter((room) => room.id !== roomId);
-    setConversation(updateChatRoom);
-    setNewMessage((prev) => ({ ...prev, [roomId]: false }));
+  // 방 입장 이벤트
+  const handleJoinRoom = (roomId: string, recipientId: number) => {
+    router.push(PATHS.CHATTING_DETAIL(roomId, recipientId));
   };
 
+
   return (
-    <div className="p-4">
-      <h1 className="text-xl font-bold mb-4">채팅 목록</h1>
-      <ul className="space-y-4">
-        {conversation.map((room) => {
-          const otherParticipant = room.participants.find(
-            (name) => name !== currentUser,
-          );
-          return (
-            <li
-              key={room.id}
-              className="flex justify-between items-center border p-2 rounded-lg"
-            >
-              <Link
-                href={`/chat/${room.id}?sender=${currentUser}&receiver=${otherParticipant}`}
-              >
-                <div>
-                  <p className="font-bold">{otherParticipant}</p>
-                  <p className="text-gray-500 text-sm">
-                    {room.lastMessage.text}
-                  </p>
-                </div>
-              </Link>
-              <div className="flex flex-col justify-center items-center">
-                <Button
-                  disabled={isLoading}
-                  btnType="submit"
-                  onClick={() => deleteChatRoom(room.id)}
-                  containerStyles="!text-base !text-black bg-transparent hover:underline hover:bg-transparent"
-                >
-                  나가기
-                </Button>
-                {newMessage[room.id] && (
-                  <Image
-                    src={NewMessage}
-                    alt="new_message"
-                    className="h-6 w-6 "
-                  />
-                )}
+    <div className="p-4 mb-12">
+      <h1 className="text-xl font-bold mb-4 mt-12">채팅 목록</h1>
+      <ul className="space-y-4 ">
+        {conversation.map((room) => (
+          <li
+            key={room.id} // 고유 식별자로 설정
+            className="flex justify-between items-center border p-2 rounded-lg"
+            onClick={() => handleJoinRoom(room.id, room.partner.id)}>
+
+            <div className="flex items-center" >
+              <Image
+                src={room.partner?.imageUrl || BasicProfile}
+                alt={`${room.partner?.nickname} 프로필 이미지`}
+                className="h-10 w-10 rounded-full mr-4"
+                width={40}
+                height={40}
+              />
+              <div>
+                <p className="font-semibold">{room.partner?.nickname}</p>
+                <p className="text-gray-500 text-sm">{room.lastMessage}</p>
               </div>
-            </li>
-          );
-        })}
+            </div>
+
+            <div className="flex flex-col justify-center items-center">
+
+              {room.hasNewMessage && (
+                <Image
+                  src={NewMessage}
+                  alt="new_message"
+                  className="h-6 w-6"
+                />
+              )}
+            </div>
+          </li>
+        ))}
       </ul>
     </div>
   );
