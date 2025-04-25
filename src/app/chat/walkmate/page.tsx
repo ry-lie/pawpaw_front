@@ -10,7 +10,6 @@ export default function WalkMatePage() {
   return (
     <div>
       <FindWalkMateWrapper />
-      <Footer />
     </div>
   );
 }
