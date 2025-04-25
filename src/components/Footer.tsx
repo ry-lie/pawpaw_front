@@ -2,7 +2,7 @@ import Link from "next/link";
 import { PATHS } from "../constants/path";
 import CommunityIcon from "@/assets/icons/community_icon.png"
 import MapIcon from "@/assets/icons/map_icon.png"
-import WalkingMateIcon from "@/assets/icons/footprint_color.png"
+import ChatIcon from "@/assets/icons/chat_icon.png"
 import MyPageIcon from "@/assets/icons/mypage_icon.png"
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
@@ -41,16 +41,17 @@ export default function Footer() {
                 </div>
                 <div className="flex flex-col items-center">
                     <Link
-                        href={PATHS.WALKMATE}
+                        href={PATHS.CHATTING_LIST}
                         className="flex flex-col justify-center items-center"
                     >
                         <Image
-                            src={WalkingMateIcon}
-                            alt="walkmate"
-                            className="h-6 w-6 mb-1"
+                            src={ChatIcon}
+                            alt="chat"
+                            className="h-7 w-6 mb-0.5"
                         />
-                        <span className="text-xs font-semibold">{t("walkmate")}</span>
+                        <span className="text-xs font-semibold">채팅</span>
                     </Link>
+
                 </div>
                 <div className="flex flex-col items-center">
                     <Link

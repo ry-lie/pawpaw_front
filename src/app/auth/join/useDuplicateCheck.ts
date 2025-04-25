@@ -41,7 +41,7 @@ export const useDuplicateCheck = ({
       }
     } catch (error) {
       if (isAxiosError(error)) {
-        const errorMessage = "유효한 이메일 주소를 입력하세요";
+        const errorMessage = "이미 사용 중인 이메일입니다.";
         setError("email", {
           type: "manual",
           message: errorMessage,

@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { errorToast, successToast } from "@/utils/toast";
 import { IoSearchOutline } from "react-icons/io5";
 import KakaoLogin from "./KakaoLogin";
+import socket from "@/utils/socket";
 
 type LoginInputs = {
   email: string;
@@ -38,6 +39,7 @@ export default function LoginForm() {
       if (response.status === 200) {
         router.push(PATHS.MAIN);
         successToast("로그인 성공했습니다.");
+        socket.emit("join-room-list");
       }
     } catch {
       errorToast("아이디 또는 비밀번호가 올바르지 않습니다.");
