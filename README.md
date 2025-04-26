@@ -62,20 +62,75 @@ $ npm start
 <br/>
 
 # 6. 화면구성
-|                         로그인 페이지                         |                      회원가입 페이지                      |                           메인 페이지                            |
-| :-----------------------------------------------------------: | :-------------------------------------------------------: | :--------------------------------------------------------------: |
-|       <img width="200" alt="Image" src="https://github.com/user-attachments/assets/182096f9-aa41-45f8-99ae-3d5e2ff39202" />        |     <img width="200" alt="Image" src="https://github.com/user-attachments/assets/a6a6f2ed-5502-4198-9994-57c02b1c63e5" />     |                   |
-|                        커뮤니티 페이지                         |                       게시글 상세 페이지                       |                         댓글 기능                         |
-|    <img width="200" alt="Image" src="https://github.com/user-attachments/assets/ce3a8b68-a305-40e8-9909-0a60a412579b" />    |    <img width="200" alt="Image" src="https://github.com/user-attachments/assets/f5bf6ab2-4695-45e0-8d70-32e282f4240e" />    | <img width="200" alt="Image" src="https://github.com/user-attachments/assets/ed98b336-dc65-4b98-b8e7-1ec9aa48402c" /> |
-|                        게시글 작성 페이지                         |                      지도 페이지                      |                           장소 상세 모달                           |
-| <img width="200" alt="Image" src="https://github.com/user-attachments/assets/c29d9a62-d17c-4a2d-8a4b-9d6b7d70e243" /> | <img width="200" alt="Image" src="https://github.com/user-attachments/assets/73e28e05-1692-4395-bba8-f5bd7a3e719e" /> |     <img width="200" alt="Image" src="https://github.com/user-attachments/assets/6cc842eb-8e1a-499e-8cb3-064139490e26" />     |
-|                        리뷰 작성 페이지                         |                      리뷰 상세 페이지                      |                           산책메이트 찾기 페이지                           |
-| <img width="200" alt="Image" src="https://github.com/user-attachments/assets/29347940-e944-4f80-93a4-5df9da81e239" /> |  |          |
-|                        채팅 페이지                         |                      마이 페이지                      |                           내가 쓴 리뷰 조회 페이지                           |
-|  | <img width="200" alt="Image" src="https://github.com/user-attachments/assets/dcd8e303-14c9-45eb-82ba-601fafdf483b" /> |     <img width="200" alt="Image" src="https://github.com/user-attachments/assets/364526e3-6e16-463a-a045-b1576b274b85" />     |
-|                        내가 쓴 글 조회 페이지                         |                                            |                                                      |
-|  |  |          |
-<br/>
+
+## - 사용자 인증
+
+<table>
+  <tr>
+    <td align="center"><strong>회원가입</strong></td>
+    <td align="center"><strong>로그인</strong></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/bb9a144d-c67b-4dbc-a016-357def168069" alt="회원가입" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/079343b7-57e5-4325-b00f-4827a77fb653" alt="로그인" width="100%"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>카카오 로그인</strong></td>
+    <td align="center"><strong>비밀번호 찾기</strong></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/1a0bd881-1dfd-434f-8903-3ba996c76ccf" alt="카카오 로그인" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/3cd78c40-8ce7-4f52-a4f7-fa3a80d26ffe" alt="비밀번호 찾기" width="100%"/></td>
+  </tr>
+</table>
+
+## - 커뮤니티
+
+<table>
+   <tr>
+    <td align="center"><strong>커뮤니티 1</strong></td>
+    <td align="center"><strong>커뮤니티 2</strong></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/0eaebc92-5ec0-49ab-8c7c-56883077718e" alt="커뮤니티 기능1" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/f6ac61a0-3c8e-4213-9a73-3fbd079439c2" alt="커뮤니티 기능2" width="100%"/></td>
+  </tr>
+</table>
+
+## - 위치 기반 장소 추천 및 산책메이트 찾기
+
+<table>
+  <tr>
+    <td align="center"><strong>지도</strong></td>
+    <td align="center"><strong>채팅</strong></td>
+  </tr>
+<tr>
+  <td><img src="https://github.com/user-attachments/assets/690c3e88-751c-4997-afb5-de74d5662874" alt="지도" width="100%"/></td>
+   <td><img src="https://github.com/user-attachments/assets/de19a40c-44c7-4ccd-8a75-57d85839650d" alt="채팅" width="100%"/></td>
+</tr>
+</table>
+
+## - 마이페이지
+
+<table>
+  <tr>
+    <td align="center"><strong>내 정보 수정</strong></td>
+    <td align="center"><strong>내 글 조회 및 산책메이트 ON/OFF</strong></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/3f81fb07-bad6-4fbf-a9a4-525228c6b8d9" alt="내 정보수정" width="100%"/></td>
+    <td><img src="https://github.com/user-attachments/assets/0aa5d4f6-2610-4ed9-b716-c5de094afe8a" alt="내 글 조회" width="100%"/></td>
+  </tr>
+  <tr>
+    <td align="center"><strong>반려동물 수정</strong></td>
+    <td></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/user-attachments/assets/15ea8c02-7fd2-410c-8c88-d5bb1d0bf3ea" alt="반려동물 수정" width="100%"/></td>
+    <td></td>
+  </tr>
+</table>
+</br>
 
 # 7. 구현 기능 ✨
 <br/>
@@ -94,11 +149,28 @@ $ npm start
 <br/>
 
 ## (3) Cooperation
-|  |  |
-|-----------------|-----------------|
-| Git    |  <img src="https://github.com/user-attachments/assets/483abc38-ed4d-487c-b43a-3963b33430e6" alt="git" width="100">    |
-| Discord    |  <img src="https://upload.wikimedia.org/wikipedia/en/9/98/Discord_logo.svg" alt="discord" width="100">    |
-| Notion    |  <img src="https://github.com/user-attachments/assets/34141eb9-deca-416a-a83f-ff9543cc2f9a" alt="Notion" width="100">    |
+<table>
+  <thead>
+    <tr>
+      <th>Git</th>
+      <th>Discord</th>
+      <th>Notion</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/483abc38-ed4d-487c-b43a-3963b33430e6" alt="git" width="80" height="80">
+      </td>
+      <td align="center">
+        <img src="https://upload.wikimedia.org/wikipedia/en/9/98/Discord_logo.svg" alt="discord" width="80" height="80">
+      </td>
+      <td align="center">
+        <img src="https://github.com/user-attachments/assets/34141eb9-deca-416a-a83f-ff9543cc2f9a" alt="notion" width="80" height="80">
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 <br/>
 
