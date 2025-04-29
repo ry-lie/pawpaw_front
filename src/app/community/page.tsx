@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { PATHS } from "@/constants/path";
 import React, { useState, useEffect } from "react";
-import { getBoardList } from "@/lib/api/board";
+//import { getBoardList } from "@/lib/api/board";
+import { getMockBoardList as getBoardList } from "@/mocks/community"; // mock데이터를 불러오기 위한 가짜 api
 import { Post } from "@/types/post";
 import PlusButton from "@/components/PlusButton";
 import Footer from "@/components/Footer";
@@ -148,7 +149,7 @@ export default function CommunityPage() {
         </div>
       </div>
 
-      <main className="mt-[108px] xs:mt-[120px] p-4 xs:p-6">
+      <main className="mt-[108px] xs:mt-[120px] p-4 xs:p-6 mb-12">
         {/* 게시글 컨테이너 */}
         <div className="space-y-2">
           {filteredPosts.map((post) => (
@@ -208,7 +209,7 @@ export default function CommunityPage() {
           <button
             onClick={() => fetchPosts(true)}
             disabled={isLoading}
-            className="w-full mb-14 py-2 font-medium bg-primary hover:bg-hover text-white rounded-md"
+            className="w-full py-2 font-medium bg-primary hover:bg-hover text-white rounded-md"
           >
             {isLoading ? "불러오는 중..." : "더 보기"}
           </button>

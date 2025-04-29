@@ -9,7 +9,8 @@ import Comment from "./Comment";
 import Loading from "@/app/loading";
 import { formatDate } from "@/utils/formatISODate";
 import { handleAddComment, handleDeleteComment, handleDeletePost, handleModifyComment } from "./handlers";
-import { fetchBoardDetail, toggleLike } from "@/lib/api/board";
+import { toggleLike } from "@/lib/api/board";
+import { getMockBoardDetail as fetchBoardDetail } from "@/mocks/communityDetail"; // 게시글 상세조회 가짜 api
 import { RiDeleteBinLine } from "react-icons/ri";
 import LikeButton from "./LikeButton";
 import Image from "next/image";
@@ -25,7 +26,6 @@ interface CommunityDetailPageProps {
   };
 }
 
-
 export default function CommunityDetailPage({ params }: CommunityDetailPageProps) {
   const { postId } = params;
   const userId = useUserStore((state) => state.id);
@@ -35,7 +35,7 @@ export default function CommunityDetailPage({ params }: CommunityDetailPageProps
 
   const loadPost = async () => {
     try {
-      const response = await fetchBoardDetail(postId);
+      const response = await fetchBoardDetail(Number(postId)); //목데이터 요청 시: postId를 number로 변환해서 비교
       setPost(response?.data?.body?.data);;
       setLoading(false);
     } catch (err) {

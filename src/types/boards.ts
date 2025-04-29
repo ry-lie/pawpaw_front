@@ -14,6 +14,8 @@ export interface Comment {
   content: string;
 }
 export interface Post {
+  id: number; // 목데이터 위해 추가
+  category: string; // 목데이터 위해 추가
   author: Author;
   imageList: Image[];
   commentList: Comment[];
