@@ -5,7 +5,7 @@ import HeartIcon from "../assets/icons/heart_icon.png";
 import FireIcon from "../assets/icons/fire_icon.png";
 import Image from "next/image";
 import React, { useEffect, useState } from 'react';
-import { getPopularBoardList, getLatestBoardList } from '@/lib/api/board';
+// import { getPopularBoardList, getLatestBoardList } from '@/lib/api/board';
 import PostCard, { PostCardProps } from '@/components/Main/PostCard';
 import StructureFotoer from "@/components/Main/StructureFooter";
 import Carousel from "@/components/Main/Carousel";
@@ -18,6 +18,7 @@ import { useUserStore } from "@/stores/userStore";
 import { getMyPage } from "@/lib/api/user";
 import { useLocationUpdater } from "@/hooks/useLocationUpdater";
 import { useTranslation } from "react-i18next";
+import { getMockPopularPosts, getMockLatestPosts } from "@/mocks/community";
 
 export interface BoardItem {
   id: number;
@@ -41,11 +42,12 @@ export default function Home() {
     { id: 3, imgUrl: Carousel3, text: t("carouselText3") },
   ];
 
+  /* 게시글 목데이터로 교체
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const popularResponse = await getPopularBoardList(6);
-        const latestResponse = await getLatestBoardList(6);
+        const popularResponse = await getMockPopularPosts(6);
+        const latestResponse = await getMockLatestPosts(6);
 
         setPopularPosts(
           Array.isArray(popularResponse.data.body.data)
@@ -76,8 +78,28 @@ export default function Home() {
 
     fetchData();
   }, []);
-
-
+  */
+  
+  // 게시글 목데이터로 교체
+  useEffect(() => {
+    setPopularPosts(
+      getMockPopularPosts().map((item) => ({
+        id: item.id,
+        title: item.title,
+        category: item.category as "일상" | "펫자랑" | "임시보호" | "고민상담",
+        imageUrl: item.imageList[0]?.url,
+      }))
+    );
+  
+    setLatestPosts(
+      getMockLatestPosts().map((item) => ({
+        id: item.id,
+        title: item.title,
+        category: item.category as "일상" | "펫자랑" | "임시보호" | "고민상담",
+        imageUrl: item.imageList[0]?.url,
+      }))
+    );
+  }, []);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
