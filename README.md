@@ -14,26 +14,56 @@ $ npm start
 <br/>
 
 # 1. Project Overview (프로젝트 개요) 🐾
+- PawPaw
+- Mobile-first web service for pet owners (find pet-friendly spots, walking mates, and chat in real time).
+</br>
+
 - 프로젝트 명: 포포
 - 프로젝트 설명: 공공 API를 통해 내 위치에 기반한 반려동물 동반 가능 장소를 추천하고, 산책메이트 찾기 서비스 및 채팅 기능을 제공하는 Mobile-First 웹 서비스
 
 <br/>
 <br/>
 
-# 2. 개발 기간 및 인원 👥
+# 2. Project Timeline (개발 기간 및 인원) 👥
+- Development Period: December 17, 2024 – January 8, 2025
+- Team: </br>
+	•	Frontend:Seobin Lee, Jooyoung Lee, Jungwoo Ha </br>
+	•	Backend: Baul Han, Seokkyung Son
+</br>
+ 
 - 개발 기간 : 2024/12/17 ~ 2025/01/08
 - 개발 인원 : 프론트엔드 3명(이서빈, 이주영, 하정우) / 백엔드 2명(한바울, 손석경) 
 
 <br/>
 <br/>
 
-# 3. 사용자 플로우 🌊
+# 3. User Flow (사용자 플로우) 🌊
 <img src="https://github.com/user-attachments/assets/8451ad47-777b-4db8-90af-60b37110f3ef" alt="user-flow"  width="100%"/>
 
 <br/>
 <br/>
 
 # 4. Key Features (주요 기능) 🔑
+- 🐶 **Community** </br>
+	•	Browse trending and recent posts from the main page </br>
+	•	Filter posts by category or search by keyword </br>
+	•	Like and comment on posts </br>
+	•	Create, edit, and delete posts and comments </br>
+- 📍 **Location Map** </br>
+	•	View pet-friendly locations on a map based on your current location </br>
+	•	Filter by category (cafes, parks, etc.) with custom markers </br>
+	•	Access detailed info and user reviews for each place </br>
+	•	Write, edit, and delete reviews </br>
+
+- 💬 **Real-time Chat** </br>
+	•	Find nearby users who have activated the “Walking Mate” mode </br>
+	•	Send direct messages and connect instantly </br>
+
+- 👤 **My Page** </br>
+	•	Register, edit, or delete pet profiles </br>
+	•	Edit your user profile (profile photo, nickname, password) </br>
+	•	View your own posts and reviews at a glance </br>
+  </br>
 - **커뮤니티**:
   - 메인페이지에서 커뮤니티의 인기글 및 최신글을 모아 볼 수 있습니다.
   - 카테고리별로 게시글을 모아 볼 수 있고, 검색을 통해 게시글을 쉽게 찾을 수 있습니다.
@@ -63,20 +93,20 @@ $ npm start
 
 # 6. 화면구성
 
-## - 사용자 인증
+## - User Authentication (사용자 인증)
 
 <table>
   <tr>
-    <td align="center"><strong>회원가입</strong></td>
-    <td align="center"><strong>로그인</strong></td>
+    <td align="center"><strong>Sign up (회원가입)</strong></td>
+    <td align="center"><strong>Log in (로그인)</strong></td>
   </tr>
   <tr>
     <td><img src="https://github.com/user-attachments/assets/bb9a144d-c67b-4dbc-a016-357def168069" alt="회원가입" width="100%"/></td>
     <td><img src="https://github.com/user-attachments/assets/079343b7-57e5-4325-b00f-4827a77fb653" alt="로그인" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>카카오 로그인</strong></td>
-    <td align="center"><strong>비밀번호 찾기</strong></td>
+    <td align="center"><strong>Log in with Kakao (카카오 로그인)</strong></td>
+    <td align="center"><strong>forgot password (비밀번호 찾기)</strong></td>
   </tr>
   <tr>
     <td><img src="https://github.com/user-attachments/assets/1a0bd881-1dfd-434f-8903-3ba996c76ccf" alt="카카오 로그인" width="100%"/></td>
@@ -84,12 +114,12 @@ $ npm start
   </tr>
 </table>
 
-## - 커뮤니티
+## - Community (커뮤니티)
 
 <table>
    <tr>
-    <td align="center"><strong>커뮤니티 1</strong></td>
-    <td align="center"><strong>커뮤니티 2</strong></td>
+    <td align="center"><strong>Community1 (커뮤니티 1)</strong></td>
+    <td align="center"><strong>Community2 (커뮤니티 2)</strong></td>
   </tr>
   <tr>
     <td><img src="https://github.com/user-attachments/assets/0eaebc92-5ec0-49ab-8c7c-56883077718e" alt="커뮤니티 기능1" width="100%"/></td>
@@ -97,12 +127,12 @@ $ npm start
   </tr>
 </table>
 
-## - 위치 기반 장소 추천 및 산책메이트 찾기
+## - Location-Based Place Recommendations & Walking Mate Finder (위치 기반 장소 추천 및 산책메이트 찾기)
 
 <table>
   <tr>
-    <td align="center"><strong>지도</strong></td>
-    <td align="center"><strong>채팅</strong></td>
+    <td align="center"><strong>Map (지도)</strong></td>
+    <td align="center"><strong>Chat (채팅)</strong></td>
   </tr>
 <tr>
   <td><img src="https://github.com/user-attachments/assets/690c3e88-751c-4997-afb5-de74d5662874" alt="지도" width="100%"/></td>
@@ -110,19 +140,19 @@ $ npm start
 </tr>
 </table>
 
-## - 마이페이지
+## - My Page (마이페이지)
 
 <table>
   <tr>
-    <td align="center"><strong>내 정보 수정</strong></td>
-    <td align="center"><strong>내 글 조회 및 산책메이트 ON/OFF</strong></td>
+    <td align="center"><strong>Edit user info (내 정보 수정)</strong></td>
+    <td align="center"><strong>View my posts & Toggle Walking Mate mode (내 글 조회 및 산책메이트 ON/OFF)</strong></td>
   </tr>
   <tr>
     <td><img src="https://github.com/user-attachments/assets/3f81fb07-bad6-4fbf-a9a4-525228c6b8d9" alt="내 정보수정" width="100%"/></td>
     <td><img src="https://github.com/user-attachments/assets/0aa5d4f6-2610-4ed9-b716-c5de094afe8a" alt="내 글 조회" width="100%"/></td>
   </tr>
   <tr>
-    <td align="center"><strong>반려동물 수정</strong></td>
+    <td align="center"><strong>Manage Pet Profile (반려동물 수정)</strong></td>
     <td></td>
   </tr>
   <tr>
@@ -181,24 +211,24 @@ $ npm start
 ```plaintext
 project/
 ├── public/
-│   ├── images               # 지도 마커 이미지 파일
-│   └── favicon.ico          # 아이콘 파일
+│   ├── images               # Custom map markers (지도 마커 이미지 파일)
+│   └── favicon.ico          # Favicon (아이콘 파일)
 ├── src/
-|   ├── app/                 # page.tsx와 해당페이지에서 사용하는 컴포넌트 작성
-│   ├── assets/              # 이미지, 폰트 등 정적 파일
-│   ├── components/          # 재사용 가능한 공통UI 컴포넌트
-│   ├── constants/           # 공통으로 사용하는 상수
-│   ├── hooks/               # 커스텀 훅 모음
-│   ├── lib/                 # api 관련 함수 모음
-│   ├── stores               # zustand 관리 스토어 파일
-│   ├── types                # 공통으로 사용하는 type 모음
-│   ├── utils                # 공통으로 사용하는 util 함수 모음
-│   ├── middleware.ts        # 권한없는 페이지 접근 제한
-├── Dockerfile               # 도커 배포를 위한 파일
-├── package-lock.json        # 정확한 종속성 버전이 기록된 파일로, 일관된 빌드를 보장
-├──  package.json            # 프로젝트 종속성 및 스크립트 정의
-├── .gitignore               # Git 무시 파일 목록
-└── README.md                # 프로젝트 개요 및 사용법
+|   ├── app/                 # Pages and page-specific components (page.tsx와 해당페이지에서 사용하는 컴포넌트 작성)
+│   ├── assets/              # Static assets (images, fonts) (이미지, 폰트 등 정적 파일)
+│   ├── components/          # Reusable UI components (재사용 가능한 공통 UI 컴포넌트)
+│   ├── constants/           # Shared constants (공통으로 사용하는 상수)
+│   ├── hooks/               # Custom React hooks (커스텀 훅 모음)
+│   ├── lib/                 # API functions and services (api 관련 함수 모음)
+│   ├── stores               # Zustand state management stores (zustand 관리 스토어 파일)
+│   ├── types                # Shared TypeScript types (공통으로 사용하는 type 모음)
+│   ├── utils                # Utility functions (공통으로 사용하는 util 함수 모음)
+│   ├── middleware.ts        # Route guards for protected pages (권한없는 페이지 접근 제한)
+├── Dockerfile               # Docker config for deployment (도커 배포를 위한 파일)
+├── package-lock.json        # Project dependencies and scripts (정확한 종속성 버전이 기록된 파일로, 일관된 빌드를 보장)
+├──  package.json            # Exact dependency versions for reproducible builds (프로젝트 종속성 및 스크립트 정의)
+├── .gitignore               # Files to be ignored by Git (Git 무시 파일 목록)
+└── README.md                # Project overview and documentation (프로젝트 개요 및 사용법)
 ```
 
 <br/>
