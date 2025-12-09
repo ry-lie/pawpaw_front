@@ -5,7 +5,7 @@ HEAD
 <br/>
 <br/>
 
-# 0. Getting Started (시작하기)
+# 0. Getting Started
 ```bash
 $ npm start
 ```
@@ -13,7 +13,7 @@ $ npm start
 <br/>
 <br/>
 
-# 1. Project Overview (프로젝트 개요) 🐾
+# 1. Project Overview 🐾
 - PawPaw
 - Mobile-first web service for pet owners (find pet-friendly spots, walking mates, and chat in real time).
 </br>
@@ -24,7 +24,7 @@ $ npm start
 <br/>
 <br/>
 
-# 2. Project Timeline (개발 기간 및 인원) 👥
+# 2. Project Timeline 👥
 - Development Period: December 17, 2024 – January 8, 2025
 - Team: </br>
 	•	Frontend:Seobin Lee, Jooyoung Lee, Jungwoo Ha </br>
@@ -37,13 +37,13 @@ $ npm start
 <br/>
 <br/>
 
-# 3. User Flow (사용자 플로우) 🌊
+# 3. User Flow 🌊
 <img src="https://github.com/user-attachments/assets/8451ad47-777b-4db8-90af-60b37110f3ef" alt="user-flow"  width="100%"/>
 
 <br/>
 <br/>
 
-# 4. Key Features (주요 기능) 🔑
+# 4. Key Features 🔑
 - 🐶 **Community** </br>
 	•	Browse trending and recent posts from the main page </br>
 	•	Filter posts by category or search by keyword </br>
@@ -84,7 +84,7 @@ $ npm start
 <br/>
 <br/>
 
-# 5. Tasks & Responsibilities (작업 및 역할 분담)
+# 5. Tasks & Responsibilities 
 <img src="https://github.com/user-attachments/assets/c4122def-ba0f-4194-aed3-30854ee97abc" alt="역할" width="100%"/>
 
 
@@ -93,7 +93,7 @@ $ npm start
 
 # 6. 화면구성
 
-## - User Authentication (사용자 인증)
+## - User Authentication 
 
 <table>
   <tr>
@@ -114,7 +114,7 @@ $ npm start
   </tr>
 </table>
 
-## - Community (커뮤니티)
+## - Community 
 
 <table>
    <tr>
@@ -127,7 +127,7 @@ $ npm start
   </tr>
 </table>
 
-## - Location-Based Place Recommendations & Walking Mate Finder (위치 기반 장소 추천 및 산책메이트 찾기)
+## - Location-Based Place Recommendations & Walking Mate Finder 
 
 <table>
   <tr>
@@ -140,7 +140,7 @@ $ npm start
 </tr>
 </table>
 
-## - My Page (마이페이지)
+## - My Page
 
 <table>
   <tr>
@@ -162,11 +162,7 @@ $ npm start
 </table>
 </br>
 
-# 7. 구현 기능 ✨
-<br/>
-<br/>
-
-# 8. Technology Stack (기술 스택) 🔧
+# 7. Technology Stack 🔧
 
 ## (1) Frotend
 <img src="https://github.com/user-attachments/assets/640c8e48-2718-4ce2-9cd6-514e6b565de5" alt="frontend-technology" width="100%"/>
@@ -204,7 +200,7 @@ $ npm start
 
 <br/>
 
-# 9. Project Structure (프로젝트 구조)
+# 8. Project Structure
 
 - frontend
   
