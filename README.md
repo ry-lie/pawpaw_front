@@ -1,5 +1,3 @@
-HEAD
-
 <img src="https://github.com/user-attachments/assets/5fdb2b75-3b9a-48f8-860a-f87220384f09" alt="배너" width="100%"/>
 
 <br/>
@@ -18,22 +16,20 @@ $ npm start
 Mobile-first web service for pet owners (find pet-friendly spots, walking mates, and chat in real time).
 
 <details>
-<summary>Korean Description</summary>
-
+<summary>🇰🇷 Korean Description</summary>
 프로젝트 명: 포포  
 프로젝트 설명: 공공 API를 통해 내 위치 기반 반려동물 동반 가능 장소 추천 및 산책메이트 매칭, 실시간 채팅 기능을 제공하는 Mobile-First 웹 서비스
-
 </details>
 <br/>
 
 # 2. Project Timeline 👥
 - Development Period: December 17, 2024 – January 8, 2025
 - Team: </br>
-	•	Frontend:Seobin Lee, Jooyoung Lee, Jungwoo Ha </br>
+	•	Frontend: Seobin Lee, Jooyoung Lee, Jungwoo Ha </br>
 	•	Backend: Baul Han, Seokkyung Son
 
 <details>
-<summary>Korean Description</summary>
+<summary>🇰🇷 Korean Description</summary>
 - 개발 기간 : 2024/12/17 ~ 2025/01/08 <br/>
 - 개발 인원 : 프론트엔드 3명(이서빈, 이주영, 하정우) / 백엔드 2명(한바울, 손석경) 
 </details>
@@ -66,7 +62,7 @@ Mobile-first web service for pet owners (find pet-friendly spots, walking mates,
 	•	Edit your user profile (profile photo, nickname, password) </br>
 	•	View your own posts and reviews at a glance </br>
 <details>
-<summary>Korean Description</summary>
+<summary>🇰🇷 Korean Description</summary>
 	
 - **커뮤니티**:
   - 메인페이지에서 커뮤니티의 인기글 및 최신글을 모아 볼 수 있습니다.
