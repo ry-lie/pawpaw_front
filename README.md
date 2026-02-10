@@ -36,7 +36,12 @@ Mobile-first web service for pet owners (find pet-friendly spots, walking mates,
 <br/>
 
 # 3. User Flow 🌊
+<img width="100%" alt="User Flow Image" src="https://github.com/user-attachments/assets/557c749b-c489-405c-8906-038a3e340895" />
+
+<details>
+<summary>🇰🇷 Korean User Flow</summary>
 <img src="https://github.com/user-attachments/assets/8451ad47-777b-4db8-90af-60b37110f3ef" alt="user-flow"  width="100%"/>
+</details>
 
 <br/>
 <br/>
