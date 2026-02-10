@@ -14,14 +14,16 @@ $ npm start
 <br/>
 
 # 1. Project Overview 🐾
-- PawPaw
-- Mobile-first web service for pet owners (find pet-friendly spots, walking mates, and chat in real time).
-</br>
+**PawPaw**  
+Mobile-first web service for pet owners (find pet-friendly spots, walking mates, and chat in real time).
 
-- 프로젝트 명: 포포
-- 프로젝트 설명: 공공 API를 통해 내 위치에 기반한 반려동물 동반 가능 장소를 추천하고, 산책메이트 찾기 서비스 및 채팅 기능을 제공하는 Mobile-First 웹 서비스
+<details>
+<summary>Korean Description</summary>
 
-<br/>
+프로젝트 명: 포포  
+프로젝트 설명: 공공 API를 통해 내 위치 기반 반려동물 동반 가능 장소 추천 및 산책메이트 매칭, 실시간 채팅 기능을 제공하는 Mobile-First 웹 서비스
+
+</details>
 <br/>
 
 # 2. Project Timeline 👥
@@ -29,12 +31,12 @@ $ npm start
 - Team: </br>
 	•	Frontend:Seobin Lee, Jooyoung Lee, Jungwoo Ha </br>
 	•	Backend: Baul Han, Seokkyung Son
-</br>
- 
-- 개발 기간 : 2024/12/17 ~ 2025/01/08
-- 개발 인원 : 프론트엔드 3명(이서빈, 이주영, 하정우) / 백엔드 2명(한바울, 손석경) 
 
-<br/>
+<details>
+<summary>Korean Description</summary>
+- 개발 기간 : 2024/12/17 ~ 2025/01/08 <br/>
+- 개발 인원 : 프론트엔드 3명(이서빈, 이주영, 하정우) / 백엔드 2명(한바울, 손석경) 
+</details>
 <br/>
 
 # 3. User Flow 🌊
@@ -63,7 +65,9 @@ $ npm start
 	•	Register, edit, or delete pet profiles </br>
 	•	Edit your user profile (profile photo, nickname, password) </br>
 	•	View your own posts and reviews at a glance </br>
-  </br>
+<details>
+<summary>Korean Description</summary>
+	
 - **커뮤니티**:
   - 메인페이지에서 커뮤니티의 인기글 및 최신글을 모아 볼 수 있습니다.
   - 카테고리별로 게시글을 모아 볼 수 있고, 검색을 통해 게시글을 쉽게 찾을 수 있습니다.
@@ -80,18 +84,10 @@ $ npm start
   - 사용자의 반려동물을 등록/수정/삭제가 가능합니다.
   - 내 정보 수정을 통해 프로필사진/닉네임/비밀번호 변경이 가능합니다.
   - 내가 쓴 글, 내가 쓴 리뷰를 모아 볼 수 있습니다.
-
-<br/>
-<br/>
-
-# 5. Tasks & Responsibilities 
-<img src="https://github.com/user-attachments/assets/c4122def-ba0f-4194-aed3-30854ee97abc" alt="역할" width="100%"/>
-
-
-<br/>
+</details>
 <br/>
 
-# 6. 화면구성
+# 5. 화면구성
 
 ## - User Authentication 
 
@@ -162,7 +158,7 @@ $ npm start
 </table>
 </br>
 
-# 7. Technology Stack 🔧
+# 6. Technology Stack 🔧
 
 ## (1) Frotend
 <img src="https://github.com/user-attachments/assets/640c8e48-2718-4ce2-9cd6-514e6b565de5" alt="frontend-technology" width="100%"/>
@@ -200,7 +196,7 @@ $ npm start
 
 <br/>
 
-# 8. Project Structure
+# 7. Project Structure
 
 - frontend
   
