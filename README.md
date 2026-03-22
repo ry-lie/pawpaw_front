@@ -88,7 +88,7 @@ Mobile-first web service for pet owners (find pet-friendly spots, walking mates,
 </details>
 <br/>
 
-# 5. 화면구성
+# 5. Screen Layout
 
 ## - User Authentication 
 
